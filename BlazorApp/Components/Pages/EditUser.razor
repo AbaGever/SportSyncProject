@@ -1,0 +1,73 @@
+﻿@* @page "/EditUser/{c:object}"
+@inject NavigationManager navigationManager
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage MySession
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@inject IJSRuntime js
+@using Models
+@using DBL
+
+
+
+@code {
+    // public string Name { get; set; }
+    // public string Email { get; set; }
+    // public string Password { get; set; }
+
+
+    User c = new User();
+    Coach coach = new Coach();
+    bool CoachorUser(User c, Coach ch)
+    {
+        if (c == null && ch != null)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    public bool IsCoachByID(int id)
+    {
+
+        return true;
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+
+            if (CoachorUser(c, coach) == true)
+            {
+                var name = await MySession.GetAsync<User>("User");
+                if (name.Success)
+                {
+                    c = name.Value;
+                    StateHasChanged();
+                }
+                else
+                    navigationManager.NavigateTo("/login");
+            }
+            else
+            {
+                var name = await MySession.GetAsync<Coach>("Coach");
+                if (name.Success)
+                {
+                    coach = name.Value;
+                    StateHasChanged();
+                }
+                else
+                    navigationManager.NavigateTo("/login");
+
+            }
+
+        }
+    }
+
+
+
+
+   
+
+} *@

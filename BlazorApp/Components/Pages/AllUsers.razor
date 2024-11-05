@@ -1,0 +1,87 @@
+﻿@page "/ShowU/"
+@using Models
+@using DBL
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage MySession
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+<body>
+    <center><h1>All Users</h1> </center>
+    <div>
+        <div class="container" >
+            <center>
+        
+            @if (ps == null)
+            {
+            <p><em>Loading...</em></p>
+            }
+            else
+            {
+                <table style="width:100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Password</th>
+                        <th>Group`s Name</th>
+                        <th>Admin</th>
+                        <th>Date Joined</th>
+                       
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ps)
+                    {
+                        <tr>
+                            <td>@item.id</td>
+                            <td>@item.firstName</td>
+                            <td>@item.lastName</td>
+                            <td>@item.emailaddress</td>
+                            <td>@item.phonenumber</td>
+                            <td>@item.password</td>
+                            <td>@item.groupname</td>
+                            <td>@item.isadmin</td>
+                            <td>@item.datejoined</td>
+                        </tr>
+                    }
+
+                </tbody>
+                </table>
+            }
+        
+       
+            
+        </center>
+    </div>
+</div>
+
+
+</body>
+
+@code {
+    List<User> ps;
+    protected override async Task OnInitializedAsync()
+    {
+        UserDB pdb = new UserDB();
+        ps = (List<User>)await pdb.GetAllAsync();
+    }
+    User c;
+     protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var name = await MySession.GetAsync<User>("CustomerObject");
+            if (name.Success && name.Value.isadmin == "true")
+            {
+                c = name.Value;
+                StateHasChanged();
+            }
+            else
+                navigationManager.NavigateTo("");
+         }
+     }
+    
+}
+

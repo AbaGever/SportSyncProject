@@ -1,0 +1,214 @@
+﻿
+@page "/p"
+@using Models
+@using DBL
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage MySession
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@inject IJSRuntime js
+
+@if(c!=null||coach!=null)
+
+<section class="py-1">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+
+            @if (c != null)
+            {
+
+                <br />
+                <div class="col-md-6">
+                    <h1 class="display-5 fw-bolder">@c.firstName   @c.lastName</h1>
+                    <strong>
+                        <h2> Email: @c.emailaddress <br /> Password: @c.password </h2>
+                        @if (c.groupname != "")
+                        {
+                            <h2> Group Name :<a href="ShowG">@c.groupname</a></h2>
+                        }
+                        <h2>Date Joined : @c.datejoined</h2>
+                        <h3>
+                            Phone Number : @c.phonenumber
+                            @if (c.isadmin == "true")
+                            {
+                                <h3>Admin</h3>
+                                <a href="ShowU">View All Users</a>
+                            }
+
+                        </h3>
+
+                    </strong>
+                    <div>
+                    </div>
+                </div>
+               
+                <div >
+                    <h1 class="h3 mb-3 font-weight-normal">Edit Yourself</h1>
+                    <label for="inputName" class="sr-only">Name</label>
+                    <input @bind-value="Name" type="text" class="form-control m-1" placeholder="Name">
+
+                    <label for="inputEmail" class="sr-only">Email address</label>
+                    <input @bind-value="Email" type="text" class="form-control m-1" placeholder="Email">
+
+                    <label class="sr-only">Password</label>
+                    <input @bind-value="Password" type="text" class="form-control m-1" placeholder="Password">
+
+                    <button @onclick="doEditUser" class="btn btn-lg btn-primary btn-block m-1" type="submit">Update</button>
+
+                </div>
+            }
+            else
+            {
+                <br />
+                <div class="col-md-6">
+                    <h1 class="display-5 fw-bolder">@coach.firstName   @coach.lastName</h1>
+                    <strong>
+                        <h2> Email: @coach.emailaddress <br /> Password: @coach.password <br /> Sport: @coach.sport<br />Experience: @coach.exp</h2>
+                        @if (coach.groupname != "")
+                        {
+                            <h2> Group Name :<a href="ShowG">@coach.groupname</a></h2>
+                        }
+                        <h3>
+                            Phone Number : @coach.phonenumber
+                          
+
+                        </h3>
+
+                    </strong>
+                    <div>
+                    </div>
+                </div>
+               
+                <div >
+                    <h1 class="h3 mb-3 font-weight-normal">Edit Yourself</h1>
+                    <label for="inputName" class="sr-only">Name</label>
+                    <input @bind-value="Name" type="text" class="form-control m-1" placeholder="Name">
+
+                    <label for="inputEmail" class="sr-only">Email address</label>
+                    <input @bind-value="Email" type="text" class="form-control m-1" placeholder="Email">
+
+                    <label class="sr-only">Password</label>
+                    <input @bind-value="Password" type="text" class="form-control m-1" placeholder="Password">
+                     <button @onclick="doEditCoach" class="btn btn-lg btn-primary btn-block m-1" type="submit">Update</button>
+
+                </div>
+            }
+            
+
+
+        </div>
+    </div>
+</section>
+}
+@code {
+    private string Name = "";
+    private string Email = "";
+    private string Password = "";
+    User c = null;
+    Coach coach = null;
+    bool CoachorUser(User c, Coach ch)
+    {
+        if (c == null && ch != null)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+
+            if (CoachorUser(c, coach) == true)
+            {
+                var name = await MySession.GetAsync<User>("User");
+                if (name.Success)
+                {
+                    c = name.Value;
+                    StateHasChanged();
+                }
+                else
+                    navigationManager.NavigateTo("/login");
+            }
+            else
+            {
+                var name = await MySession.GetAsync<Coach>("Coach");
+                if (name.Success)
+                {
+                    coach = name.Value;
+                    StateHasChanged();
+                }
+                else
+                    navigationManager.NavigateTo("/login");
+
+            }
+
+        }
+    }
+    async Task doEditUser()
+    {
+        UserDB userDB = new UserDB();
+
+        if (Name == "")
+        {
+            Name = c.firstName;
+        }
+        if (Email == "")
+        {
+            Email = c.emailaddress;
+        }
+
+        c.firstName = Name;
+        c.emailaddress = Email;
+        c.password = Password;
+        c.id = c.id;
+
+
+        int n = await userDB.UpdateAsync(c);
+        if (n > 0)
+        {
+            await js.InvokeVoidAsync("alert", $"Updated Successfully!");
+            navigationManager.NavigateTo("/");
+        }
+        else
+        {
+            await js.InvokeVoidAsync("alert", $"Update failed!");
+            navigationManager.NavigateTo("/");
+        }
+    }
+    async Task doEditCoach()
+    {
+        CoachDB CoachDB = new CoachDB();
+
+        if (Name == "")
+        {
+            Name = coach.firstName;
+        }
+        if (Email == "")
+        {
+            Email = coach.emailaddress;
+        }
+
+        coach.firstName = Name;
+        coach.emailaddress = Email;
+        coach.password = Password;
+        coach.id = coach.id;
+
+
+        int n = await CoachDB.UpdateAsync(coach);
+        if (n > 0)
+        {
+            await js.InvokeVoidAsync("alert", $"Updated Successfully!");
+            navigationManager.NavigateTo("/");
+        }
+        else
+        {
+            await js.InvokeVoidAsync("alert", $"Update failed!");
+            navigationManager.NavigateTo("/");
+        }
+    }
+
+
+}
