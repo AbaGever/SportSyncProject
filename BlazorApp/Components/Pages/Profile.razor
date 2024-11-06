@@ -20,11 +20,12 @@
                         <h1 class="display-5 fw-bolder">@c.firstName   @c.lastName</h1>
                         <strong>
                             <h2> Email: @c.emailaddress <br /> Password: @password </h2>
+                            <button @onclick="ShowPS" class="btn btn-lg btn-primary btn-block m-1">Show My Password</button>
                             @if (c.groupname != "")
                             {
                                 <h2> Group Name :<a href="ShowG">@c.groupname</a></h2>
                             }
-                            <button @onclick="ShowPS" class="btn btn-lg btn-primary btn-block m-1">Show My Password</button>
+                           
 
                             <h2>Date Joined : @c.datejoined</h2>
                             <h3>
@@ -177,21 +178,19 @@
         if (n > 0)
         {
             await js.InvokeVoidAsync("alert", $"Updated Successfully!");
+            await MySession.SetAsync("User",c);
             var name = await MySession.GetAsync<User>("User");
             if (name.Success)
             {
                 c = name.Value;
                 StateHasChanged();
             }
-            
 
         }
         else
         {
             await js.InvokeVoidAsync("alert", $"Update failed!");
-            var name1 = await MySession.GetAsync<Coach>("Coach");
-                coach = name1.Value;
-                StateHasChanged();
+            
             
             
         }
@@ -220,12 +219,17 @@
         if (n > 0)
         {
             await js.InvokeVoidAsync("alert", $"Updated Successfully!");
-            navigationManager.NavigateTo("/");
+            await MySession.SetAsync("User", c);
+            var name = await MySession.GetAsync<User>("User");
+            if (name.Success)
+            {
+                c = name.Value;
+                StateHasChanged();
+            }
         }
         else
         {
             await js.InvokeVoidAsync("alert", $"Update failed!");
-            navigationManager.NavigateTo("/");
         }
     }
 
