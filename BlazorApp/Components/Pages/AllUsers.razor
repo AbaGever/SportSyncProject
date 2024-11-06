@@ -1,4 +1,4 @@
-﻿@page "/ShowU/"
+﻿@page "/ShowU"
 @using Models
 @using DBL
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
@@ -41,7 +41,7 @@
                             <td>@item.emailaddress</td>
                             <td>@item.phonenumber</td>
                             <td>@item.password</td>
-                            <td>@item.groupname</td>
+                            <td><a href="ShowG">@item.groupname</a></td>
                             <td>@item.isadmin</td>
                             <td>@item.datejoined</td>
                         </tr>
@@ -67,19 +67,19 @@
         UserDB pdb = new UserDB();
         ps = (List<User>)await pdb.GetAllAsync();
     }
-    User c;
+    User c = null;
      protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            var name = await MySession.GetAsync<User>("CustomerObject");
+            var name = await MySession.GetAsync<User>("User");
             if (name.Success && name.Value.isadmin == "true")
             {
                 c = name.Value;
                 StateHasChanged();
             }
             else
-                navigationManager.NavigateTo("");
+                navigationManager.NavigateTo("/");
          }
      }
     
