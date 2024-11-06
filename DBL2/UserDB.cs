@@ -88,7 +88,7 @@ namespace DBL
                 { "id", customer.id.ToString() },
                 { "firstName", customer.firstName },
                 { "lastName", customer.lastName },  
-                { "emailadress" , customer.emailaddress },
+                { "emailaddress" , customer.emailaddress },
                 { "phonenumber", customer.phonenumber },
                 { "password", customer.password },
                 { "groupname", customer.groupname },

@@ -82,7 +82,7 @@ namespace DBL
                 { "id", coach.id.ToString() },
                 { "firstName", coach.firstName },
                 { "lastName", coach.lastName },
-                { "emailadress" , coach.emailaddress },
+                { "emailaddress" , coach.emailaddress },
                 { "phonenumber", coach.phonenumber },
                 { "password", coach.password },
                 { "sport", coach.sport},

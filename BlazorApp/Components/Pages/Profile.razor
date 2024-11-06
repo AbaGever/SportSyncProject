@@ -1,5 +1,4 @@
-﻿
-@page "/p"
+﻿@page "/p"
 @using Models
 @using DBL
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
@@ -7,104 +6,113 @@
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject IJSRuntime js
 
-@if(c!=null||coach!=null)
+@if (c != null || coach != null)
+{
+    <section class="py-1">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
 
-<section class="py-1">
-    <div class="container px-4 px-lg-5 my-5">
-        <div class="row gx-4 gx-lg-5 align-items-center">
+                @if (c != null)
+                {
 
-            @if (c != null)
-            {
-
-                <br />
-                <div class="col-md-6">
-                    <h1 class="display-5 fw-bolder">@c.firstName   @c.lastName</h1>
-                    <strong>
-                        <h2> Email: @c.emailaddress <br /> Password: @c.password </h2>
-                        @if (c.groupname != "")
-                        {
-                            <h2> Group Name :<a href="ShowG">@c.groupname</a></h2>
-                        }
-                        <h2>Date Joined : @c.datejoined</h2>
-                        <h3>
-                            Phone Number : @c.phonenumber
-                            @if (c.isadmin == "true")
+                    <br />
+                    <div class="col-md-6">
+                        <h1 class="display-5 fw-bolder">@c.firstName   @c.lastName</h1>
+                        <strong>
+                            <h2> Email: @c.emailaddress <br /> Password: @password </h2>
+                            @if (c.groupname != "")
                             {
-                                <h3>Admin</h3>
-                                <a href="ShowU">View All Users</a>
+                                <h2> Group Name :<a href="ShowG">@c.groupname</a></h2>
                             }
+                            <button @onclick="ShowPS" class="btn btn-lg btn-primary btn-block m-1">Show My Password</button>
 
-                        </h3>
+                            <h2>Date Joined : @c.datejoined</h2>
+                            <h3>
+                                Phone Number : @c.phonenumber
+                                @if (c.isadmin == "true")
+                                {
+                                    <h3>Admin</h3>
+                                    <a href="ShowU">View All Users</a>
+                                }
 
-                    </strong>
-                    <div>
+                            </h3>
+
+                        </strong>
+                        <div>
+                        </div>
                     </div>
-                </div>
-               
-                <div >
-                    <h1 class="h3 mb-3 font-weight-normal">Edit Yourself</h1>
-                    <label for="inputName" class="sr-only">Name</label>
-                    <input @bind-value="Name" type="text" class="form-control m-1" placeholder="Name">
 
-                    <label for="inputEmail" class="sr-only">Email address</label>
-                    <input @bind-value="Email" type="text" class="form-control m-1" placeholder="Email">
-
-                    <label class="sr-only">Password</label>
-                    <input @bind-value="Password" type="text" class="form-control m-1" placeholder="Password">
-
-                    <button @onclick="doEditUser" class="btn btn-lg btn-primary btn-block m-1" type="submit">Update</button>
-
-                </div>
-            }
-            else
-            {
-                <br />
-                <div class="col-md-6">
-                    <h1 class="display-5 fw-bolder">@coach.firstName   @coach.lastName</h1>
-                    <strong>
-                        <h2> Email: @coach.emailaddress <br /> Password: @coach.password <br /> Sport: @coach.sport<br />Experience: @coach.exp</h2>
-                        @if (coach.groupname != "")
-                        {
-                            <h2> Group Name :<a href="ShowG">@coach.groupname</a></h2>
-                        }
-                        <h3>
-                            Phone Number : @coach.phonenumber
-                          
-
-                        </h3>
-
-                    </strong>
                     <div>
+                        <h1 class="h3 mb-3 font-weight-normal">Edit Yourself</h1>
+                        <label for="inputName" class="sr-only">Name</label>
+                        <input @bind-value="Name" type="text" class="form-control m-1" placeholder="Name">
+
+                        <label for="inputEmail" class="sr-only">Email address</label>
+                        <input @bind-value="Email" type="text" class="form-control m-1" placeholder="Email">
+
+                        <label class="sr-only">Password</label>
+                        <input @bind-value="Password" type="text" class="form-control m-1" placeholder="Password">
+
+                        <button @onclick="doEditUser" class="btn btn-lg btn-primary btn-block m-1">Update</button>
+
                     </div>
-                </div>
-               
-                <div >
-                    <h1 class="h3 mb-3 font-weight-normal">Edit Yourself</h1>
-                    <label for="inputName" class="sr-only">Name</label>
-                    <input @bind-value="Name" type="text" class="form-control m-1" placeholder="Name">
+                }
+                else
+                {
+                    <br />
+                    <div class="col-md-6">
+                        <h1 class="display-5 fw-bolder">@coach.firstName   @coach.lastName</h1>
+                        <strong>
+                            <h2> Email: @coach.emailaddress <br /> Password: @coach.password <br /> Sport: @coach.sport<br />Experience: @coach.exp</h2>
+                            @if (coach.groupname != "")
+                            {
+                                <h2> Group Name :<a href="ShowG">@coach.groupname</a></h2>
+                            }
+                            <h3>
+                                Phone Number : @coach.phonenumber
 
-                    <label for="inputEmail" class="sr-only">Email address</label>
-                    <input @bind-value="Email" type="text" class="form-control m-1" placeholder="Email">
 
-                    <label class="sr-only">Password</label>
-                    <input @bind-value="Password" type="text" class="form-control m-1" placeholder="Password">
-                     <button @onclick="doEditCoach" class="btn btn-lg btn-primary btn-block m-1" type="submit">Update</button>
+                            </h3>
 
-                </div>
-            }
-            
+                        </strong>
+                        <div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h1 class="h3 mb-3 font-weight-normal">Edit Yourself</h1>
+                        <label for="inputName" class="sr-only">Name</label>
+                        <input @bind-value="Name" type="text" class="form-control m-1" placeholder="Name">
+
+                        <label for="inputEmail" class="sr-only">Email address</label>
+                        <input @bind-value="Email" type="text" class="form-control m-1" placeholder="Email">
+
+                        <label class="sr-only">Password</label>
+                        <input @bind-value="Password" type="text" class="form-control m-1" placeholder="Password">
+                        <button @onclick="doEditCoach" class="btn btn-lg btn-primary btn-block m-1" type="submit">Update</button>
+
+                    </div>
+                }
+
 
 
         </div>
     </div>
 </section>
+
 }
 @code {
     private string Name = "";
     private string Email = "";
     private string Password = "";
+    private string password = "*******";
     User c = null;
     Coach coach = null;
+    UserDB userDB = new UserDB();
+    void ShowPS()
+    {
+        password = c.password;
+    }
     bool CoachorUser(User c, Coach ch)
     {
         if (c == null && ch != null)
@@ -121,35 +129,34 @@
         if (firstRender)
         {
 
-            if (CoachorUser(c, coach) == true)
-            {
+            
                 var name = await MySession.GetAsync<User>("User");
                 if (name.Success)
                 {
                     c = name.Value;
                     StateHasChanged();
                 }
-                else
-                    navigationManager.NavigateTo("/login");
-            }
-            else
-            {
-                var name = await MySession.GetAsync<Coach>("Coach");
-                if (name.Success)
+
+
+                var name1 = await MySession.GetAsync<Coach>("Coach");
+                if (name1.Success)
                 {
-                    coach = name.Value;
+                    coach = name1.Value;
                     StateHasChanged();
                 }
-                else
-                    navigationManager.NavigateTo("/login");
 
+
+            
+            if (c==null && coach==null)
+            {
+                navigationManager.NavigateTo("/login");
             }
 
         }
     }
     async Task doEditUser()
     {
-        UserDB userDB = new UserDB();
+        
 
         if (Name == "")
         {
@@ -170,13 +177,25 @@
         if (n > 0)
         {
             await js.InvokeVoidAsync("alert", $"Updated Successfully!");
-            navigationManager.NavigateTo("/");
+            var name = await MySession.GetAsync<User>("User");
+            if (name.Success)
+            {
+                c = name.Value;
+                StateHasChanged();
+            }
+            
+
         }
         else
         {
             await js.InvokeVoidAsync("alert", $"Update failed!");
-            navigationManager.NavigateTo("/");
+            var name1 = await MySession.GetAsync<Coach>("Coach");
+                coach = name1.Value;
+                StateHasChanged();
+            
+            
         }
+
     }
     async Task doEditCoach()
     {
