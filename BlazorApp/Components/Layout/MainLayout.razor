@@ -1,4 +1,11 @@
 ﻿@inherits LayoutComponentBase
+@using Models2
+@using DBL2
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage MySession
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@inject IJSRuntime js
+
 <head>
     <title>SportSync</title>
     <meta charset="UTF-8">
@@ -62,7 +69,6 @@
         header {
             text-align: center;
             padding: 20px 0;
-
             color: #fff;
         }
 
@@ -100,14 +106,15 @@
         }
     </style>
 </head>
+
 <div class="w3-bar w3-black w3-hide-small">
     <a href="" class="w3-bar-item w3-button">Home</a>
-    <a href="/r" class="w3-bar-item w3-button">SIGN UP</a>
-    <a href="login" class="w3-bar-item w3-button">LOG IN</a>
-    <a href="#" class="w3-bar-item w3-button">SIGN UP as a Coach!</a>
+    <a href="/r" class="w3-bar-item w3-button">Sign Up</a>
+    <a href="login" class="w3-bar-item w3-button">Log In</a>
     <a href="#" class="w3-bar-item w3-button">Weekly Contest</a>
-    <a href="p" class="w3-bar-item w3-button">MyProfile</a>
+    <a href="p" class="w3-bar-item w3-button">My Profile</a>
     <a href="#" class="w3-bar-item w3-button w3-right"><i class="fa fa-search"></i></a>
+
 </div>
 
 @Body

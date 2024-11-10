@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MySql;
 using MySql.Data.MySqlClient;
-namespace DBL
+namespace DBL2
 {
     public abstract class DB
     {

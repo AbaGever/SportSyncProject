@@ -5,11 +5,11 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp", "BlazorApp\BlazorApp.csproj", "{3E28A71B-CE12-486D-A9C0-ED45CCE186EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBL2", "DBL2\DBL2.csproj", "{E1FA084C-73E6-4DFF-ACEB-E66B9A9A53C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBL2", "DBL2\DBL2.csproj", "{E1FA084C-73E6-4DFF-ACEB-E66B9A9A53C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models2", "Models2\Models2.csproj", "{3A240A0C-63D4-4491-861E-23275F694B59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models2", "Models2\Models2.csproj", "{3A240A0C-63D4-4491-861E-23275F694B59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTesting2", "UnitTesting2\UnitTesting2.csproj", "{15D6D5DF-D809-4143-A747-1D5CFB0D7994}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTesting2", "UnitTesting2\UnitTesting2.csproj", "{15D6D5DF-D809-4143-A747-1D5CFB0D7994}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

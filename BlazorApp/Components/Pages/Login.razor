@@ -1,7 +1,7 @@
 ﻿@page "/login"
 
-@using Models
-@using DBL
+@using Models2
+@using DBL2
 @inject IJSRuntime js
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage MySession
@@ -45,7 +45,7 @@
             <h2 style="color:black">Log in</h2>
 
             <label>
-                <span>Email1</span>
+                <span>Email</span>
                 <input @bind-value="CoachEmail" type="email" required />
             </label>
 

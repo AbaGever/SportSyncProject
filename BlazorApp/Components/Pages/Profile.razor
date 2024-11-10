@@ -1,6 +1,6 @@
 ﻿@page "/p"
-@using Models
-@using DBL
+@using Models2
+@using DBL2
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage MySession
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
@@ -55,7 +55,8 @@
                         <input @bind-value="Password" type="text" class="form-control m-1" placeholder="Password">
 
                         <button @onclick="doEditUser" class="btn btn-lg btn-primary btn-block m-1">Update</button>
-
+                        <div> <br /> <br /> </div>
+                        <button @onclick="Logout" class="btn btn-lg btn-primary btn-block m-1">Log out of your Account</button>
                     </div>
                 }
                 else
@@ -64,7 +65,11 @@
                     <div class="col-md-6">
                         <h1 class="display-5 fw-bolder">@coach.firstName   @coach.lastName</h1>
                         <strong>
-                            <h2> Email: @coach.emailaddress <br /> Password: @coach.password <br /> Sport: @coach.sport<br />Experience: @coach.exp</h2>
+                            <h2> Email: @coach.emailaddress <br /> Password: @password  <br /></h2> 
+                                <button @onclick="ShowPS" class="btn btn-lg btn-primary btn-block m-1">Show My Password</button>
+                            <h2>
+                               Sport: @coach.sport<br />Experience: @coach.exp
+                            </h2>
                             @if (coach.groupname != "")
                             {
                                 <h2> Group Name :<a href="ShowG">@coach.groupname</a></h2>
@@ -92,6 +97,8 @@
                         <input @bind-value="Password" type="text" class="form-control m-1" placeholder="Password">
                         <button @onclick="doEditCoach" class="btn btn-lg btn-primary btn-block m-1" type="submit">Update</button>
 
+                        <div> <br /> <br /> </div>
+                        <button @onclick="Logout" class="btn btn-lg btn-primary btn-block m-1">Log out of your Account</button>
                     </div>
                 }
 
@@ -112,7 +119,13 @@
     UserDB userDB = new UserDB();
     void ShowPS()
     {
-        password = c.password;
+        if(c!= null)
+        {
+            password = c.password;
+
+        }
+        else
+        password = coach.password;
     }
     bool CoachorUser(User c, Coach ch)
     {
@@ -130,24 +143,24 @@
         if (firstRender)
         {
 
-            
-                var name = await MySession.GetAsync<User>("User");
-                if (name.Success)
-                {
-                    c = name.Value;
-                    StateHasChanged();
-                }
+
+            var name = await MySession.GetAsync<User>("User");
+            if (name.Success)
+            {
+                c = name.Value;
+                StateHasChanged();
+            }
 
 
-                var name1 = await MySession.GetAsync<Coach>("Coach");
-                if (name1.Success)
-                {
-                    coach = name1.Value;
-                    StateHasChanged();
-                }
+            var name1 = await MySession.GetAsync<Coach>("Coach");
+            if (name1.Success)
+            {
+                coach = name1.Value;
+                StateHasChanged();
+            }
 
 
-            
+
             if (c==null && coach==null)
             {
                 navigationManager.NavigateTo("/login");
@@ -157,7 +170,6 @@
     }
     async Task doEditUser()
     {
-        
 
         if (Name == "")
         {
@@ -166,6 +178,10 @@
         if (Email == "")
         {
             Email = c.emailaddress;
+        }
+        if (password == "")
+        {
+            password = c.password;
         }
 
         c.firstName = Name;
@@ -190,9 +206,9 @@
         else
         {
             await js.InvokeVoidAsync("alert", $"Update failed!");
-            
-            
-            
+
+
+
         }
 
     }
@@ -208,6 +224,10 @@
         {
             Email = coach.emailaddress;
         }
+        if (password == "")
+        {
+            password = coach.password;
+        }
 
         coach.firstName = Name;
         coach.emailaddress = Email;
@@ -219,11 +239,11 @@
         if (n > 0)
         {
             await js.InvokeVoidAsync("alert", $"Updated Successfully!");
-            await MySession.SetAsync("User", c);
-            var name = await MySession.GetAsync<User>("User");
+            await MySession.SetAsync("Coach", coach);
+            var name = await MySession.GetAsync<Coach>("Coach");
             if (name.Success)
             {
-                c = name.Value;
+                coach = name.Value;
                 StateHasChanged();
             }
         }
@@ -232,6 +252,11 @@
             await js.InvokeVoidAsync("alert", $"Update failed!");
         }
     }
-
+    async Task Logout()
+    {
+        await MySession.SetAsync("User", null);
+        await MySession.SetAsync("Coach", null);
+        navigationManager.NavigateTo("");
+    }
 
 }

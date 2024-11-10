@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Models;
+using Models2;
 using Org.BouncyCastle.Crypto.Macs;
-namespace DBL
+namespace DBL2
 {
     public class CoachDB : BaseDB<Coach>
     {

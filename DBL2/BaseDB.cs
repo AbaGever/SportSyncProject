@@ -6,7 +6,7 @@ using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DBL
+namespace DBL2
 {
 
     public abstract class BaseDB<T> : DB
@@ -83,6 +83,25 @@ namespace DBL
                 Dictionary<string, object> p = new Dictionary<string, object>();
                 p.Add("id", res.ToString());
                 string sql = @$"SELECT * FROM {GetTableName()} WHERE ({GetPrimaryKeyName()} = @id)";
+                List<T> list = (List<T>)await SelectAllAsync(sql, p);
+                if (list.Count == 1)
+                    return list[0];
+                else
+                    return null;
+            }
+            else
+                return null;
+        }
+        protected async Task<object> InsertGetObjAsyncgroup(Dictionary<string, object> keyAndValue)
+        {
+            string sqlCommand = PrepareInsertQueryWithParameters(keyAndValue);
+            sqlCommand += $" SELECT LAST_INSERT_name();";
+            object res = await ExecScalarAsync(sqlCommand);
+            if (res != null)
+            {
+                Dictionary<string, object> p = new Dictionary<string, object>();
+                p.Add("name", res);
+                string sql = @$"SELECT * FROM {GetTableName()} WHERE ({GetPrimaryKeyName()} = @name)";
                 List<T> list = (List<T>)await SelectAllAsync(sql, p);
                 if (list.Count == 1)
                     return list[0];

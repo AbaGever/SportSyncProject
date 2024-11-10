@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Models;
-namespace DBL
+using Models2;
+namespace DBL2
 {
     public class UserDB : BaseDB<User>
     {
