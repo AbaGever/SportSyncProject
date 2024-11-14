@@ -61,7 +61,7 @@ namespace DBL2
             {"name", group.name },
             {"maxcapacity", group.maxcapacity},
             {"sport", group.sport },
-            {"coach",group.coachid },
+            {"coachid",group.coachid },
             };
             int num = await base.InsertAsync(data);
             if (num > 0)

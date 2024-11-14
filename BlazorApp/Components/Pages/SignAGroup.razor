@@ -1,5 +1,106 @@
-﻿<h3>SignAGroup</h3>
+﻿@page "/sag"
+@using MySql.Data.MySqlClient;
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage MySession
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@using Models2
+@using DBL2
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+<section class="h-100 bg-dark">
+    <center >
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col">
+                <div class="card card-registration my-4">
+                    <div class="row g-0">
+                        
+                        <div class="col-xl-6">
+                            <div class="card-body p-md-5 text-black">
+                                <h1 class="mb-5 text-uppercase">Group registration form</h1>
 
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div data-mdb-input-init class="form-outline">
+                                            <label class="form-label" for="form3Example97">Group Name</label>
+                                            <br />
+                                            <input @bind-value="group.name" type="text" id="form3Example97" class="form-control form-control-lg" placeholder="@name" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div data-mdb-input-init class="form-outline">
+                                            <label class="form-label" for="form3Example97">Maximum Capacity</label>
+                                            <br />
+                                            <input @bind-value="group.maxcapacity" type ="int" id="form3Example97" class="form-control form-control-lg" placeholder="@maxcapacity"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div data-mdb-input-init class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example97">Group Sport</label>
+                                    <br />
+                                    <input @bind-value="group.sport" type="text" id="form3Example97" class="form-control form-control-lg" placeholder="@sport"/>
+                                </div>
+                                
+                                <br />
+                                <div class="d-flex justify-content-end pt-3">
+                                    <button @onclick="Reset" style="  background-color:darkgreen" data-mdb-button-init data-mdb-ripple-init class="btn btn-light btn-lg">Reset all</button>
+                                    <button @onclick="RegGroup" style=" background-color:darkgreen"  data-mdb-button-init data-mdb-ripple-init class="btn btn-warning btn-lg ms-2">Submit form</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </center>
+</section>
+<style>
+    
+    .card-registration .select-input.form-control[readonly]:not([disabled]) {
+        font-size: 1rem;
+        line-height: 2.15;
+        padding-left: .75em;
+        padding-right: .75em;
+    }
+
+    .card-registration .select-arrow {
+        top: 13px;
+    }</style>
 @code {
-
+    string name = "Efrohei Shoham";
+    string sport = "football";
+    int maxcapacity = 0;
+    Group group = new Group();
+    GroupDB Gdb = new GroupDB();
+    Coach coach;
+    bool b;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var name1 = await MySession.GetAsync<Coach>("Coach");
+            if (name1.Success)
+            {
+                coach = name1.Value;
+                StateHasChanged();
+            }
+            if (coach == null)
+            {
+                navigationManager.NavigateTo("/");
+            }
+        }
+    }
+    async Task RegGroup()
+    {
+        group.coachid = coach.id;
+        b = await Gdb.insertgroup(group);
+        navigationManager.NavigateTo("/");
+    }
+    void Reset()
+    {
+        name = "";
+        sport = "";
+        maxcapacity = 0;
+        group = null;
+    }
 }

@@ -19,8 +19,21 @@
                     <div class="col-md-6">
                         <h1 class="display-5 fw-bolder">@c.firstName   @c.lastName</h1>
                         <strong>
-                            <h2> Email: @c.emailaddress <br /> Password: @password </h2>
-                            <button @onclick="ShowPS" class="btn btn-lg btn-primary btn-block m-1">Show My Password</button>
+                            <h2> Email: @c.emailaddress </h2> 
+                            @if (!showPass)
+                            {
+                                <h2>  Password: @password </h2>
+                                string tmp1 = "Show new Password ";
+                                @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" @onclick=" ShowPass" />
+                                <br>
+                            }
+                            else
+                            {
+                                <h2>  Password: @c.password </h2>
+                                string tmp1 = "Show new Password ";
+                                @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" checked="checked" @onclick="ShowPass" />
+                                <br>
+                            }
                             @if (c.groupname != "")
                             {
                                 <h2> Group Name :<a href="ShowG">@c.groupname</a></h2>
@@ -56,7 +69,6 @@
 
                         <button @onclick="doEditUser" class="btn btn-lg btn-primary btn-block m-1">Update</button>
                         <div> <br /> <br /> </div>
-                        <button @onclick="Logout" class="btn btn-lg btn-primary btn-block m-1">Log out of your Account</button>
                     </div>
                 }
                 else
@@ -65,8 +77,22 @@
                     <div class="col-md-6">
                         <h1 class="display-5 fw-bolder">@coach.firstName   @coach.lastName</h1>
                         <strong>
-                            <h2> Email: @coach.emailaddress <br /> Password: @password  <br /></h2> 
-                                <button @onclick="ShowPS" class="btn btn-lg btn-primary btn-block m-1">Show My Password</button>
+                            <h2>
+                                Email: @coach.emailaddress  </h2>
+                                @if (!showPass)
+                                {
+                                    <h2>  Password: @password </h2>
+                                    string tmp1 = "Show new Password ";
+                                    @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" @onclick=" ShowPass" />
+                                    <br>
+                                }
+                                else
+                                {
+                                    <h2>  Password: @coach.password </h2>
+                                    string tmp1 = "Show new Password ";
+                                    @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" checked="checked" @onclick="ShowPass" />
+                                    <br>
+                                }
                             <h2>
                                Sport: @coach.sport<br />Experience: @coach.exp
                             </h2>
@@ -98,9 +124,9 @@
                         <button @onclick="doEditCoach" class="btn btn-lg btn-primary btn-block m-1" type="submit">Update</button>
 
                         <div> <br /> <br /> </div>
-                        <button @onclick="Logout" class="btn btn-lg btn-primary btn-block m-1">Log out of your Account</button>
                     </div>
                 }
+                <button style="background-color:darkred;padding:30px 40px" @onclick="Logout" class="btn btn-lg btn-primary btn-block m-1">Log out of your Account</button>
 
 
 
@@ -114,18 +140,14 @@
     private string Email = "";
     private string Password = "";
     private string password = "*******";
+    bool showPass = false;
+
     User c = null;
     Coach coach = null;
     UserDB userDB = new UserDB();
-    void ShowPS()
+    void ShowPass()
     {
-        if(c!= null)
-        {
-            password = c.password;
-
-        }
-        else
-        password = coach.password;
+        showPass = !showPass;     
     }
     bool CoachorUser(User c, Coach ch)
     {

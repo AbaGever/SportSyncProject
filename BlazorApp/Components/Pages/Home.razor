@@ -37,17 +37,16 @@
             <h1 class="w3-xxxlarge"><b>SportSync</b></h1>
             <h6>The project involves developing a scheduling and training management system designed for both amateur and professional athletes. The system is intended to streamline the management of users' workout routines by offering a tool that allows the creation of personalized schedules, tailored to the fitness level, type of sport, and the athlete's specific requirements.</h6>
         </header>
-        @if(UserS==null&&coach!=null&&coach.groupname==null)
+        @if(UserS==null&&coach!=null&&coach.groupname=="")
     {
-            <a href="sag"style="color:white;padding:20px 80px;background-color:green" class="w3-bar-item w3-button">Sign A Group</a>
-    }
+            <a href="sag" style="color:white;padding:20px 80px;background-color:#234D29" class="w3-bar-item w3-button">Sign A Group</a>
+        }
+        else
+        {
+            
+        }
     </center>
     </div>
-
-
-
-
-
 
 
 @code {
@@ -55,7 +54,6 @@
     Coach coach = null;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-
         if (firstRender)
         {
             var user1 = await MySession.GetAsync<User>("User");
@@ -73,5 +71,6 @@
 
         }
     }
+
 }
 
