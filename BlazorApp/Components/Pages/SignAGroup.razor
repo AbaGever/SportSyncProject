@@ -34,11 +34,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div data-mdb-input-init class="form-outline mb-4">
-                                    <label class="form-label" for="form3Example97">Group Sport</label>
-                                    <br />
-                                    <input @bind-value="group.sport" type="text" id="form3Example97" class="form-control form-control-lg" placeholder="@sport"/>
-                                </div>
+                                
                                 
                                 <br />
                                 <div class="d-flex justify-content-end pt-3">
@@ -93,6 +89,8 @@
     async Task RegGroup()
     {
         group.coachid = coach.id;
+        coach.groupname = group.name;
+        group.sport = coach.sport;
         b = await Gdb.insertgroup(group);
         navigationManager.NavigateTo("/");
     }

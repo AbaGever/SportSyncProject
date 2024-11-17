@@ -379,7 +379,7 @@
     private string UserPassword = "";
 
 
-  
+
     public async Task LogInToTrainer()
     {
         UserDB UserDB = new UserDB();
@@ -404,10 +404,12 @@
     public async Task LogInToCoach()
     {
         CoachDB CoachDB = new CoachDB();
+        GroupDB groupDB = new GroupDB();
         Coach Coach = await CoachDB.LoginAsync(CoachEmail, CoachPassword);
         if (Coach != null)
         {
             await MySession.SetAsync("Coach", Coach);
+            await MySession.SetAsync("Group", groupDB.SelectByPkAsync(Coach.groupname));
             navigationManager.NavigateTo("/");
 
         }

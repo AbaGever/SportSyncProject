@@ -22,6 +22,18 @@ namespace Models2
         {
 
         }
+        public Coach(int Id, string Fname, string Lname, string email, string number, string ps, string sprt, int exp1)
+        {
+            id = Id;
+            firstName = Fname;
+            lastName = Lname;
+            emailaddress = email;
+            phonenumber = number;
+            password = ps;
+            sport = sprt;
+            groupname = "";
+            exp = exp1;
+        }
         public Coach(int Id, string Fname, string Lname, string email, string number, string ps, string sprt, string gname, int exp1)
         {
             id = Id;

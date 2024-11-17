@@ -19,7 +19,7 @@
                     <div class="col-md-6">
                         <h1 class="display-5 fw-bolder">@c.firstName   @c.lastName</h1>
                         <strong>
-                            <h2> Email: @c.emailaddress </h2> 
+                            <h2> Email: @c.emailaddress </h2>
                             @if (!showPass)
                             {
                                 <h2>  Password: @password </h2>
@@ -38,7 +38,7 @@
                             {
                                 <h2> Group Name :<a href="ShowG">@c.groupname</a></h2>
                             }
-                           
+
 
                             <h2>Date Joined : @c.datejoined</h2>
                             <h3>
@@ -78,23 +78,24 @@
                         <h1 class="display-5 fw-bolder">@coach.firstName   @coach.lastName</h1>
                         <strong>
                             <h2>
-                                Email: @coach.emailaddress  </h2>
-                                @if (!showPass)
-                                {
-                                    <h2>  Password: @password </h2>
-                                    string tmp1 = "Show new Password ";
-                                    @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" @onclick=" ShowPass" />
-                                    <br>
-                                }
-                                else
-                                {
-                                    <h2>  Password: @coach.password </h2>
-                                    string tmp1 = "Show new Password ";
-                                    @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" checked="checked" @onclick="ShowPass" />
-                                    <br>
-                                }
+                                Email: @coach.emailaddress
+                            </h2>
+                            @if (!showPass)
+                            {
+                                <h2>  Password: @password </h2>
+                                string tmp1 = "Show new Password ";
+                                @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" @onclick=" ShowPass" />
+                                <br>
+                            }
+                            else
+                            {
+                                <h2>  Password: @coach.password </h2>
+                                string tmp1 = "Show new Password ";
+                                @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" checked="checked" @onclick="ShowPass" />
+                                <br>
+                            }
                             <h2>
-                               Sport: @coach.sport<br />Experience: @coach.exp
+                                Sport: @coach.sport<br />Experience: @coach.exp
                             </h2>
                             @if (coach.groupname != "")
                             {
@@ -130,9 +131,9 @@
 
 
 
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
 }
 @code {
@@ -147,7 +148,7 @@
     UserDB userDB = new UserDB();
     void ShowPass()
     {
-        showPass = !showPass;     
+        showPass = !showPass;
     }
     bool CoachorUser(User c, Coach ch)
     {
@@ -183,7 +184,7 @@
 
 
 
-            if (c==null && coach==null)
+            if (c == null && coach == null)
             {
                 navigationManager.NavigateTo("/login");
             }
@@ -216,7 +217,7 @@
         if (n > 0)
         {
             await js.InvokeVoidAsync("alert", $"Updated Successfully!");
-            await MySession.SetAsync("User",c);
+            await MySession.SetAsync("User", c);
             var name = await MySession.GetAsync<User>("User");
             if (name.Success)
             {

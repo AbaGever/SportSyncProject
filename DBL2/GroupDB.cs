@@ -12,7 +12,7 @@ namespace DBL2
     {
         protected override string GetTableName()
         {
-            return "groups";
+            return "sportsync_db.groups";
         }
 
         protected override string GetPrimaryKeyName()
@@ -79,10 +79,10 @@ namespace DBL2
             Dictionary<string, object> filterValues = new Dictionary<string, object>();
             Dictionary<string, object> fillValues = new Dictionary<string, object>()
             {
-                { "name", g.name },
-                { "maxcapacity", g.maxcapacity.ToString() },
+                
+                { "maxcapacity", g.maxcapacity },
                 { "sport", g.sport },
-                { "coachid" , g.coachid.ToString() },
+                { "coachid" , g.coachid },
 
             };
             filterValues.Add("name", g.name.ToString());
@@ -100,9 +100,10 @@ namespace DBL2
 
         public async Task<Group> SelectByPkAsync(string name)
         {
+            string q = "SELECT * FROM sportsync_db.groups WHERE name=@name;";
             Dictionary<string, object> p = new Dictionary<string, object>();
             p.Add("name", name);
-            List<Group> list = (List<Group>)await SelectAllAsync(p);
+            List<Group> list = (List<Group>)await SelectAllAsync(q,p);
             if (list.Count == 1)
                 return list[0];
             else

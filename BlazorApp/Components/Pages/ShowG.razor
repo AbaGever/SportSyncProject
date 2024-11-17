@@ -1,0 +1,129 @@
+﻿@page "/ShowG"
+@using Models2
+@using DBL2
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage MySession
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@inject IJSRuntime js
+
+@if (coach != null && group != null && group.coachid == coach.id)
+{
+    <section class="py-1">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+
+                <br />
+
+                <div class="col-md-6">
+                    
+                        <h1 class="display-5 fw-bolder">@group.name</h1>
+                        <strong>
+
+                            <h2>
+                                Sport : @group.sport <br /> Max Capacity : @group.maxcapacity <br />
+                            </h2>
+
+                            <h1 class="display-5 fw-bolder"> Coach Info <br />@coach.firstName   @coach.lastName</h1>
+
+                            <h2>
+
+                                Email: @coach.emailaddress
+                                <br />Experience: @coach.exp
+                            </h2>
+
+
+                        </strong>
+
+                        
+                    </div>
+
+                    <div>
+                        <h1 class="h3 mb-3 font-weight-normal">Edit Group</h1>
+
+                        <label for="inputEmail" class="sr-only">Max Capacity</label>
+                        <input @bind-value="group.maxcapacity" type="int" class="form-control m-1" placeholder="Max capacity">
+
+
+                        <button @onclick="doEditgroup" class="btn btn-lg btn-primary btn-block m-1" type="submit">Update</button>
+
+                        <div> <br /> <br /> </div>
+                    </div>
+
+
+
+                </div>
+                    
+        </div>
+    </section>
+}
+
+@code {
+    Coach coach = null;
+    Group group = null;
+    private string Name = "";
+    private string max = "";
+    string old = "";
+    GroupDB groupDB = new GroupDB();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+
+
+            var name1 = await MySession.GetAsync<Coach>("Coach");
+            if (name1.Success)
+            {
+                coach = name1.Value;
+                var name = await MySession.GetAsync<Group>("Group");
+                if(name.Success)
+                {
+                    group = name.Value;
+                }
+                StateHasChanged();
+            }
+
+
+
+            if (coach == null || coach.groupname == "")
+            {
+                navigationManager.NavigateTo("/");
+            }
+
+        }
+    }
+    async Task doEditgroup()
+    {
+        GroupDB GDB = new GroupDB();
+
+        if (Name == "")
+        {
+            Name = group.name;
+        }
+        if (max == "")
+        {
+            max = group.maxcapacity.ToString();
+        }
+
+
+
+        int n = await GDB.UpdateAsync(group);
+
+
+
+        if (n > 0)
+        {
+            await js.InvokeVoidAsync("alert", $"Updated Successfully!");
+            await MySession.SetAsync("Group", group);
+            var name = await MySession.GetAsync<Group>("Group");
+            if (name.Success)
+            {
+                group = name.Value;
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            await js.InvokeVoidAsync("alert", $"Update failed!");
+        }
+    }
+}
