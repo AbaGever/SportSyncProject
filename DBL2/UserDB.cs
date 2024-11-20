@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Models2;
 namespace DBL2
 {
@@ -145,6 +147,17 @@ namespace DBL2
                 return list[0];
             else
                 return null;
+        }
+
+        public async Task<List<User>> SelectAllInGroup(string groupname)
+        {
+            string sql = @"SELECT * FROM sportsync_db.users where groupname = @groupname;";
+            Dictionary<string, object> p = new Dictionary<string, object>();
+            p.Add("groupname", groupname);
+            List<User> list = (List<User>)await SelectAllAsync(sql, p);
+            return list;
+
+
         }
     }
 }

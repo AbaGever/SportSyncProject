@@ -5,6 +5,7 @@
 @inject IJSRuntime js
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage MySession
+@inject ProtectedSessionStorage GroupSession
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 
 
@@ -409,7 +410,8 @@
         if (Coach != null)
         {
             await MySession.SetAsync("Coach", Coach);
-            await MySession.SetAsync("Group", groupDB.SelectByPkAsync(Coach.groupname));
+            Group group = await groupDB.SelectByPkAsync(Coach.groupname);
+            await GroupSession.SetAsync("Group", group);
             navigationManager.NavigateTo("/");
 
         }

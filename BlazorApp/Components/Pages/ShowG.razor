@@ -3,19 +3,22 @@
 @using DBL2
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage MySession
+@inject ProtectedSessionStorage GroupSession
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject IJSRuntime js
 
-@if (coach != null && group != null && group.coachid == coach.id)
+@if ((coach != null && group != null && group.coachid == coach.id) || c != null)
 {
-    <section class="py-1">
-        <div class="container px-4 px-lg-5 my-5">
-            <div class="row gx-4 gx-lg-5 align-items-center">
+    @if (coach != null)
+    {
+        <section class="py-1">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="row gx-4 gx-lg-5 align-items-center">
 
-                <br />
+                    <br />
 
-                <div class="col-md-6">
-                    
+                    <div class="col-md-6">
+
                         <h1 class="display-5 fw-bolder">@group.name</h1>
                         <strong>
 
@@ -34,7 +37,7 @@
 
                         </strong>
 
-                        
+
                     </div>
 
                     <div>
@@ -52,17 +55,97 @@
 
 
                 </div>
-                    
-        </div>
-    </section>
+
+                <!-- Table for Users in the Group (Visible to both Coach and Regular User) -->
+                @if (usersInGroup != null && usersInGroup.Count > 0)
+                {
+                    <h2 class="mt-5">Players in Group</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                @if (coach != null) // If coach is logged in, show delete button
+                                {
+                                    <th>Action</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in usersInGroup)
+                            {
+                                <tr>
+                                    <td>@user.firstName</td>
+                                    <td>@user.lastName</td>
+                                    @if (coach != null) // If coach is logged in, show delete button
+                                    {
+                                        <td>
+                                            <button @onclick="() => RemoveUserFromGroup(user.id)" class="btn btn-danger">Remove</button>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
+            </div>
+            }
+
+
+            else if(c !=null)
+            {
+            @* If user is not a coach, show only the table without the delete button *@
+            <section class="py-1">
+                <div class="container px-4 px-lg-5 my-5">
+                    <div class="row gx-4 gx-lg-5 align-items-center">
+                        <div class="col-md-6">
+                            <h1 class="display-5 fw-bolder">@group.name</h1>
+                            <h2>
+                                Sport: @group.sport <br />
+                                Max Capacity: @group.maxcapacity <br />
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table for Users in the Group (Visible for regular user as well) -->
+                @if (usersInGroup != null && usersInGroup.Count > 0)
+                {
+                    <h2 class="mt-5">Players in Group</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in usersInGroup)
+                            {
+                                <tr>
+                                    <td>@user.firstName</td>
+                                    <td>@user.lastName</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </section>
+            }
+        </section>
+    }
+
 }
 
 @code {
     Coach coach = null;
+    User c = null;
     Group group = null;
     private string Name = "";
     private string max = "";
-    string old = "";
+    List<User> usersInGroup = new List<User>();
+
     GroupDB groupDB = new GroupDB();
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -74,8 +157,8 @@
             if (name1.Success)
             {
                 coach = name1.Value;
-                var name = await MySession.GetAsync<Group>("Group");
-                if(name.Success)
+                var name = await GroupSession.GetAsync<Group>("Group");
+                if (name.Success)
                 {
                     group = name.Value;
                 }
@@ -125,5 +208,11 @@
         {
             await js.InvokeVoidAsync("alert", $"Update failed!");
         }
+    }
+    async Task RemoveUserFromGroup(int id)
+    {
+        UserDB userDB = new UserDB();
+        User user = await userDB.SelectByPkAsync(id);
+        user.groupname = "";
     }
 }
