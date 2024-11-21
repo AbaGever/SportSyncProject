@@ -44,7 +44,7 @@ namespace Models2
         // Simple ToString override
         public override string ToString()
         {
-            return $"{Day}/{Month}/{Year}";
+            return $"{Year}-{Month}-{Day}";
         }
     }
 

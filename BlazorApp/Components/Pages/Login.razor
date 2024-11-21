@@ -385,10 +385,18 @@
     {
         UserDB UserDB = new UserDB();
         User User = await UserDB.LoginAsync(UserEmail, UserPassword);
+        Group group = null;
+        GroupDB groupDB = new GroupDB();
         if (User != null)
         {
 
             await MySession.SetAsync("User", User);
+            if(User.groupname != "")
+            {
+                group = await groupDB.SelectByPkAsync(User.groupname);
+                await GroupSession.SetAsync("Group", group);
+
+        }
             navigationManager.NavigateTo("/");
 
 
@@ -410,8 +418,12 @@
         if (Coach != null)
         {
             await MySession.SetAsync("Coach", Coach);
-            Group group = await groupDB.SelectByPkAsync(Coach.groupname);
-            await GroupSession.SetAsync("Group", group);
+            if(Coach.groupname != "")
+            {
+                Group group = await groupDB.SelectByPkAsync(Coach.groupname);
+                await GroupSession.SetAsync("Group", group);
+            }
+            
             navigationManager.NavigateTo("/");
 
         }

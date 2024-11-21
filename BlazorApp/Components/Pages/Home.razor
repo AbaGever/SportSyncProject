@@ -68,11 +68,25 @@
             if (user2.Success)
             {
                 coach = user2.Value;
-               group = await groupDB.SelectByPkAsync(coach.groupname);
+                if (coach == null)
+                {
+                    group = null;
+                }
+                else
+                {
+                    group = await groupDB.SelectByPkAsync(coach.groupname);
+                }
                 StateHasChanged();
             }
-
+            else
+            {
+                if (UserS == null && coach == null&&group ==null)
+                {
+                    navigationManager.NavigateTo("/");
+                }
+            }
         }
+        
     }
 
 }

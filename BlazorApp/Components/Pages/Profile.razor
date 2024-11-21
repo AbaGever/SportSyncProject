@@ -3,6 +3,7 @@
 @using DBL2
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage MySession
+@inject ProtectedSessionStorage GroupSession
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject IJSRuntime js
 
@@ -279,6 +280,7 @@
     {
         await MySession.SetAsync("User", null);
         await MySession.SetAsync("Coach", null);
+        await GroupSession.SetAsync("Group", null);
         navigationManager.NavigateTo("");
     }
 
