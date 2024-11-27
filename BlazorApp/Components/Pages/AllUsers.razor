@@ -61,18 +61,18 @@
 </body>
 
 @code {
-    List<User> ps;
+    List<Trainer> ps;
     protected override async Task OnInitializedAsync()
     {
-        UserDB pdb = new UserDB();
-        ps = (List<User>)await pdb.GetAllAsync();
+        TrainerDB pdb = new TrainerDB();
+        ps = (List<Trainer>)await pdb.GetAllAsync();
     }
-    User c = null;
+    Trainer c = null;
      protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            var name = await MySession.GetAsync<User>("User");
+            var name = await MySession.GetAsync<Trainer>("Trainer");
             if (name.Success && name.Value.isadmin == "true")
             {
                 c = name.Value;

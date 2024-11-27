@@ -3,7 +3,6 @@
 @using DBL2
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage MySession
-@inject ProtectedSessionStorage GroupSession
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject IJSRuntime js
 
@@ -37,7 +36,7 @@
                             }
                             @if (c.groupname != "")
                             {
-                                <h2> Group Name :<a href="ShowG">@c.groupname</a></h2>
+                                <h2> Group Name :<a href="ShowG/@c.groupname">@c.groupname</a></h2>
                             }
 
 
@@ -100,7 +99,7 @@
                             </h2>
                             @if (coach.groupname != "")
                             {
-                                <h2> Group Name :<a href="ShowG">@coach.groupname</a></h2>
+                                <h2> Group Name :<a href="ShowG/@coach.groupname">@coach.groupname</a></h2>
                             }
                             <h3>
                                 Phone Number : @coach.phonenumber
@@ -144,14 +143,14 @@
     private string password = "*******";
     bool showPass = false;
 
-    User c = null;
+    Trainer c = null;
     Coach coach = null;
-    UserDB userDB = new UserDB();
+    TrainerDB userDB = new TrainerDB();
     void ShowPass()
     {
         showPass = !showPass;
     }
-    bool CoachorUser(User c, Coach ch)
+    bool CoachorUser(Trainer c, Coach ch)
     {
         if (c == null && ch != null)
         {
@@ -168,7 +167,7 @@
         {
 
 
-            var name = await MySession.GetAsync<User>("User");
+            var name = await MySession.GetAsync<Trainer>("Trainer");
             if (name.Success)
             {
                 c = name.Value;
@@ -218,8 +217,8 @@
         if (n > 0)
         {
             await js.InvokeVoidAsync("alert", $"Updated Successfully!");
-            await MySession.SetAsync("User", c);
-            var name = await MySession.GetAsync<User>("User");
+            await MySession.SetAsync("Trainer", c);
+            var name = await MySession.GetAsync<Trainer>("Trainer");
             if (name.Success)
             {
                 c = name.Value;
@@ -278,9 +277,8 @@
     }
     async Task Logout()
     {
-        await MySession.SetAsync("User", null);
+        await MySession.SetAsync("Trainer", null);
         await MySession.SetAsync("Coach", null);
-        await GroupSession.SetAsync("Group", null);
         navigationManager.NavigateTo("");
     }
 

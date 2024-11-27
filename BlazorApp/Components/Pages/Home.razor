@@ -50,7 +50,7 @@
 
 
 @code {
-    User UserS = null;
+    Trainer UserS = null;
     Coach coach = null;
     Group group = new Group();
     GroupDB groupDB = new GroupDB();
@@ -58,7 +58,7 @@
     {
         if (firstRender)
         {
-            var user1 = await MySession.GetAsync<User>("User");
+            var user1 = await MySession.GetAsync<Trainer>("Trainer");
             if (user1.Success)
             {
                 UserS = user1.Value;

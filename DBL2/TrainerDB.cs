@@ -8,11 +8,11 @@ using System.Xml.Linq;
 using Models2;
 namespace DBL2
 {
-    public class UserDB : BaseDB<User>
+    public class TrainerDB : BaseDB<Trainer>
     {
         protected override string GetTableName()
         {
-            return "users";
+            return "trainers";
         }
 
         protected override string GetPrimaryKeyName()
@@ -20,9 +20,9 @@ namespace DBL2
             return "id";
         }
 
-        protected override async Task<User> CreateModelAsync(object[] row)
+        protected override async Task<Trainer> CreateModelAsync(object[] row)
         {
-            User c = new User();
+            Trainer c = new Trainer();
             try {
                 c.id = int.Parse(row[0].ToString());
                 c.firstName = row[1].ToString();
@@ -41,23 +41,23 @@ namespace DBL2
             return c;
         }
 
-        protected override async Task<List<User>> CreateListModelAsync(List<object[]> rows)
+        protected override async Task<List<Trainer>> CreateListModelAsync(List<object[]> rows)
         {
-            List<User> userList = new List<User>();
+            List<Trainer> userList = new List<Trainer>();
             foreach (object[] item in rows)
             {
-                User c;
-                c = (User)await CreateModelAsync(item);
+                Trainer c;
+                c = (Trainer)await CreateModelAsync(item);
                 userList.Add(c);
             }
             return userList;
         }
 
-        public async Task<List<User>> GetAllAsync()
+        public async Task<List<Trainer>> GetAllAsync()
         {
-            return ((List<User>)await SelectAllAsync());
+            return ((List<Trainer>)await SelectAllAsync());
         }
-        public async Task<bool> insertuser(User user)
+        public async Task<bool> insertuser(Trainer user)
         {
             time t = new time();
             Dictionary<string, object> data = new Dictionary<string, object>()
@@ -82,7 +82,7 @@ namespace DBL2
 
        
 
-        public async Task<int> UpdateAsync(User customer)
+        public async Task<int> UpdateAsync(Trainer customer)
         {
             Dictionary<string, object> filterValues = new Dictionary<string, object>();
             Dictionary<string, object> fillValues = new Dictionary<string, object>()
@@ -101,7 +101,7 @@ namespace DBL2
             return await base.UpdateAsync(fillValues, filterValues);
         }
 
-        public async Task<int> DeleteAsync(User customer)
+        public async Task<int> DeleteAsync(Trainer customer)
         {
             Dictionary<string, object> filterValues = new Dictionary<string, object>
             {
@@ -110,11 +110,11 @@ namespace DBL2
             return await base.DeleteAsync(filterValues);
         }
 
-        public async Task<User> SelectByPkAsync(int id)
+        public async Task<Trainer> SelectByPkAsync(int id)
         {
             Dictionary<string, object> p = new Dictionary<string, object>();
             p.Add("id", id);
-            List<User> list = (List<User>)await SelectAllAsync(p);
+            List<Trainer> list = (List<Trainer>)await SelectAllAsync(p);
             if (list.Count == 1)
                 return list[0];
             else
@@ -125,36 +125,36 @@ namespace DBL2
         public async Task<List<(string, string)>> GetNameAndEmail4NonAdminsAsync()
         {
             List<(string, string)> returnList = new List<(string, string)>();
-            string sql = "select * from sportsync_db.users";
+            string sql = "select * from sportsync_db.trainers";
             Dictionary<string, object> p = new Dictionary<string, object>();
             p.Add("isadmin", "");
-            List<User> list = (List<User>)await SelectAllAsync(sql, p);
-            foreach (User item in list)
+            List<Trainer> list = (List<Trainer>)await SelectAllAsync(sql, p);
+            foreach (Trainer item in list)
             {
                 returnList.Add((item.firstName, item.emailaddress));
             }
             return returnList;
         }
 
-        public async Task<User> LoginAsync(string email, string password)
+        public async Task<Trainer> LoginAsync(string email, string password)
         {
-            string sql = @"SELECT * FROM sportsync_db.users where emailaddress=@emailaddress AND password=@password;";
+            string sql = @"SELECT * FROM sportsync_db.trainers where emailaddress=@emailaddress AND password=@password;";
             Dictionary<string, object> p = new Dictionary<string, object>();
             p.Add("emailaddress", email);
             p.Add("password", password);
-            List<User> list = (List<User>)await SelectAllAsync(sql, p);
+            List<Trainer> list = (List<Trainer>)await SelectAllAsync(sql, p);
             if (list.Count == 1)
                 return list[0];
             else
                 return null;
         }
 
-        public async Task<List<User>> SelectAllInGroup(string groupname)
+        public async Task<List<Trainer>> SelectAllInGroup(string groupname)
         {
-            string sql = @"SELECT * FROM sportsync_db.users where groupname = @groupname;";
+            string sql = @"SELECT * FROM sportsync_db.trainers where groupname = @groupname;";
             Dictionary<string, object> p = new Dictionary<string, object>();
             p.Add("groupname", groupname);
-            List<User> list = (List<User>)await SelectAllAsync(sql, p);
+            List<Trainer> list = (List<Trainer>)await SelectAllAsync(sql, p);
             return list;
 
 

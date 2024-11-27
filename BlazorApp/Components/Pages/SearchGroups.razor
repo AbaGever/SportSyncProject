@@ -1,0 +1,82 @@
+﻿@page "/searchG"
+@using Models2;
+@using DBL2;
+@inject IJSRuntime js
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage MySession
+
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+
+<head>
+    <title>SportSync</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        h1, h2, h3, h4, h5, h6 {
+            font-family: "Oswald"
+        }
+
+        body {
+            font-family: "Open Sans"
+        }
+    </style>
+</head>
+<div class="w3-content" style="max-width:1600px">
+    <center>
+        <!-- Header -->
+        <header class="w3-container w3-center w3-padding-48 w3-white">
+            <h1 class="w3-xxxlarge"><b>Search Groups</b></h1>
+        </header>
+        <input name="Sport" @bind-value="sport" placeholder="Search Group By Sport">
+        <button @onclick="Search">Search Groups</button>
+
+        @if (list == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <center>
+            <table style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Maximum Capacity</th>
+                        <th>Sport</th>
+                        <th> </th>
+                        
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in list)
+                    {
+                        <tr>
+                            <td><center><a href="ShowG/@item.name">@item.name</a></center></td>
+                            <td><center>@item.maxcapacity</center></td>
+                            <td><center>@item.sport</center></td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+                </center>
+        }
+      
+    </center>
+</div>
+
+@code {
+    CoachDB coachDB = new CoachDB();
+    List<Group> list;
+    string sport = "";
+    async Task Search()
+    {
+        GroupDB groupDB = new GroupDB();
+         list = await groupDB.SelectBySportAsync(sport);
+    }
+}

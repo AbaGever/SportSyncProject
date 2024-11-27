@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models2
 {
-    public class User
+    public class Trainer
     {
         public int id { get; set; }
         public string firstName { get; set; }
@@ -18,7 +18,7 @@ namespace Models2
         public string isadmin { get; set; }
         public string datejoined { get; set; }
 
-        public User()
+        public Trainer()
         {
             isadmin = "false";
             time t = new time();
@@ -26,7 +26,7 @@ namespace Models2
             groupname = null;
 
         }
-        public User(int Id, string Fname, string Lname, string email, string number, string ps, string gname, string isAdmin, string datej)
+        public Trainer(int Id, string Fname, string Lname, string email, string number, string ps, string gname, string isAdmin, string datej)
         {
             id = Id;
             firstName = Fname;
@@ -38,7 +38,7 @@ namespace Models2
             groupname = gname;
             datejoined = datej;
         }
-         public User( string Fname, string Lname, string email, string number, string ps, string gname, string isAdmin, string datej)
+         public Trainer( string Fname, string Lname, string email, string number, string ps, string gname, string isAdmin, string datej)
         {
             
             firstName = Fname;

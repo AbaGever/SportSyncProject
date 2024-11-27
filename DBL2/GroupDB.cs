@@ -98,6 +98,14 @@ namespace DBL2
             return await base.DeleteAsync(filterValues);
         }
 
+        public async Task<List<Group>> SelectBySportAsync(string sport)
+        {
+            string q = "SELECT * FROM sportsync_db.groups WHERE sport=@sport;";
+            Dictionary<string, object> p = new Dictionary<string, object>();
+            p.Add("sport", sport);
+            List<Group> list = (List<Group>)await SelectAllAsync(q, p);
+            return list;
+        }
         public async Task<Group> SelectByPkAsync(string name)
         {
             string q = "SELECT * FROM sportsync_db.groups WHERE name=@name;";
@@ -109,10 +117,9 @@ namespace DBL2
             else
                 return null;
         }
-        
-        
-        
 
-        
+
+
+
     }
 }
