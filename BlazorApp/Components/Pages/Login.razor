@@ -385,7 +385,6 @@
     {
         TrainerDB UserDB = new TrainerDB();
         Trainer User = await UserDB.LoginAsync(UserEmail, UserPassword);
-        Group group = null;
         GroupDB groupDB = new GroupDB();
         if (User != null)
         {

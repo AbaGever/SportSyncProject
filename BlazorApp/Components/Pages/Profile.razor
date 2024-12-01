@@ -34,7 +34,7 @@
                                 @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" checked="checked" @onclick="ShowPass" />
                                 <br>
                             }
-                            @if (c.groupname != "")
+                            @if (c.groupname != ""&&c.groupname !=null)
                             {
                                 <h2> Group Name :<a href="ShowG/@c.groupname">@c.groupname</a></h2>
                             }

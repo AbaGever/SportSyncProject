@@ -6,8 +6,9 @@
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject IJSRuntime js
 
-@if (coach != null && group != null && group.coachid == coach.id || c != null)
+@if (group != null)
 {
+
     @if (coach != null)
     {
         <section class="py-1">
@@ -83,8 +84,65 @@
             </div>
         </section>
     }
-    else if (c != null && c.groupname == group.name)
+    else if (coach == null && c != null)
     {
+        @* If user is not a coach, show only the table without the delete button *@
+        <section class="py-1">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="row gx-4 gx-lg-5 align-items-center">
+                    <div class="col-md-6">
+                        <h1 class="display-5 fw-bolder">@group.name</h1>
+                        <h2>
+                            Sport: @group.sport <br />
+                            Max Capacity: @group.maxcapacity <br />
+                        </h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table for Users in the Group (Visible for regular user as well) -->
+            @if (c.groupname == group.name)
+            {
+                @if (usersInGroup != null && usersInGroup.Count > 0)
+                {
+                    <center>
+                        <h2 class="mt-5">Players in Group</h2>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in usersInGroup)
+                                {
+                                    <tr>
+                                        <td>@user.firstName</td>
+                                        <td>@user.lastName</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </center>
+                }
+
+                <center>
+                    <button style="background-color:darkred;padding:10px 30px" @onclick="() => RemoveUserFromGroup2(c.id)" class="btn btn-lg btn-primary btn-block m-1">Leave Group</button>
+                </center>
+            }
+            else
+            {
+                <center>
+                    <button style="background-color:green;padding:10px 30px" @onclick="() => JoinGroup(c.id)" class="btn btn-lg btn-primary btn-block m-1">Join Group</button>
+                </center>
+            }
+        </section>
+    }
+    else if (c == null && coach == null)
+    {
+
         @* If user is not a coach, show only the table without the delete button *@
         <section class="py-1">
             <div class="container px-4 px-lg-5 my-5">
@@ -124,14 +182,8 @@
                     </table>
                 </center>
             }
-            <center>
-                <button style="background-color:darkred;padding:10px 30px" @onclick="() => RemoveUserFromGroup2(c.id)" class="btn btn-lg btn-primary btn-block m-1">Leave Group</button>
-            </center>
-        </section>
-    }
-    else if (c != null && c.groupname == "" || c != null && c.groupname == null)
-    {
 
+        </section>
     }
 }
 
@@ -140,41 +192,55 @@
     public string groupname { get; set; }
     Coach coach = null;
     Trainer c = null;
-    Group group = null;
+    Group group;
     private string Name = "";
     private string max = "";
     List<Trainer> usersInGroup = new List<Trainer>();
-
     GroupDB groupDB = new GroupDB();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (groupname == null)
+        {
+            group = null;
+        }
+        else
+        {
+
+            group = await groupDB.SelectByPkAsync(groupname);
+            StateHasChanged();
+
+
+        }
+    }
+
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+
         if (firstRender)
         {
             var name1 = await MySession.GetAsync<Coach>("Coach");
             if (name1.Success)
             {
                 coach = name1.Value;
-                Group group = await groupDB.SelectByPkAsync(groupname);
                 await LoadUsersInGroup();
 
                 StateHasChanged();
             }
 
-            var user1 = await MySession.GetAsync<Trainer>("User");
+            var user1 = await MySession.GetAsync<Trainer>("Trainer");
             if (user1.Success)
             {
                 c = user1.Value;
-                Group group = await groupDB.SelectByPkAsync(groupname);
-                await LoadUsersInGroup();               
+                await LoadUsersInGroup();
                 StateHasChanged();
             }
 
-            if ((coach == null && c == null) || (coach != null && string.IsNullOrEmpty(coach.groupname)) || (c != null && string.IsNullOrEmpty(c.groupname)))
-            {
-                navigationManager.NavigateTo("/");
-            }
+
         }
     }
+
 
     async Task doEditgroup()
     {
@@ -194,13 +260,7 @@
         if (n > 0)
         {
             await js.InvokeVoidAsync("alert", $"Updated Successfully!");
-            await MySession.SetAsync("Group", group);
-            var name = await MySession.GetAsync<Group>("Group");
-            if (name.Success)
-            {
-                group = name.Value;
-                StateHasChanged();
-            }
+
         }
         else
         {
@@ -208,11 +268,13 @@
         }
     }
 
+
+
     public async Task LoadUsersInGroup()
     {
-        string groupName = group.name;
+
         TrainerDB userDB = new TrainerDB();
-        List<Trainer> usersInGroup = await userDB.SelectAllInGroup(groupName);
+        List<Trainer> usersInGroup = await userDB.SelectAllInGroup(groupname);
 
         this.usersInGroup = usersInGroup;
 
@@ -231,6 +293,7 @@
             await LoadUsersInGroup();
         }
     }
+
     async Task RemoveUserFromGroup2(int id)
     {
         TrainerDB userDB = new TrainerDB();
@@ -240,8 +303,8 @@
         {
             user.groupname = null;
             await userDB.UpdateAsync(user);
-            await MySession.SetAsync("User", user);
-            var name = await MySession.GetAsync<Trainer>("User");
+            await MySession.SetAsync("Trainer", user);
+            var name = await MySession.GetAsync<Trainer>("Trainer");
             if (name.Success)
             {
                 user = name.Value;
@@ -250,6 +313,27 @@
             await LoadUsersInGroup();
         }
         navigationManager.NavigateTo("");
+
+    }
+    async Task JoinGroup(int id)
+    {
+        TrainerDB userDB = new TrainerDB();
+        Trainer user = await userDB.SelectByPkAsync(id);
+
+        if (user != null)
+        {
+            user.groupname = groupname;
+            await userDB.UpdateAsync(user);
+            await MySession.SetAsync("Trainer", user);
+            var name = await MySession.GetAsync<Trainer>("Trainer");
+            if (name.Success)
+            {
+                user = name.Value;
+                StateHasChanged();
+            }
+            await LoadUsersInGroup();
+        }
+
 
     }
 
