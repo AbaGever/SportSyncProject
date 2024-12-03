@@ -99,7 +99,7 @@
                             </h2>
                             @if (coach.groupname != "")
                             {
-                                <h2> Group Name :<a href="ShowG/@coach.groupname">@coach.groupname</a></h2>
+                                <h2> Group Name :<a href="ShowG/@(coach.groupname)">@coach.groupname</a></h2>
                             }
                             <h3>
                                 Phone Number : @coach.phonenumber
@@ -127,7 +127,7 @@
                         <div> <br /> <br /> </div>
                     </div>
                 }
-                <button style="background-color:darkred;padding:30px 40px" @onclick="Logout" class="btn btn-lg btn-primary btn-block m-1">Log out of your Account</button>
+                <button style="background-color:red;padding:30px 40px" @onclick="Logout" class="btn btn-lg btn-primary btn-block m-1">Log out of your Account</button>
 
 
 

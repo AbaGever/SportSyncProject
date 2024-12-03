@@ -54,8 +54,8 @@ namespace DBL2
         {
             Dictionary<string, object> data = new Dictionary<string, object>()
             {
-            {"firstName", c.firstName },
-            {"lastName", c.lastName},
+            {"firstname", c.firstName },
+            {"lastname", c.lastName},
             {"emailaddress", c.emailaddress },
             {"phonenumber", c.phonenumber },
             {"password", c.password },
@@ -80,8 +80,8 @@ namespace DBL2
             Dictionary<string, object> fillValues = new Dictionary<string, object>()
             {
                 { "id", coach.id.ToString() },
-                { "firstName", coach.firstName },
-                { "lastName", coach.lastName },
+                { "firstname", coach.firstName },
+                { "lastname", coach.lastName },
                 { "emailaddress" , coach.emailaddress },
                 { "phonenumber", coach.phonenumber },
                 { "password", coach.password },

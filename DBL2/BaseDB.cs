@@ -139,7 +139,7 @@ namespace DBL2
         {
             string where = PrepareWhereQueryWithParameters(parameters);
 
-            string sqlCommand = $"DELETE FROM {GetTableName()} {where}";
+            string sqlCommand = $"DELETE FROM sportsync_db.{GetTableName()} {where}";
             return await ExecNonQueryAsync(sqlCommand);
         }
 

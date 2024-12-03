@@ -70,18 +70,23 @@
                                         @if (coach != null) // If coach is logged in, show delete button
                                         {
                                             <td>
-                                                <button style="background-color:red" @onclick="() => RemoveUserFromGroup(user.id)" class="btn btn-danger">Remove</button>
+                                                <button style="background-color:red;color:white" @onclick="() => RemoveUserFromGroup(user.id)" class="btn btn-danger">Remove</button>
                                             </td>
                                         }
                                     </tr>
                                 }
                             </tbody>
                         </table>
+
                     </center>
+
                 }
 
 
             </div>
+            <center>
+                <button style="background-color:darkred;color:white" @onclick="() => Delete(groupname)" class="btn btn-danger">Remove</button>
+            </center>
         </section>
     }
     else if (coach == null && c != null)
@@ -197,6 +202,7 @@
     private string max = "";
     List<Trainer> usersInGroup = new List<Trainer>();
     GroupDB groupDB = new GroupDB();
+    CoachDB coachDB = new CoachDB();
 
     protected override async Task OnParametersSetAsync()
     {
@@ -335,6 +341,30 @@
         }
 
 
+    }
+    async Task Delete(string gname)
+
+    {
+        coach.groupname = null;
+        int n = await coachDB.UpdateAsync(coach);
+        if (n > 0)
+        {
+            await MySession.SetAsync("Coach", coach);
+            var name = await MySession.GetAsync<Coach>("Coach");
+            if (name.Success)
+            {
+                coach = name.Value;
+                StateHasChanged();
+            }
+        }
+        GroupDB groupDB = new GroupDB();
+        Group group = await groupDB.SelectByPkAsync(gname);
+        if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {group.name}?"))
+        {
+            await groupDB.DeleteAsync(group);
+            await OnInitializedAsync();
+            navigationManager.NavigateTo("/");
+        }
     }
 
 }

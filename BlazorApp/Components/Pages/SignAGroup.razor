@@ -13,7 +13,7 @@
             <div class="col">
                 <div class="card card-registration my-4">
                     <div class="row g-0">
-                        
+
                         <div class="col-xl-6">
                             <div class="card-body p-md-5 text-black">
                                 <h1 class="mb-5 text-uppercase">Group registration form</h1>
@@ -23,19 +23,19 @@
                                         <div data-mdb-input-init class="form-outline">
                                             <label class="form-label" for="form3Example97">Group Name</label>
                                             <br />
-                                            <input @bind-value="group.name" type="text" id="form3Example97" class="form-control form-control-lg" placeholder="@name" />
+                                            <input @bind-value="group.name" type="text" id="form3Example97" class="form-control form-control-lg" placeholder="@strname" />
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-4">
                                         <div data-mdb-input-init class="form-outline">
                                             <label class="form-label" for="form3Example97">Maximum Capacity</label>
                                             <br />
-                                            <input @bind-value="group.maxcapacity" type ="int" id="form3Example97" class="form-control form-control-lg" placeholder="@maxcapacity"/>
+                                            <input @bind-value="group.maxcapacity" type="int" id="form3Example97" class="form-control form-control-lg" placeholder="@strmx" />
                                         </div>
                                     </div>
                                 </div>
-                                
-                                
+
+
                                 <br />
                                 <div class="d-flex justify-content-end pt-3">
                                     <button @onclick="Reset" style="  background-color:darkgreen" data-mdb-button-init data-mdb-ripple-init class="btn btn-light btn-lg">Reset all</button>
@@ -51,23 +51,23 @@
     </center>
 </section>
 <style>
-    
+
     .card-registration .select-input.form-control[readonly]:not([disabled]) {
-        font-size: 1rem;
-        line-height: 2.15;
-        padding-left: .75em;
-        padding-right: .75em;
+    font-size: 1rem;
+    line-height: 2.15;
+    padding-left: .75em;
+    padding-right: .75em;
     }
 
     .card-registration .select-arrow {
-        top: 13px;
+    top: 13px;
     }</style>
 @code {
-    string name = "Efrohei Shoham";
-    string sport = "football";
-    int maxcapacity = 0;
+    string strname = "Enter Group`s Name";
+    string strmx = "Enter Maximum Capacity";
     Group group = new Group();
     GroupDB Gdb = new GroupDB();
+    CoachDB coachDB = new CoachDB();
     Coach coach;
     bool b;
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -89,16 +89,34 @@
     async Task RegGroup()
     {
         group.coachid = coach.id;
-        coach.groupname = group.name;
         group.sport = coach.sport;
+        
         b = await Gdb.insertgroup(group);
-        navigationManager.NavigateTo("/");
+        if (b)
+        {
+            navigationManager.NavigateTo("/");
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("Didnt Succeed");
+        }
+        coach.groupname = group.name;
+        int n = await coachDB.UpdateAsync(coach);
+        if (n > 0)
+        {
+            await JS.InvokeVoidAsync("alert", $"Updated Successfully!");
+            await MySession.SetAsync("Coach", coach);
+            var name = await MySession.GetAsync<Coach>("Coach");
+            if (name.Success)
+            {
+                coach = name.Value;
+                StateHasChanged();
+            }
+        }
+        
     }
     void Reset()
     {
-        name = "";
-        sport = "";
-        maxcapacity = 0;
         group = null;
 
     } 

@@ -37,13 +37,13 @@
             <h1 class="w3-xxxlarge"><b>SportSync</b></h1>
             <h6>The project involves developing a scheduling and training management system designed for both amateur and professional athletes. The system is intended to streamline the management of users' workout routines by offering a tool that allows the creation of personalized schedules, tailored to the fitness level, type of sport, and the athlete's specific requirements.</h6>
         </header>
-        @if(UserS==null&&coach!=null&&coach.groupname==""||coach!=null && group.coachid != coach.id)
+        @if (UserS == null && coach != null && coach.groupname == "" || coach != null && coach.groupname == null || coach != null && group.coachid != coach.id)
     {
             <a href="sag" style="color:white;padding:20px 80px;background-color:#234D29" class="w3-bar-item w3-button">Sign A Group</a>
         }
-        else if (coach != null && coach.groupname != "")
+        else if (coach != null && coach.groupname != ""&&coach.groupname!=null)
         {
-            <a href="ShowG" style="color:white;padding:20px 80px;background-color:#234D29" class="w3-bar-item w3-button">Show Group Info</a>
+            <a href="ShowG/@(coach.groupname)" style="color:white;padding:20px 80px;background-color:#234D29" class="w3-bar-item w3-button">Show Group Info</a>
         }
     </center>
     </div>

@@ -12,7 +12,7 @@ namespace DBL2
     {
         protected override string GetTableName()
         {
-            return "sportsync_db.groups";
+            return "groups";
         }
 
         protected override string GetPrimaryKeyName()
