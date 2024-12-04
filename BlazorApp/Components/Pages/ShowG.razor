@@ -85,7 +85,7 @@
 
             </div>
             <center>
-                <button style="background-color:darkred;color:white" @onclick="() => Delete(groupname)" class="btn btn-danger">Remove</button>
+                <button style="background-color:darkred;color:white" @onclick="() => Delete(groupname)" class="btn btn-danger">Delete Group</button>
             </center>
         </section>
     }
@@ -343,11 +343,18 @@
 
     }
     async Task Delete(string gname)
-
     {
+        TrainerDB trainerDB = new TrainerDB();
+        List<Trainer> TS = await trainerDB.SelectAllInGroup(gname);
+        foreach (Trainer trainer in TS)
+        {
+            trainer.groupname = null;
+            int n = await trainerDB.UpdateAsync(trainer);
+        }
         coach.groupname = null;
-        int n = await coachDB.UpdateAsync(coach);
-        if (n > 0)
+        
+        int a = await coachDB.UpdateAsync(coach);
+        if (a > 0)
         {
             await MySession.SetAsync("Coach", coach);
             var name = await MySession.GetAsync<Coach>("Coach");
