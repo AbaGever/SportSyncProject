@@ -7,46 +7,35 @@
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 
 
-<head>
-    <title>SportSync</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        h1, h2, h3, h4, h5, h6 {
-            font-family: "Oswald"
-        }
-
-        body {
-            font-family: "Open Sans"
-        }
-    </style>
-</head>
 
 
-    <!-- Navigation bar with social media icons -->
-    <!-- w3-content defines a container for fixed size centered content,
-    and is wrapped around the whole page content, except for the footer in this example -->
-    <div class="w3-content" style="max-width:1600px">
+<!-- Navigation bar with social media icons -->
+<!-- w3-content defines a container for fixed size centered content,
+and is wrapped around the whole page content, except for the footer in this example -->
+<div class="container" style="color:white" >
+
+    <video autoplay muted loop class="video-bg" >
+        <source src="joni2.mp4" type="video/mp4" />
+
+    </video>
         <center>
-        <!-- Header -->
-        <header class="w3-container w3-center w3-padding-48 w3-white">
-            <h1 class="w3-xxxlarge"><b>SportSync</b></h1>
-            <h6>The project involves developing a scheduling and training management system designed for both amateur and professional athletes. The system is intended to streamline the management of users' workout routines by offering a tool that allows the creation of personalized schedules, tailored to the fitness level, type of sport, and the athlete's specific requirements.</h6>
-        </header>
-        @if (UserS == null && coach != null && coach.groupname == "" || coach != null && coach.groupname == null || coach != null && group.coachid != coach.id)
-    {
-            <a href="sag" style="color:white;padding:20px 80px;background-color:#234D29" class="w3-bar-item w3-button">Sign A Group</a>
-        }
-        else if (coach != null && coach.groupname != ""&&coach.groupname!=null)
-        {
-            <a href="ShowG/@(coach.groupname)" style="color:white;padding:20px 80px;background-color:#234D29" class="w3-bar-item w3-button">Show Group Info</a>
-        }
-    </center>
-    </div>
+            <div class="content">
+
+                <h1> <b>SportSync</b></h1>
+                <h6>The project involves developing a scheduling and training management system designed for both amateur and professional athletes. The system is intended to streamline the management of users' workout routines by offering a tool that allows the creation of personalized schedules, tailored to the fitness level, type of sport, and the athlete's specific requirements.</h6>
+            </div>
+                @if (UserS == null && coach != null && coach.groupname == "" || coach != null && coach.groupname == null || coach != null && group.coachid != coach.id)
+                {
+                <a href="sag" class="button">Sign A Group</a>
+                }
+                else if (coach != null && coach.groupname != "" && coach.groupname != null)
+                {
+                <a href="ShowG/@(coach.groupname)" class="button">Show Group Info</a>
+                }
+
+        </center>
+    
+</div>
 
 
 @code {
@@ -80,13 +69,13 @@
             }
             else
             {
-                if (UserS == null && coach == null&&group ==null)
+                if (UserS == null && coach == null && group == null)
                 {
                     navigationManager.NavigateTo("/");
                 }
             }
         }
-        
+
     }
 
 }

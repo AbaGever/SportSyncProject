@@ -126,7 +126,7 @@ namespace DBL2
             if (string.IsNullOrEmpty(InKeyValue))
                 return 0;
 
-            string sqlCommand = $"UPDATE {GetTableName()} SET {InKeyValue}  {where}";
+            string sqlCommand = $"UPDATE sportsync_db.{GetTableName()} SET {InKeyValue}  {where}";
             return await ExecNonQueryAsync(sqlCommand);
         }
 

@@ -11,183 +11,181 @@
 
     @if (coach != null)
     {
-        <section class="py-1">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="row gx-4 gx-lg-5 align-items-center">
+        <section>
+            <div class="container">
+                <div class="content">
 
-                    <br />
+                    <div>
+                        <h1>@group.name</h1>
 
-                    <div class="col-md-6">
-                        <h1 class="display-5 fw-bolder">@group.name</h1>
-                        <strong>
-                            <h2>
-                                Sport : @group.sport <br /> Max Capacity : @group.maxcapacity <br />
-                            </h2>
-                            <h1 class="display-5 fw-bolder"> Coach Info <br />@coach.firstName   @coach.lastName</h1>
-                            <h2>
-                                Email: @coach.emailaddress
-                                <br />Experience: @coach.exp
-                            </h2>
-                        </strong>
+                        <h3>
+                            Sport : @group.sport <br /> Max Capacity : @group.maxcapacity <br />
+                        </h3>
+                        <h2><u> Coach Info</u>  <br />@coach.firstName   @coach.lastName</h2>
+                        <h3>
+                            Email: @coach.emailaddress
+                            <br />Experience: @coach.exp
+                        </h3>
+
                     </div>
 
                     <div>
-                        <h1 class="h3 mb-3 font-weight-normal">Edit Group</h1>
+                        <h2>Edit Group</h2>
 
-                        <label for="inputEmail" class="sr-only">Max Capacity</label>
-                        <input @bind-value="group.maxcapacity" type="int" class="form-control m-1" placeholder="Max capacity">
-                        <button @onclick="doEditgroup" class="btn btn-lg btn-primary btn-block m-1" type="submit">Update</button>
+                        <h3 for="inputEmail">
+                            Max Capacity
+                            <input @bind-value="max" type="int" placeholder="Max capacity">
+                        </h3>
+                        <button class="button" @onclick="doEditgroup" type="submit">Update</button>
 
-                        <div> <br /> <br /> </div>
+                        <br /> <br />
                     </div>
+                    <!-- Table for Users in the Group (Visible to both Coach and Regular User) -->
+                    @if (usersInGroup != null && usersInGroup.Count > 0)
+                    {
+                        <center>
+                            <h2><u>Players in Group</u></h2>
 
-                </div>
+                            <table class="table">
 
-                <!-- Table for Users in the Group (Visible to both Coach and Regular User) -->
-                @if (usersInGroup != null && usersInGroup.Count > 0)
-                {
-                    <center>
-                        <h2 class="mt-5">Players in Group</h2>
-
-                        <table class="table">
-
-                            <thead>
-                                <tr>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    @if (coach != null) // If coach is logged in, show delete button
-                                    {
-                                        <th>Action</th>
-                                    }
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var user in usersInGroup)
-                                {
+                                <thead>
                                     <tr>
-                                        <td>@user.firstName</td>
-                                        <td>@user.lastName</td>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
                                         @if (coach != null) // If coach is logged in, show delete button
                                         {
-                                            <td>
-                                                <button style="background-color:red;color:white" @onclick="() => RemoveUserFromGroup(user.id)" class="btn btn-danger">Remove</button>
-                                            </td>
+                                            <th>Action</th>
                                         }
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in usersInGroup)
+                                    {
+                                        <tr>
+                                            <td>@user.firstName</td>
+                                            <td>@user.lastName</td>
+                                            @if (coach != null) // If coach is logged in, show delete button
+                                            {
+                                                <td>
+                                                    <button style="background-color:white;border-color:white" @onclick="() => RemoveUserFromGroup(user.id)" class="btn btn-danger">Remove</button>
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
 
-                    </center>
+                        </center>
 
-                }
-
+                    }
+            <center>
+                <button  @onclick="() => Delete(groupname)" class="remove">Delete Group</button>
+            </center>
+                </div>
 
             </div>
-            <center>
-                <button style="background-color:darkred;color:white" @onclick="() => Delete(groupname)" class="btn btn-danger">Delete Group</button>
-            </center>
         </section>
     }
     else if (coach == null && c != null)
     {
         @* If user is not a coach, show only the table without the delete button *@
-        <section class="py-1">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="row gx-4 gx-lg-5 align-items-center">
-                    <div class="col-md-6">
-                        <h1 class="display-5 fw-bolder">@group.name</h1>
+        <section>
+            <div class="container">
+                <div class="content">
+                    <div>
+                        <h1>@group.name</h1>
                         <h2>
                             Sport: @group.sport <br />
                             Max Capacity: @group.maxcapacity <br />
                         </h2>
                     </div>
+
+
+                    <!-- Table for Users in the Group (Visible for regular user as well) -->
+                    @if (c.groupname == group.name)
+                    {
+                        @if (usersInGroup != null && usersInGroup.Count > 0)
+                        {
+                            <center>
+                                <h2>Players in Group</h2>
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var user in usersInGroup)
+                                        {
+                                            <tr>
+                                                <td>@user.firstName</td>
+                                                <td>@user.lastName</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </center>
+                        }
+
+                        <center>
+                            <button style="background-color:darkred;padding:10px 30px" @onclick="() => RemoveUserFromGroup2(c.id)" class="btn btn-lg btn-primary btn-block m-1">Leave Group</button>
+                        </center>
+                    }
+                    else
+                    {
+                        <center>
+                            <button style="background-color:green;padding:10px 30px" @onclick="() => JoinGroup(c.id)" class="btn btn-lg btn-primary btn-block m-1">Join Group</button>
+                        </center>
+                    }
                 </div>
             </div>
-
-            <!-- Table for Users in the Group (Visible for regular user as well) -->
-            @if (c.groupname == group.name)
-            {
-                @if (usersInGroup != null && usersInGroup.Count > 0)
-                {
-                    <center>
-                        <h2 class="mt-5">Players in Group</h2>
-
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var user in usersInGroup)
-                                {
-                                    <tr>
-                                        <td>@user.firstName</td>
-                                        <td>@user.lastName</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </center>
-                }
-
-                <center>
-                    <button style="background-color:darkred;padding:10px 30px" @onclick="() => RemoveUserFromGroup2(c.id)" class="btn btn-lg btn-primary btn-block m-1">Leave Group</button>
-                </center>
-            }
-            else
-            {
-                <center>
-                    <button style="background-color:green;padding:10px 30px" @onclick="() => JoinGroup(c.id)" class="btn btn-lg btn-primary btn-block m-1">Join Group</button>
-                </center>
-            }
         </section>
     }
     else if (c == null && coach == null)
     {
 
         @* If user is not a coach, show only the table without the delete button *@
-        <section class="py-1">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="row gx-4 gx-lg-5 align-items-center">
-                    <div class="col-md-6">
+        <section>
+            <div class="container">
+                <div class="content">
+                    <div>
                         <h1 class="display-5 fw-bolder">@group.name</h1>
                         <h2>
                             Sport: @group.sport <br />
                             Max Capacity: @group.maxcapacity <br />
                         </h2>
                     </div>
+
+
+                    <!-- Table for Users in the Group (Visible for regular user as well) -->
+                    @if (usersInGroup != null && usersInGroup.Count > 0)
+                    {
+                        <center>
+                            <h2>Players in Group</h2>
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in usersInGroup)
+                                    {
+                                        <tr>
+                                            <td>@user.firstName</td>
+                                            <td>@user.lastName</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </center>
+                    }
                 </div>
             </div>
-
-            <!-- Table for Users in the Group (Visible for regular user as well) -->
-            @if (usersInGroup != null && usersInGroup.Count > 0)
-            {
-                <center>
-                    <h2 class="mt-5">Players in Group</h2>
-
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var user in usersInGroup)
-                            {
-                                <tr>
-                                    <td>@user.firstName</td>
-                                    <td>@user.lastName</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </center>
-            }
-
         </section>
     }
 }
@@ -199,7 +197,7 @@
     Trainer c = null;
     Group group;
     private string Name = "";
-    private string max = "";
+    private int max;
     List<Trainer> usersInGroup = new List<Trainer>();
     GroupDB groupDB = new GroupDB();
     CoachDB coachDB = new CoachDB();
@@ -215,6 +213,8 @@
 
             group = await groupDB.SelectByPkAsync(groupname);
             StateHasChanged();
+            max = group.maxcapacity;
+
 
 
         }
@@ -252,14 +252,7 @@
     {
         GroupDB GDB = new GroupDB();
 
-        if (Name == "")
-        {
-            Name = group.name;
-        }
-        if (max == "")
-        {
-            max = group.maxcapacity.ToString();
-        }
+        group.maxcapacity = max;
 
         int n = await GDB.UpdateAsync(group);
 
@@ -346,28 +339,29 @@
     {
         TrainerDB trainerDB = new TrainerDB();
         List<Trainer> TS = await trainerDB.SelectAllInGroup(gname);
-        foreach (Trainer trainer in TS)
-        {
-            trainer.groupname = null;
-            int n = await trainerDB.UpdateAsync(trainer);
-        }
-        coach.groupname = null;
-        
-        int a = await coachDB.UpdateAsync(coach);
-        if (a > 0)
-        {
-            await MySession.SetAsync("Coach", coach);
-            var name = await MySession.GetAsync<Coach>("Coach");
-            if (name.Success)
-            {
-                coach = name.Value;
-                StateHasChanged();
-            }
-        }
+       
         GroupDB groupDB = new GroupDB();
         Group group = await groupDB.SelectByPkAsync(gname);
         if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {group.name}?"))
         {
+            foreach (Trainer trainer in TS)
+            {
+                trainer.groupname = null;
+                int n = await trainerDB.UpdateAsync(trainer);
+            }
+            coach.groupname = null;
+
+            int a = await coachDB.UpdateAsync(coach);
+            if (a > 0)
+            {
+                await MySession.SetAsync("Coach", coach);
+                var name = await MySession.GetAsync<Coach>("Coach");
+                if (name.Success)
+                {
+                    coach = name.Value;
+                    StateHasChanged();
+                }
+            }
             await groupDB.DeleteAsync(group);
             await OnInitializedAsync();
             navigationManager.NavigateTo("/");

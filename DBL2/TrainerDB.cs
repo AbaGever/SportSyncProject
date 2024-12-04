@@ -87,13 +87,28 @@ namespace DBL2
             Dictionary<string, object> filterValues = new Dictionary<string, object>();
             Dictionary<string, object> fillValues = new Dictionary<string, object>()
             {
-                { "id", customer.id.ToString() },
-                { "firstName", customer.firstName },
-                { "lastName", customer.lastName },  
+                { "firstname", customer.firstName },
+                { "lastname", customer.lastName },  
                 { "emailaddress" , customer.emailaddress },
                 { "phonenumber", customer.phonenumber },
                 { "password", customer.password },
                 { "groupname", customer.groupname },
+                { "isadmin", customer.isadmin},
+                { "datejoined", customer.datejoined}
+            };
+            filterValues.Add("id", customer.id.ToString());
+            return await base.UpdateAsync(fillValues, filterValues);
+        }
+        public async Task<int> UpdateAsyncWithoutGroup(Trainer customer)
+        {
+            Dictionary<string, object> filterValues = new Dictionary<string, object>();
+            Dictionary<string, object> fillValues = new Dictionary<string, object>()
+            {
+                { "firstname", customer.firstName },
+                { "lastname", customer.lastName },
+                { "emailaddress" , customer.emailaddress },
+                { "phonenumber", customer.phonenumber },
+                { "password", customer.password },
                 { "isadmin", customer.isadmin},
                 { "datejoined", customer.datejoined}
             };

@@ -8,17 +8,15 @@
 
 @if (c != null || coach != null)
 {
-    <section class="py-1">
-        <div class="container px-4 px-lg-5 my-5">
-            <div class="row gx-4 gx-lg-5 align-items-center">
+    <section >
+        <div class="container">
+            <div class="content">
 
                 @if (c != null)
                 {
-
-                    <br />
-                    <div class="col-md-6">
-                        <h1 class="display-5 fw-bolder">@c.firstName   @c.lastName</h1>
-                        <strong>
+                    <div>
+                        <h1>@c.firstName   @c.lastName</h1>
+                       
                             <h2> Email: @c.emailaddress </h2>
                             @if (!showPass)
                             {
@@ -51,32 +49,31 @@
 
                             </h3>
 
-                        </strong>
+                        
                         <div>
                         </div>
                     </div>
 
                     <div>
-                        <h1 class="h3 mb-3 font-weight-normal">Edit Yourself</h1>
-                        <label for="inputName" class="sr-only">Name</label>
+                        <h2 >Edit Yourself</h2>
+                        <label for="inputName" >Name</label>
                         <input @bind-value="Name" type="text" class="form-control m-1" placeholder="Name">
 
-                        <label for="inputEmail" class="sr-only">Email address</label>
+                        <label for="inputEmail" >Email address</label>
                         <input @bind-value="Email" type="text" class="form-control m-1" placeholder="Email">
 
-                        <label class="sr-only">Password</label>
+                        <label>Password</label>
                         <input @bind-value="Password" type="text" class="form-control m-1" placeholder="Password">
 
-                        <button @onclick="doEditUser" class="btn btn-lg btn-primary btn-block m-1">Update</button>
-                        <div> <br /> <br /> </div>
+                        <button class="button" @onclick="doEditUser" >Update</button>
+                        
                     </div>
                 }
                 else
                 {
-                    <br />
-                    <div class="col-md-6">
-                        <h1 class="display-5 fw-bolder">@coach.firstName   @coach.lastName</h1>
-                        <strong>
+                    <div >
+                        <h1 >@coach.firstName   @coach.lastName</h1>
+                        
                             <h2>
                                 Email: @coach.emailaddress
                             </h2>
@@ -95,7 +92,7 @@
                                 <br>
                             }
                             <h2>
-                                Sport: @coach.sport<br />Experience: @coach.exp
+                                Sport: @coach.sport<br />Experience: @coach.exp Years
                             </h2>
                             @if (coach.groupname != "")
                             {
@@ -107,28 +104,28 @@
 
                             </h3>
 
-                        </strong>
-                        <div>
-                        </div>
+                        
+                        
                     </div>
 
                     <div>
-                        <h1 class="h3 mb-3 font-weight-normal">Edit Yourself</h1>
-                        <label for="inputName" class="sr-only">Name</label>
-                        <input @bind-value="Name" type="text" class="form-control m-1" placeholder="Name">
+                        <h2 >Edit Yourself</h2>
+                        <label for="inputName">Name</label>
+                        <input @bind-value="Name" type="text"  placeholder="Name">
 
-                        <label for="inputEmail" class="sr-only">Email address</label>
-                        <input @bind-value="Email" type="text" class="form-control m-1" placeholder="Email">
+                        <label for="inputEmail" >Email address</label>
+                        <input @bind-value="Email" type="text" placeholder="Email">
 
-                        <label class="sr-only">Password</label>
-                        <input @bind-value="Password" type="text" class="form-control m-1" placeholder="Password">
-                        <button @onclick="doEditCoach" class="btn btn-lg btn-primary btn-block m-1" type="submit">Update</button>
+                        <label >Password</label>
+                        <input @bind-value="Password" type="text" placeholder="Password">
+                        <button class="button" @onclick="doEditCoach" type="submit">Update</button>
 
-                        <div> <br /> <br /> </div>
+                        <br /> 
                     </div>
                 }
-                <button style="background-color:red;padding:30px 40px" @onclick="Logout" class="btn btn-lg btn-primary btn-block m-1">Log out of your Account</button>
 
+                <button class="remove" @onclick="Logout">Log out of your Account</button>
+                
 
 
             </div>
@@ -204,16 +201,16 @@
         }
         if (password == "")
         {
-            password = c.password;
+            Password = c.password;
         }
 
         c.firstName = Name;
         c.emailaddress = Email;
         c.password = Password;
-        c.id = c.id;
 
 
-        int n = await userDB.UpdateAsync(c);
+
+        int n = await userDB.UpdateAsyncWithoutGroup(c);
         if (n > 0)
         {
             await js.InvokeVoidAsync("alert", $"Updated Successfully!");
@@ -255,7 +252,6 @@
         coach.firstName = Name;
         coach.emailaddress = Email;
         coach.password = Password;
-        coach.id = coach.id;
 
 
         int n = await CoachDB.UpdateAsync(coach);

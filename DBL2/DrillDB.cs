@@ -106,7 +106,14 @@ namespace DBL2
             else
                 return null;
         }
-
+        public async Task<List<Drill>> SelectByMuscleAsync(string muscle)
+        {
+            string sql = @"SELECT * FROM sportsync_db.drills where muscle = @muscle;";
+            Dictionary<string, object> p = new Dictionary<string, object>();
+            p.Add("muscle", muscle);
+            List<Drill> list = (List<Drill>)await SelectAllAsync(sql, p);
+            return list;
+        }
 
 
 

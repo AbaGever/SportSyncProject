@@ -9,117 +9,169 @@
 <HeadContent>
     <title>SportSync</title>
     <link rel="icon" href="/download.png">
-    <link rel="apple-touch-icon" href="/download.png" >
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </HeadContent>
 <style>
-        h1, h2, h3, h4, h5, h6 {
-            font-family: "Oswald"
+
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: "Poppins";
+    }
+
+    .container {
+        width: 100%;
+        margin: 10px;
+        background:rgba(0,0,0,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position:relative;
+        overflow:hidden;
+        min-height:100vh;
+    }
+
+
+    .video-bg {
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        transform:translate(-50%.-50%);
+        min-width:100%;
+        min-height:100%;
+        z-index:-1;
+    }
+
+    .button {
+        background-color: #83ad4b;
+        border: none;
+        color: white;
+        padding: 16px 32px;
+        text-align: center;
+        font-size: 16px;
+        margin: 4px 2px;
+        opacity: 0.6;
+        transition: 0.3s;
+        display: inline-block;
+        text-decoration: none;
+        cursor: pointer;
+        box-shadow: 0 9px #999;
+        
+    }
+
+    
+
+    .remove {
+        background-color: darkred;
+        border: none;
+        color: white;
+        padding: 16px 32px;
+        text-align: center;
+        font-size: 16px;
+        margin: 4px 2px;
+        opacity: 0.6;
+        transition: 0.3s;
+        display: inline-block;
+        text-decoration: none;
+        cursor: pointer;
+        box-shadow: 0 9px #999;
+    }
+
+    .button:hover {
+        opacity: 1
+    }
+
+    .remove:hover {
+        opacity: 1
+    }
+
+    .button:active {
+        background-color: #3e8e41;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+    }
+
+    .remove:active {
+        background-color: #ad4b52;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+    }
+
+    .content {
+        text-align: center;
+    }
+
+        .content h1 {
+            font-size: 95px;
+            color: #754bad;
+            margin-bottom: 10px;
         }
 
-        .body {
-            font-family: Arial, sans-serif;
-            margin: auto;
-            padding: 0;
-            background-color: #f0f0f0;
-            text-align: center;
+    .nav {
+        text-align: center;
+        margin-top: 0px;
+        color: lightgrey;
+        background-color: #83ad4b;
+    }
+
+    .nav-list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .nav-item {
+        display: inline;
+        margin-right: 20px;
+    }
+
+    .nav-link {
+        color: #333;
+        text-decoration: none;
+    }
+
+        .nav-link:hover {
+            color: mediumpurple;
         }
 
-        .center {
-            margin: 0;
-            position: absolute;
-            left: 50%;
-            -ms-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
+    footer {
+        text-align: center;
+        padding: 20px 0;
+        background-color: black;
+        color: #fff;
+        margin-top: 20px;
+    }
+    @@media (min-aspect-ratio:3/4) {
+        .background-clip{
+            width:2000px;
+            height: 900px;
+            object-fit: fill;
         }
 
-        .button {
-            background-color: royalblue;
-            border: none;
-            color: white;
-            padding: 16px 32px;
-            text-align: center;
-            font-size: 16px;
-            margin: 4px 2px;
-            opacity: 0.6;
-            transition: 0.3s;
-            display: inline-block;
-            text-decoration: none;
-            cursor: pointer;
+    }
+
+    @@media (max-aspect-ratio:3/4) {
+        .background-clip{
+            height: 100%;
+            width: auto;
+            object-fit: fill;
         }
 
-            .button:hover {
-                opacity: 1
-            }
+    }
+</style>
 
 
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        header {
-            text-align: center;
-            padding: 20px 0;
-            color: #fff;
-        }
-
-        nav {
-            text-align: center;
-            margin-top: 20px;
-            color: lightgrey;
-        }
-
-            nav ul {
-                list-style-type: none;
-                padding: 0;
-            }
-
-                nav ul li {
-                    display: inline;
-                    margin-right: 20px;
-                }
-
-                    nav ul li a {
-                        color: #333;
-                        text-decoration: none;
-                    }
-
-                        nav ul li a:hover {
-                            color: #ff4500;
-                        }
-
-        footer {
-            text-align: center;
-            padding: 20px 0;
-            background-color: black;
-            color: #fff;
-            margin-top: 20px;
-        }
-    </style>
-
-
-<div class="w3-bar w3-black w3-hide-small">
-    <a href="" class="w3-bar-item w3-button">Home</a>
-    <a href="/r" class="w3-bar-item w3-button">Sign Up</a>
-    <a href="login" class="w3-bar-item w3-button">Log In</a>
-    <a href="#" class="w3-bar-item w3-button">Weekly Contest</a>
-    <a href="p" class="w3-bar-item w3-button">My Profile</a>
-    <a href="#" class="w3-bar-item w3-button w3-right"><i class="fa fa-search">SearchExercises</i></a>
-    <a href="searchG" class="w3-bar-item w3-button w3-right"><i class="fa fa-search">SearchGroups</i></a>
-
-
+<div class="nav">
+    <ul class="nav-list">
+        <li class="nav-item"><a href="" class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="/r" class="nav-link">Sign Up</a></li>
+        <li class="nav-item"><a href="login" class="nav-link">Log In</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">Weekly Contest</a></li>
+        <li class="nav-item"><a href="p" class="nav-link">My Profile</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fa fa-search"></i> BulidAWorkout</a></li>
+        <li class="nav-item"><a href="searchG" class="nav-link"><i class="fa fa-search"></i> SearchGroups</a></li>
+    </ul>
 </div>
 
 @Body

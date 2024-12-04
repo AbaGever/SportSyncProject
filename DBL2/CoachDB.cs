@@ -79,7 +79,6 @@ namespace DBL2
             Dictionary<string, object> filterValues = new Dictionary<string, object>();
             Dictionary<string, object> fillValues = new Dictionary<string, object>()
             {
-                { "id", coach.id.ToString() },
                 { "firstname", coach.firstName },
                 { "lastname", coach.lastName },
                 { "emailaddress" , coach.emailaddress },
