@@ -10,169 +10,25 @@
     <title>SportSync</title>
     <link rel="icon" href="/download.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+    <link rel="stylesheet" href="app.css">
+
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </HeadContent>
-<style>
-
-    * {
-        padding: 0;
-        margin: 0;
-        box-sizing: border-box;
-        font-family: "Poppins";
-    }
-
-    .container {
-        width: 100%;
-        margin: 10px;
-        background:rgba(0,0,0,0.4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position:relative;
-        overflow:hidden;
-        min-height:100vh;
-    }
 
 
-    .video-bg {
-        position: absolute;
-        top: 0%;
-        left: 0%;
-        transform:translate(-50%.-50%);
-        min-width:100%;
-        min-height:100%;
-        z-index:-1;
-    }
 
-    .button {
-        background-color: #83ad4b;
-        border: none;
-        color: white;
-        padding: 16px 32px;
-        text-align: center;
-        font-size: 16px;
-        margin: 4px 2px;
-        opacity: 0.6;
-        transition: 0.3s;
-        display: inline-block;
-        text-decoration: none;
-        cursor: pointer;
-        box-shadow: 0 9px #999;
+@* <nav class="navbar">
+    <ul >
+        <li><a href="">Home</a></li>
         
-    }
-
-    
-
-    .remove {
-        background-color: darkred;
-        border: none;
-        color: white;
-        padding: 16px 32px;
-        text-align: center;
-        font-size: 16px;
-        margin: 4px 2px;
-        opacity: 0.6;
-        transition: 0.3s;
-        display: inline-block;
-        text-decoration: none;
-        cursor: pointer;
-        box-shadow: 0 9px #999;
-    }
-
-    .button:hover {
-        opacity: 1
-    }
-
-    .remove:hover {
-        opacity: 1
-    }
-
-    .button:active {
-        background-color: #3e8e41;
-        box-shadow: 0 5px #666;
-        transform: translateY(4px);
-    }
-
-    .remove:active {
-        background-color: #ad4b52;
-        box-shadow: 0 5px #666;
-        transform: translateY(4px);
-    }
-
-    .content {
-        text-align: center;
-    }
-
-        .content h1 {
-            font-size: 95px;
-            color: #754bad;
-            margin-bottom: 10px;
-        }
-
-    .nav {
-        text-align: center;
-        margin-top: 0px;
-        color: lightgrey;
-        background-color: #83ad4b;
-    }
-
-    .nav-list {
-        list-style-type: none;
-        padding: 0;
-    }
-
-    .nav-item {
-        display: inline;
-        margin-right: 20px;
-    }
-
-    .nav-link {
-        color: #333;
-        text-decoration: none;
-    }
-
-        .nav-link:hover {
-            color: mediumpurple;
-        }
-
-    footer {
-        text-align: center;
-        padding: 20px 0;
-        background-color: black;
-        color: #fff;
-        margin-top: 20px;
-    }
-    @@media (min-aspect-ratio:3/4) {
-        .background-clip{
-            width:2000px;
-            height: 900px;
-            object-fit: fill;
-        }
-
-    }
-
-    @@media (max-aspect-ratio:3/4) {
-        .background-clip{
-            height: 100%;
-            width: auto;
-            object-fit: fill;
-        }
-
-    }
-</style>
-
-
-<div class="nav">
-    <ul class="nav-list">
-        <li class="nav-item"><a href="" class="nav-link">Home</a></li>
-        <li class="nav-item"><a href="/r" class="nav-link">Sign Up</a></li>
-        <li class="nav-item"><a href="login" class="nav-link">Log In</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Weekly Contest</a></li>
-        <li class="nav-item"><a href="p" class="nav-link">My Profile</a></li>
-        <li class="nav-item"><a href="#" class="nav-link"><i class="fa fa-search"></i> BulidAWorkout</a></li>
-        <li class="nav-item"><a href="searchG" class="nav-link"><i class="fa fa-search"></i> SearchGroups</a></li>
+        <li><a href="/r">Sign Up</a></li>
+        <li><a href="login">Log In</a></li>
+        <li><a href="#">Weekly Contest</a></li>
+        <li><a href="p">My Profile</a></li>
+        <li><a href="#"> BulidAWorkout</a></li>
+        <li><a href="searchG"> SearchGroups</a></li>
     </ul>
-</div>
+</nav> *@
 
 @Body
 

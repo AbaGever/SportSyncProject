@@ -5,19 +5,27 @@
 @inject ProtectedSessionStorage MySession
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 
-<div class="content">
 
-        <h1 class="header">All Users</h1> 
-        <center >
+    <h1 style="font-family:sans-serif; margin-top: 80px;
+        font-size: 90px;
+        font-weight: 800; text-align: center;">
+        All Users
+    </h1>
 
-            @if (ps == null)
-            {
-                <p><em>Loading...</em></p>
-            }
-            else
-            {
-                <div class ="table-container">
-                    <table class="user-table">
+
+<div>
+
+
+    <center>
+
+        @if (ps == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <div class="table-container">
+                <table class="user-table">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -47,12 +55,12 @@
                                     <td>
                                         <a href="ShowG/@item.groupname">@item.groupname</a>
                                     </td>
-                                   
+
                                 }
                                 else
                                 {
                                     <td>@item.groupname</td>
-                                }                                                           
+                                }
                                 <td>@item.isadmin</td>
                                 <td>@item.datejoined</td>
                             </tr>
@@ -60,36 +68,48 @@
 
                     </tbody>
                 </table>
-                </div>
-            }
+            </div>
+        }
 
 
 
-        </center>
-    </div>
+    </center>
 
+</div>
 
 <style>
-    .header {
+    ..header {
         text-align: center;
-        margin-bottom: 20px; /* מרווח בין הכותרת לטבלה */
+        margin-bottom: 20px;
     }
 
     .table-container {
-        margin-top: 20px; /* מרווח נוסף לטבלה */
-        overflow-x: auto; /* גלילה אופקית עבור טבלאות רחבות */
+        margin-top: 20px;
+        overflow-x: auto;
+        width: 100%;
+        max-width: 100%;
     }
 
     .user-table {
         width: 100%;
         border-collapse: collapse;
+        margin: 0 auto;
     }
 
-        .user-table th, .user-table td {
+        .user-table th,
+        .user-table td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
+            white-space: nowrap;
         }
+
+    @@media screen and (max-width: 768px) {
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
 </style>
 
 
