@@ -1,6 +1,6 @@
 $black: #000000;
 $white: #ffffff;
-$primary1: #ff2953;
+$primary1: #ffbf00;
 
 @mixin main-font {
   font-family: 'Poppins', sans-serif;
@@ -84,13 +84,12 @@ body {
 
 /*header section*/
 .hero_area {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-image: url(../images/hero-bg.jpg);
-  color:black;
-  background-size: cover;
-  background-attachment: fixed;
+    color: $black;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-size: cover;
+    background-attachment: fixed;
 }
 
 .sub_page {
@@ -227,7 +226,7 @@ a:focus {
   flex: 1;
   display: flex;
   align-items: center;
-  color: black;
+  color: $black;
 
   #carouselExampleIndicators {
     width: 100%;
@@ -306,10 +305,9 @@ a:focus {
 // us section
 
 .us_section {
-    background-image: url(../images/us-bg.jpg);
     background-size: cover;
     background-attachment: fixed;
-    color:red;
+    color: $black;
 
     .us_container {
         padding-top: 25px;
@@ -347,10 +345,9 @@ a:focus {
 // heathy section
 
 .heathy_section {
-  background-image: url(../images/healthy-bg.jpg);
   background-size: cover;
   background-attachment: fixed;
-  color: $white;
+  color: $black;
   text-align: center;
 
   h2 {
@@ -380,10 +377,9 @@ a:focus {
 // trainer section
 
 .trainer_section {
-  background-image: url(../images/trainer-bg.jpg);
   background-size: cover;
   background-attachment: fixed;
-  color: $white;
+  color: $black;
 
   .box {
     margin-top: 55px;
@@ -427,69 +423,68 @@ a:focus {
 
 // contact section
 .contact_section {
-  position: relative;
-  background-color: #27223f;
-  color: $white;
-
-  .heading_container {
-    justify-content: start;
-
-    h2 {
-      &::before {
-        text-align: left;
-        left: 0;
-        transform: none;
-      }
-    }
-  }
-
-  .row {
-    align-items: center;
-  }
-
-  .img-box {
-    img {
-      width: 100%;
-    }
-  }
-
-
-
-  .form_container {
-    padding: 45px 0 45px 15px;
-
-  }
-
-  form {}
-
-  input {
-    width: 100%;
-    border: none;
-    background-color: $white;
-    outline: none;
-    color: $black;
-    margin-top: 25px;
-    padding: 12px;
-
-    &::placeholder {
-      color: #2a2a2c;
-    }
-
-    &.message-box {
-      padding: 45px 12px;
-    }
-  }
-
-  button {
-    padding: 10px 65px;
-    outline: none;
-    border: none;
+    position: relative;
+    background-color: #27223f;
     color: $white;
-    background: #ff2953;
-    margin: 45px 0 0 auto;
-    text-transform: uppercase;
-  }
 
+    .heading_container {
+        justify-content: start;
+
+        h2 {
+            &::before {
+                text-align: left;
+                left: 0;
+                transform: none;
+            }
+        }
+    }
+
+    .row {
+        align-items: center;
+    }
+
+    .img-box {
+        img {
+            width: 100%;
+        }
+    }
+
+
+
+    .form_container {
+        padding: 45px 0 45px 15px;
+    }
+
+    form {
+    }
+
+    input {
+        width: 100%;
+        border: none;
+        background-color: $white;
+        outline: none;
+        color: $black;
+        margin-top: 25px;
+        padding: 12px;
+
+        &::placeholder {
+            color: #2a2a2c;
+        }
+
+        &.message-box {
+            padding: 45px 12px;
+        }
+    }
+
+    button {
+        padding: 10px 65px;
+        outline: none;
+        border: none;
+        color: $white;
+        background: #ffbf00;
+        margin: 45px 0 0 auto;
+        text-transform: uppercase;
+    }
 }
 
 // end contact section

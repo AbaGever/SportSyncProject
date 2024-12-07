@@ -7,366 +7,400 @@
 @inject ProtectedSessionStorage MySession
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 
+<HeadContent>
+    <!-- Basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Site Metas -->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SportSync</title>
+    <link rel="icon" href="/download.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+
+    <!-- slider stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="homepage/css/bootstrap.css">
+
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&amp;display=swap" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="homepage/css/style.css" rel="stylesheet">
+    <!-- responsive style -->
+    <link href="homepage/css/responsive.css" rel="stylesheet">
+</HeadContent>
+   
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg custom_nav-container ">
+                <a class="navbar-brand" href="/">
+                    <span>
+                        SportSync
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                        <ul class="navbar-nav">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/r">Sign Up</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">Log In</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="/p">Your Profile</a>
+                            </li>
 
 
-<br />
-<div class="cont">
-    <div class="form sign-in">
-        <h2>Log in</h2>
-
-        <label>
-            <span>Email</span>
-            <input @bind-value="UserEmail" type="email" required />
-        </label>
-
-        <label>
-            <span>Password</span>
-            <input @bind-value="UserPassword" type="password" required />
-        </label>
-        <button @onclick="LogInToTrainer" type="button" class="submit">Login</button>
-
-    </div>
-    <div class="sub-cont">
-        <div class="img">
-            <div class="img__text m--up">
-
-                <h3>Are you a Coach?</h3>
-            </div>
-            <div class="img__text m--in">
-
-                <h3>Are you a Trainer?</h3>
-            </div>
-            <div class="img__btn">
-                <span class="m--up">Login Here</span>
-                <span class="m--in">Login Here</span>
+                        </ul>
+                        <div class="user_option">
+                            <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+   
+    <section class=" slider_section position-relative">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="col-lg-10 col-md-11 mx-auto">
+                            <div class="detail-box">
+                                <div>
+                                    <h1>Log In</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="form sign-up">
-            <h2 style="color:black">Log in</h2>
+    </section>
+    <div class="wrapper">
+        <div class="title-text">
+            <div class="title Trainer">
+                Trainer
+            </div>
+            <div class="title Coach">
+                Coach
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="slide-controls">
+                <input type="radio" name="slide" id="Trainer" checked>
+                <input type="radio" name="slide" id="Coach">
+                <label for="Trainer" class="slide Trainer">Trainer</label>
+                <label for="Coach" class="slide Coach">Coach</label>
+                <div class="slider-tab"></div>
+            </div>
+            <div class="form-inner">
+                <form action="#" class="Trainer">
 
-            <label>
-                <span>Email</span>
-                <input @bind-value="CoachEmail" type="email" required />
-            </label>
+                    <div class="field">
+                        <input @bind-value="UserEmail" type="email" Placeholder="Enter Email Address " required />
+                    </div>
 
-            <label>
-                <span>Password</span>
-                <input @bind-value="CoachPassword" type="password" required />
-            </label>
-            <button @onclick="LogInToCoach" type="button" class="submit">Login</button>
+                    <div class="field">
+                        <input @bind-value="UserPassword" type="password" Placeholder="Enter Password" required />
+                    </div>
+                    <div class="field btn">
+                        <div class="btn-layer"></div>
+                        <input @onclick="LogInToTrainer" type="submit" value="Log In" class="submit">Log In</input>
+                    </div>
 
+                </form>
+                <form action="#" class="Coach">
+                    <div class="field">
+                        <input @bind-value="CoachEmail" type="email" Placeholder="Enter Email Address " required />
+                    </div>
+
+                    <div class="field">
+                        <input @bind-value="CoachPassword" type="password" Placeholder="Enter Password" required />
+                    </div>
+                    <div class="field btn">
+                        <div class="btn-layer"></div>
+                        <input @onclick="LogInToCoach" type="submit" value="Log In" class="submit">Log In</input>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
 <script>
-    document.querySelector('.img__btn').addEventListener('click', function () {
-        document.querySelector('.cont').classList.toggle('s--signup');
+    function triggerAnimation() {
+    const loginText = document.querySelector(".title-text .Trainer");
+    const loginForm = document.querySelector("form.Trainer");
+    const loginBtn = document.querySelector("label.Trainer");
+    const signupBtn = document.querySelector("label.Coach");
+    const signupLink = document.querySelector("form .Coach-link a");
+    signupBtn.onclick = (()=>{
+      loginForm.style.marginLeft = "-50%";
+      loginText.style.marginLeft = "-50%";
     });
+    loginBtn.onclick = (()=>{
+      loginForm.style.marginLeft = "0%";
+      loginText.style.marginLeft = "0%";
+    });
+
+    }
 </script>
 
-
-
 <style>
-    *,
-    *:before,
-    *:after {
-        box-sizing: border-box;
+    import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+    * {
         margin: 0;
         padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
     }
 
-    body {
-        font-family: 'Poppins', Helvetica, Arial, sans-serif;
-        background: #234D29;
-    }
 
-    input,
-    button {
-        border: none;
-        outline: none;
-        background: none;
-        font-family: 'Poppins', Helvetica, Arial, sans-serif;
-    }
 
-    .tip {
-        font-size: 20px;
-        margin: 40px auto 50px;
-        text-align: center;
-    }
-
-    .cont {
-        border-radius: 20px;
-        overflow: hidden;
-        position: relative;
-        width: 900px;
-        height: 775px;
-        margin: 0 auto 100px;
-        background: #fff;
-        /*         box-shadow: -10px -10px 15px rgba(255, 255, 255, 0.3), 10px 10px 15px rgba(70, 70, 70, 0.15), inset -10px -10px 15px rgba(255, 255, 255, 0.3), inset 10px 10px 15px rgba(70, 70, 70, 0.15);
-     */
-    }
-
-    .form {
-        position: relative;
-        width: 640px;
+    html, body {
         height: 100%;
-        -webkit-transition: -webkit-transform 1.2s ease-in-out;
-        transition: -webkit-transform 1.2s ease-in-out;
-        transition: transform 1.2s ease-in-out;
-        transition: transform 1.2s ease-in-out, -webkit-transform 1.2s ease-in-out;
-        padding: 50px 30px 0;
-    }
-
-    .sub-cont {
-        overflow: hidden;
-        position: absolute;
-        left: 640px;
-        top: 0;
-        width: 900px;
-        height: 100%;
-        padding-left: 260px;
-        background: white;
-        -webkit-transition: -webkit-transform 1.2s ease-in-out;
-        transition: -webkit-transform 1.2s ease-in-out;
-        transition: transform 1.2s ease-in-out;
-        color: #fff;
-        transition: transform 1.2s ease-in-out, -webkit-transform 1.2s ease-in-out;
-    }
-
-    .cont.s--signup .sub-cont {
-        -webkit-transform: translate3d(-640px, 0, 0);
-        transform: translate3d(-640px, 0, 0);
-    }
-
-    button {
-        display: block;
-        margin: 0 auto;
-        width: 260px;
-        height: 36px;
-        border-radius: 30px;
-        color: #fff;
-        font-size: 15px;
-        cursor: pointer;
-    }
-
-    .img {
-        overflow: hidden;
-        z-index: 2;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 260px;
-        height: 100%;
-        padding-top: 360px;
-        background: #234d29;
-    }
-
-        .img:before {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: 900px;
-            height: 100%;
-            background-image: url("ext.jpg");
-            opacity: .8;
-            background-size: cover;
-            -webkit-transition: -webkit-transform 1.2s ease-in-out;
-            transition: transform 1.2s ease-in-out;
-            transition: transform 1.2s ease-in-out, -webkit-transform 1.2s ease-in-out;
-        }
-
-        .img:after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-        }
-
-    .cont.s--signup .img:before {
-        -webkit-transform: translate3d(640px, 0, 0);
-        transform: translate3d(640px, 0, 0);
-    }
-
-    .img__text {
-        z-index: 2;
-        position: absolute;
-        left: 0;
-        top: 50px;
         width: 100%;
-        padding: 0 20px;
-        text-align: center;
+        place-items: center;
+        background: -webkit-linear-gradient(bottom, #E0DCC8, #FFBF00);
+    }
+
+    ::selection {
+        background: Grey;
         color: #fff;
-        -webkit-transition: -webkit-transform 1.2s ease-in-out;
-        transition: -webkit-transform 1.2s ease-in-out;
-        transition: transform 1.2s ease-in-out;
-        transition: transform 1.2s ease-in-out, -webkit-transform 1.2s ease-in-out;
     }
 
-        .img__text h2 {
-            margin-bottom: 10px;
-            font-weight: normal;
-        }
-
-        .img__text p {
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-    .cont.s--signup .img__text.m--up {
-        -webkit-transform: translateX(520px);
-        transform: translateX(520px);
-    }
-
-    .img__text.m--in {
-        -webkit-transform: translateX(-520px);
-        transform: translateX(-520px);
-    }
-
-    .cont.s--signup .img__text.m--in {
-        -webkit-transform: translateX(0);
-        transform: translateX(0);
-    }
-
-    .img__btn {
+    .wrapper {
         overflow: hidden;
-        z-index: 2;
-        position: relative;
-        width: 100px;
-        height: 36px;
-        margin: 0 auto;
-        background: transparent;
-        color: #fff;
-        text-transform: uppercase;
-        font-size: 15px;
-        cursor: pointer;
+        margin: auto;
+        max-width: 500px;
+        background: #fff;
+        padding: 30px;
+        border-radius: 5px;
+        box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
     }
 
-        .img__btn:after {
-            content: '';
-            z-index: 2;
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            border: 2px solid #fff;
-            border-radius: 30px;
-        }
-
-        .img__btn span {
-            position: absolute;
-            left: 0;
-            top: 0;
-            display: -webkit-box;
+        .wrapper .title-text {
             display: flex;
-            -webkit-box-pack: center;
-            justify-content: center;
-            -webkit-box-align: center;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            -webkit-transition: -webkit-transform 1.2s;
-            transition: -webkit-transform 1.2s;
-            transition: transform 1.2s;
-            transition: transform 1.2s, -webkit-transform 1.2s;
+            width: 200%;
         }
 
-            .img__btn span.m--in {
-                -webkit-transform: translateY(-72px);
-                transform: translateY(-72px);
+        .wrapper .title {
+            width: 50%;
+            font-size: 35px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+        }
+
+        .wrapper .slide-controls {
+            position: relative;
+            display: flex;
+            height: 50px;
+            width: 100%;
+            overflow: hidden;
+            margin: 30px 0 10px 0;
+            justify-content: space-between;
+            border: 1px solid lightgrey;
+            border-radius: 5px;
+        }
+
+    .slide-controls .slide {
+        height: 100%;
+        width: 100%;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 500;
+        text-align: center;
+        line-height: 48px;
+        cursor: pointer;
+        z-index: 1;
+        transition: all 0.6s ease;
+    }
+
+    .slide-controls label.Coach {
+        color: #000;
+    }
+
+    .slide-controls .slider-tab {
+        position: absolute;
+        height: 100%;
+        width: 50%;
+        left: 0;
+        z-index: 0;
+        border-radius: 5px;
+        background: -webkit-linear-gradient(left, white,Grey,Grey,white);
+        transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+    }
+
+    input[type="radio"] {
+        display: none;
+    }
+
+    #Coach:checked ~ .slider-tab {
+        left: 50%;
+    }
+
+    #Coach:checked ~ label.Coach {
+        color: #fff;
+        cursor: default;
+        user-select: none;
+    }
+
+    #Coach:checked ~ label.Trainer {
+        color: #000;
+    }
+
+    #Trainer:checked ~ label.Coach {
+        color: #000;
+    }
+
+    #Trainer:checked ~ label.Trainer {
+        cursor: default;
+        user-select: none;
+    }
+
+    .wrapper .form-container {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .form-container .form-inner {
+        display: flex;
+        width: 200%;
+    }
+
+        .form-container .form-inner form {
+            width: 50%;
+            transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+        }
+
+    .form-inner form .field {
+        height: 50px;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+        .form-inner form .field input {
+            height: 100%;
+            width: 100%;
+            outline: none;
+            padding-left: 15px;
+            border-radius: 5px;
+            border: 1px solid lightgrey;
+            border-bottom-width: 2px;
+            font-size: 17px;
+            transition: all 0.3s ease;
+        }
+
+            .form-inner form .field input:focus {
+                border-color: #FFBF00;
+                /* box-shadow: inset 0 0 3px #fb6aae; */
             }
 
-    .cont.s--signup .img__btn span.m--in {
-        -webkit-transform: translateY(0);
-        transform: translateY(0);
+            .form-inner form .field input::placeholder {
+                color: #999;
+                transition: all 0.3s ease;
+            }
+
+    form .field input:focus::placeholder {
+        color: #b3b3b3;
     }
 
-    .cont.s--signup .img__btn span.m--up {
-        -webkit-transform: translateY(72px);
-        transform: translateY(72px);
-    }
-
-    h2 {
-        width: 100%;
-        font-size: 26px;
-        text-align: center;
-    }
-
-    label {
-        display: block;
-        width: 260px;
-        margin: 25px auto 0;
-        text-align: center;
-    }
-
-        label span {
-            font-size: 12px;
-            color: #cfcfcf;
-            text-transform: uppercase;
-        }
-
-    input {
-        display: block;
-        width: 100%;
+    .form-inner form .pass-link {
         margin-top: 5px;
-        padding-bottom: 5px;
-        font-size: 16px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+    }
+
+    .form-inner form .Coach-link {
         text-align: center;
+        margin-top: 30px;
     }
 
-    .forgot-pass {
-        margin-top: 15px;
-        text-align: center;
-        font-size: 12px;
-        color: #cfcfcf;
-    }
-
-    .submit {
-        margin-top: 40px;
-        margin-bottom: 20px;
-        background: #234d29;
-        text-transform: uppercase;
-    }
-
-    .fb-btn {
-        border: 2px solid #d3dae9;
-        color: #8fa1c7;
-    }
-
-        .fb-btn span {
-            font-weight: bold;
-            color: #455a81;
+        .form-inner form .pass-link a,
+        .form-inner form .Coach-link a {
+            color: #fa4299;
+            text-decoration: none;
         }
 
-    .sign-in {
-        -webkit-transition-timing-function: ease-out;
-        transition-timing-function: ease-out;
+            .form-inner form .pass-link a:hover,
+            .form-inner form .Coach-link a:hover {
+                text-decoration: underline;
+            }
+
+    form .btn {
+        height: 50px;
+        width: 100%;
+        border-radius: 5px;
+        position: relative;
+        overflow: hidden;
     }
 
-    .cont.s--signup .sign-in {
-        -webkit-transition-timing-function: ease-in-out;
-        transition-timing-function: ease-in-out;
-        -webkit-transition-duration: 1.2s;
-        transition-duration: 1.2s;
-        -webkit-transform: translate3d(640px, 0, 0);
-        transform: translate3d(640px, 0, 0);
-    }
+        form .btn .btn-layer {
+            height: 100%;
+            width: 300%;
+            position: absolute;
+            left: -100%;
+            background: -webkit-linear-gradient(right,#E0DCC8,#FFBF00,#E0DCC8,#FFBF00);
+            border-radius: 5px;
+            transition: all 0.4s ease;
+            ;
+        }
 
-    .sign-up {
-        -webkit-transform: translate3d(-900px, 0, 0);
-        transform: translate3d(-900px, 0, 0);
-    }
+        form .btn:hover .btn-layer {
+            left: 0;
+        }
 
-    .cont.s--signup .sign-up {
-        -webkit-transform: translate3d(0, 0, 0);
-        transform: translate3d(0, 0, 0);
-    }</style>
+        form .btn input[type="submit"] {
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+            position: relative;
+            background: none;
+            border: none;
+            color: #fff;
+            padding-left: 0;
+            border-radius: 5px;
+            font-size: 20px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -374,12 +408,36 @@
 
 @code {
 
+
     private string UserEmail = "";
     private string CoachEmail = "";
     private string CoachPassword = "";
     private string UserPassword = "";
 
+    private bool isFirstRender = true;
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender || !isFirstRender)
+        {
+            try
+            {
+                // Call your JavaScript function to trigger the animation
+                await js.InvokeVoidAsync("triggerAnimation");
+
+                // Only set isFirstRender to false on the first render
+                if (firstRender)
+                {
+                    isFirstRender = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error triggering JavaScript animation: {ex.Message}");
+                // You can also display an alert or a UI message for better feedback
+            }
+        }
+    }
 
     public async Task LogInToTrainer()
     {
@@ -389,9 +447,9 @@
         if (User != null)
         {
 
-            await MySession.SetAsync("Trainer", User);
-            
-            navigationManager.NavigateTo("/");
+            await MySession.SetAsync("Trainer",User);
+
+            navigationManager.NavigateTo("");
 
 
         }
@@ -414,7 +472,7 @@
             await MySession.SetAsync("Coach", Coach);
 
 
-            navigationManager.NavigateTo("/");
+            navigationManager.NavigateTo("");
 
         }
         else
