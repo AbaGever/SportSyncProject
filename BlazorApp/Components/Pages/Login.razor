@@ -111,35 +111,34 @@
                 <div class="slider-tab"></div>
             </div>
             <div class="form-inner">
-                <form action="#" class="Trainer">
+    <div class="Trainer">
+        <div class="field">
+            <input @bind-value="UserEmail" type="email" Placeholder="Enter Email Address " required />
+        </div>
 
-                    <div class="field">
-                        <input @bind-value="UserEmail" type="email" Placeholder="Enter Email Address " required />
-                    </div>
+        <div class="field">
+            <input @bind-value="UserPassword" type="password" Placeholder="Enter Password" required />
+        </div>
+        <div class="field btn">
+            <div class="btn-layer"></div>
+            <button @onclick="LogInToTrainer" class="submit">Log In</button>
+        </div>
+    </div>
 
-                    <div class="field">
-                        <input @bind-value="UserPassword" type="password" Placeholder="Enter Password" required />
-                    </div>
-                    <div class="field btn">
-                        <div class="btn-layer"></div>
-                        <input @onclick="LogInToTrainer" type="submit" value="Log In" class="submit">Log In</input>
-                    </div>
+    <div class="Coach">
+        <div class="field">
+            <input @bind-value="CoachEmail" type="email" Placeholder="Enter Email Address " required />
+        </div>
 
-                </form>
-                <form action="#" class="Coach">
-                    <div class="field">
-                        <input @bind-value="CoachEmail" type="email" Placeholder="Enter Email Address " required />
-                    </div>
-
-                    <div class="field">
-                        <input @bind-value="CoachPassword" type="password" Placeholder="Enter Password" required />
-                    </div>
-                    <div class="field btn">
-                        <div class="btn-layer"></div>
-                        <input @onclick="LogInToCoach" type="submit" value="Log In" class="submit">Log In</input>
-                    </div>
-                </form>
-            </div>
+        <div class="field">
+            <input @bind-value="CoachPassword" type="password" Placeholder="Enter Password" required />
+        </div>
+        <div class="field btn">
+            <div class="btn-layer"></div>
+            <button @onclick="LogInToCoach" class="submit">Log In</button>
+        </div>
+    </div>
+</div>
         </div>
     </div>
 
@@ -387,25 +386,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @code {
 
 
@@ -430,6 +410,7 @@
                 {
                     isFirstRender = false;
                 }
+               
             }
             catch (Exception ex)
             {
@@ -449,7 +430,7 @@
 
             await MySession.SetAsync("Trainer",User);
 
-            navigationManager.NavigateTo("");
+            navigationManager.NavigateTo("/");
 
 
         }
