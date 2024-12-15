@@ -1,8 +1,6 @@
-﻿
-using DBL2;
-using Models2;
+﻿using DBL2;
 
-namespace UnitTesting2
+namespace UnitTesting
 {
     internal class Program
     {
@@ -10,7 +8,7 @@ namespace UnitTesting2
         {
             DrillsListDB instance = new DrillsListDB();
 
-            int testWorkoutId = 1; 
+            int testWorkoutId = 1;
 
             // Call the function
             List<string> drills = await instance.GetDrillsNamesInWorkOut(testWorkoutId);

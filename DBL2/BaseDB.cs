@@ -12,7 +12,7 @@ namespace DBL2
     public abstract class BaseDB<T> : DB
     {
         protected abstract string GetTableName();
-        protected abstract string GetPrimaryKeyName();
+        protected abstract List<string> GetPrimaryKeyName();
         protected abstract Task<T> CreateModelAsync(object[] row);
         protected abstract Task<List<T>> CreateListModelAsync(List<object[]> rows);
 
@@ -82,7 +82,11 @@ namespace DBL2
             {
                 Dictionary<string, object> p = new Dictionary<string, object>();
                 p.Add("id", res.ToString());
-                string sql = @$"SELECT * FROM {GetTableName()} WHERE ({GetPrimaryKeyName()} = @id)";
+                string sql;
+                if (GetPrimaryKeyName()[1] == null)
+                    sql = @$"SELECT * FROM {GetTableName()} WHERE ({GetPrimaryKeyName()[0]} = @id)";
+                else
+                    sql = @$"SELECT * FROM {GetTableName()} WHERE ({GetPrimaryKeyName()[0]},{GetPrimaryKeyName()[1]} = @id)";
                 List<T> list = (List<T>)await SelectAllAsync(sql, p);
                 if (list.Count == 1)
                     return list[0];

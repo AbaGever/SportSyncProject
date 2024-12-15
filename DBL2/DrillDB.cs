@@ -14,9 +14,9 @@ namespace DBL2
             return "drills";
         }
 
-        protected override string GetPrimaryKeyName()
+        protected override List<string> GetPrimaryKeyName()
         {
-            return "name";
+            return new List<string> { "name" };
         }
 
         protected override async Task<Drill> CreateModelAsync(object[] row)
@@ -47,7 +47,7 @@ namespace DBL2
         {
             return ((List<Drill>)await SelectAllAsync());
         }
-        public async Task<bool> insertcoach(Drill d)
+        public async Task<bool> insertdrill(Drill d)
         {
             Dictionary<string, object> data = new Dictionary<string, object>()
             {

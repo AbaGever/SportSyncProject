@@ -76,7 +76,7 @@ body {
       left: 50%;
       width: 55px;
       height: 5px;
-      background-color: $primary1;
+      /*background-color: $primary1;*/
       transform: translateX(-50%);
     }
   }
@@ -146,8 +146,8 @@ body {
     a {
       &::after {
         display: block;
-        background-color: $primary1;
-      }
+/*        background-color: $primary1;
+*/      }
     }
   }
 }

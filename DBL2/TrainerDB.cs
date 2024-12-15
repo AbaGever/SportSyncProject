@@ -12,12 +12,15 @@ namespace DBL2
     {
         protected override string GetTableName()
         {
+            
             return "trainers";
         }
 
-        protected override string GetPrimaryKeyName()
+      
+        protected override List<string> GetPrimaryKeyName()
         {
-            return "id";
+
+            return new List<string>{"id"};
         }
 
         protected override async Task<Trainer> CreateModelAsync(object[] row)

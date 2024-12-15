@@ -1,0 +1,42 @@
+﻿@page "/t"
+@using Models2
+@using DBL2
+
+<center>
+    <h3>Testing</h3>
+    <label for="fruitSelect">Choose a fruit:</label>
+    <select id="fruitSelect">
+        <option value="default">None</option>
+        @foreach (string m in Muscles)
+        {
+            <option value="@selectedmuscle">@m</option>
+        }
+        <option value="@selectedmuscle">Aerobic</option>
+
+    </select>
+    <input type="date" min="@time" max="@maxDate"/> 
+
+    @selectedmuscle1
+</center>
+@code {
+    List<string> Muscles = new List<string>
+    {
+        "Arms","Back","Chest","Core","Full Body","Legs","Shoulders"
+    };
+    string selectedmuscle1;
+    string selectedmuscle ; 
+    time time = new time();
+    private DateTime selectedDate;
+    private string maxDate;
+
+    protected override void OnInitialized()
+    {
+        // Calculate the maximum date (next month)
+        var today = DateTime.Today;
+        var nextMonth = today.AddMonths(1);
+
+        // Convert to string in "yyyy-MM-dd" format
+        maxDate = nextMonth.ToString("yyyy-MM-dd");
+
+    }
+}

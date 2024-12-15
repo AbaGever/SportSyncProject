@@ -15,9 +15,9 @@ namespace DBL2
             return "groups";
         }
 
-        protected override string GetPrimaryKeyName()
+        protected override List<string> GetPrimaryKeyName()
         {
-            return "name";
+            return new List<string> { "name" };
         }
 
         protected override async Task<Group> CreateModelAsync(object[] row)

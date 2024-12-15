@@ -14,9 +14,9 @@ namespace DBL2
             return "coaches";
         }
         
-        protected override string GetPrimaryKeyName()
+        protected override List<string> GetPrimaryKeyName()
         {
-            return "id";
+            return new List<string> { "id" };
         }
 
         protected override async Task<Coach> CreateModelAsync(object[] row)
@@ -103,9 +103,10 @@ namespace DBL2
 
         public async Task<Coach> SelectByPkAsync(int id)
         {
+            string q = "SELECT * FROM sportsync_db.coaches WHERE id=@id;";
             Dictionary<string, object> p = new Dictionary<string, object>();
             p.Add("id", id);
-            List<Coach> list = (List<Coach>)await SelectAllAsync(p);
+            List<Coach> list = (List<Coach>)await SelectAllAsync(q,p);
             if (list.Count == 1)
                 return list[0];
             else

@@ -6,16 +6,110 @@
 @inject ProtectedSessionStorage MySession
 
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+<HeadContent>
+    <!-- Basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Site Metas -->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SportSync</title>
+    <link rel="icon" href="/download.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+
+    <!-- slider stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="homepage/css/bootstrap.css">
+
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&amp;display=swap" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="homepage/css/style.css" rel="stylesheet">
+    <!-- responsive style -->
+    <link href="homepage/css/responsive.css" rel="stylesheet">
+</HeadContent>
+<div class="ALLLL">
+    <header class="header_section">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg custom_nav-container ">
+                <a class="navbar-brand" href="/">
+                    <span>
+                        SportSync
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                        <ul class="navbar-nav  ">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                            </li>
 
 
-<div class="container">
-    <center class="content">
-        <!-- Header -->
-        <header>
-            <h1 ><b>Search Groups</b></h1>
-        </header>
+                            @if (c == null && coach == null)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/r">Sign Up</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/login">Log In</a>
+                                </li>
+                            }
+
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="/p">Your Profile</a>
+                            </li>
+                            
+
+
+                        </ul>
+                        <div class="user_option">
+                            <div class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+</div>
+<div>
+    <center>
+        <section class=" slider_section position-relative">
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="container">
+                            <div class="col-lg-10 col-md-11 mx-auto">
+                                <div class="detail-box">
+                                    <div>
+                                       
+                                        <h1>
+                                            SportSync
+                                        </h1>
+                                        
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <input name="Sport" @bind-value="sport" placeholder="Search Group By Sport">
-        <button @onclick="Search">Search Groups</button>
+        <button class="button-73" @onclick="Search">Search Groups</button>
 
         @if (list == null)
         {
@@ -24,42 +118,379 @@
         else
         {
             <center>
-            <table style="width:100%">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Maximum Capacity</th>
-                        <th>Sport</th>
-                        <th> </th>
-                        
-
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in list)
-                    {
+                <table style="width:100%">
+                    <thead>
                         <tr>
-                            <td><center><a href="ShowG/@(item.name)">@item.name</a></center></td>
-                            <td><center>@item.maxcapacity</center></td>
-                            <td><center>@item.sport</center></td>
-                        </tr>
-                    }
+                            <th><center>Name</center></th>
+                            <th><center>Maximum Capacity</center></th>
+                            <th><center>Sport</center></th>
+                            
 
-                </tbody>
-            </table>
-                </center>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in list)
+                        {
+                            <tr>
+                                <td><center><a href="ShowG/@(item.name)">@item.name</a></center></td>
+                                <td><center>@item.maxcapacity</center></td>
+                                <td><center>@item.sport</center></td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </center>
         }
-      
+
     </center>
 </div>
+<style>
+
+    .ALLLL {
+        width: 100%;
+    }
+
+    input {
+        width: 800px;
+        height: 40px;
+        border-radius: 15px;
+        text-align:center;
+    }
+
+    @@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    html, body {
+        height: 100%;
+        width: 100%;
+        place-items: center;
+        background: -webkit-linear-gradient(bottom, #E0DCC8, #FFBF00);
+    }
+
+
+
+        <!-- HTML ! -->
+        /* CSS */
+        .button-24 {
+            background: #FF4742;
+            border: 1px solid #FF4742;
+            border-radius: 6px;
+            box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+            box-sizing: border-box;
+            color: #FFFFFF;
+            cursor: pointer;
+            display: inline-block;
+            font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 16px;
+            min-height: 40px;
+            outline: 0;
+            padding: 12px 14px;
+            text-align: center;
+            text-rendering: geometricprecision;
+            text-transform: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: middle;
+        }
+
+    .button-24:hover,
+    .button-24:active {
+        background-color: initial;
+        background-position: 0 0;
+        color: #FF4742;
+    }
+
+    .button-24:active {
+        opacity: .5;
+    }
+
+    .button-73 {
+        appearance: none;
+        background-color: #FFFFFF;
+        border-radius: 40em;
+        border-style: none;
+        box-shadow: #ADCFFF 0 -12px 6px inset;
+        box-sizing: border-box;
+        color: #000000;
+        cursor: pointer;
+        display: inline-block;
+        font-family: -apple-system,sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: -.24px;
+        margin: 0;
+        outline: none;
+        padding: 1rem 1.3rem;
+        quotes: auto;
+        text-align: center;
+        text-decoration: none;
+        transition: all .15s;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
+        .button-73:hover {
+            background-color: #FFC229;
+            box-shadow: #FF6314 0 -6px 8px inset;
+            transform: scale(1.125);
+        }
+
+        .button-73:active {
+            transform: scale(1.025);
+        }
+
+    @@media (min-width: 768px) {
+        .button-73 {
+            font-size: 1.5rem;
+            padding: .75rem 2rem;
+        }
+    }
+
+    ::selection {
+        background: Grey;
+        color: #fff;
+    }
+
+    .wrapper {
+        overflow: hidden;
+        margin: auto;
+        max-width: 500px;
+        background: #fff;
+        padding: 30px;
+        border-radius: 5px;
+        box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
+    }
+
+        .wrapper .title-text {
+            display: flex;
+            width: 200%;
+        }
+
+        .wrapper .title {
+            width: 50%;
+            font-size: 35px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+        }
+
+        .wrapper .slide-controls {
+            position: relative;
+            display: flex;
+            height: 50px;
+            width: 100%;
+            overflow: hidden;
+            margin: 30px 0 10px 0;
+            justify-content: space-between;
+            border: 1px solid lightgrey;
+            border-radius: 5px;
+        }
+
+    .slide-controls .slide {
+        height: 100%;
+        width: 100%;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 500;
+        text-align: center;
+        line-height: 48px;
+        cursor: pointer;
+        z-index: 1;
+        transition: all 0.6s ease;
+    }
+
+    .slide-controls label.Coach {
+        color: #000;
+    }
+
+    .slide-controls .slider-tab {
+        position: absolute;
+        height: 100%;
+        width: 50%;
+        left: 0;
+        z-index: 0;
+        border-radius: 5px;
+        background: -webkit-linear-gradient(left, white,Grey,Grey,white);
+        transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+    }
+
+    input[type="radio"] {
+        display: none;
+    }
+
+    #Coach:checked ~ .slider-tab {
+        left: 50%;
+    }
+
+    #Coach:checked ~ label.Coach {
+        color: #fff;
+        cursor: default;
+        user-select: none;
+    }
+
+    #Coach:checked ~ label.Trainer {
+        color: #000;
+    }
+
+    #Trainer:checked ~ label.Coach {
+        color: #000;
+    }
+
+    #Trainer:checked ~ label.Trainer {
+        cursor: default;
+        user-select: none;
+    }
+
+    .wrapper .form-container {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .form-container .form-inner {
+        display: flex;
+        width: 200%;
+    }
+
+        .form-container .form-inner form {
+            width: 50%;
+            transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+        }
+
+    .form-inner form .field {
+        height: 50px;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+        .form-inner form .field input {
+            height: 100%;
+            width: 100%;
+            outline: none;
+            padding-left: 15px;
+            border-radius: 5px;
+            border: 1px solid lightgrey;
+            border-bottom-width: 2px;
+            font-size: 17px;
+            transition: all 0.3s ease;
+        }
+
+            .form-inner form .field input:focus {
+                border-color: #FFBF00;
+                /* box-shadow: inset 0 0 3px #fb6aae; */
+            }
+
+            .form-inner form .field input::placeholder {
+                color: #999;
+                transition: all 0.3s ease;
+            }
+
+    form .field input:focus::placeholder {
+        color: #b3b3b3;
+    }
+
+    .form-inner form .pass-link {
+        margin-top: 5px;
+    }
+
+    .form-inner form .Coach-link {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+        .form-inner form .pass-link a,
+        .form-inner form .Coach-link a {
+            color: #fa4299;
+            text-decoration: none;
+        }
+
+            .form-inner form .pass-link a:hover,
+            .form-inner form .Coach-link a:hover {
+                text-decoration: underline;
+            }
+
+    form .btn {
+        height: 50px;
+        width: 100%;
+        border-radius: 5px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        form .btn .btn-layer {
+            height: 100%;
+            width: 300%;
+            position: absolute;
+            left: -100%;
+            background: -webkit-linear-gradient(right,#E0DCC8,#FFBF00,#E0DCC8,#FFBF00);
+            border-radius: 5px;
+            transition: all 0.4s ease;
+            ;
+        }
+
+        form .btn:hover .btn-layer {
+            left: 0;
+        }
+
+        form .btn input[type="submit"] {
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+            position: relative;
+            background: none;
+            border: none;
+            color: #fff;
+            padding-left: 0;
+            border-radius: 5px;
+            font-size: 20px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+</style>
 
 @code {
-    CoachDB coachDB = new CoachDB();
+
+    Coach coach = null;
+    Trainer c = null;
     List<Group> list;
     string sport = "";
     async Task Search()
     {
         GroupDB groupDB = new GroupDB();
-         list = await groupDB.SelectBySportAsync(sport);
+        list = await groupDB.SelectBySportAsync(sport);
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        if (firstRender)
+        {
+            var name1 = await MySession.GetAsync<Coach>("Coach");
+            if (name1.Success)
+            {
+                coach = name1.Value;
+
+                StateHasChanged();
+            }
+
+            var user1 = await MySession.GetAsync<Trainer>("Trainer");
+            if (user1.Success)
+            {
+                c = user1.Value;
+                StateHasChanged();
+            }
+
+
+        }
     }
 }

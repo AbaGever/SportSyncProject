@@ -19,87 +19,204 @@
     <link href="homepage/css/responsive.css" rel="stylesheet">
 </HeadContent>
 
+<center>
+    <header class="header_section">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg custom_nav-container ">
+                <a class="navbar-brand" href="/">
+                    <span>
+                        SportSync
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                        <ul class="navbar-nav  ">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/r">Sign Up</a>
+                                </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link" href="/p">Your Profile</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="/searchG">Search Groups</a>
+                            </li>
+                        </ul>
+                        <div class="user_option">
+                            <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+<div class="container">
+        <section style="flex:0;" class=" slider_section position-relative">
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        
+                            <div class="col-lg-10 col-md-11 mx-auto">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>Login</h1>
+                                    </div>
+                                </div>
+                            </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </section>
+    <div class="panel @panelClass">
+        <div class="form-container sign-up-container">
+            <h1>Log In</h1>
+                <input type="email" placeholder="Email" @bind-value="CoachEmail" />
+                <input type="password" placeholder="Password" @bind-value="CoachPassword" />
+                <button class="button-73" @onclick="LogInToCoach">Log In</button>
+        </div>
+        <div class="form-container sign-in-container">
+            <h1>Log In</h1>
+                <input type="email" placeholder="Email" @bind-value="UserEmail" />
+                <input type="password" placeholder="Password" @bind-value="UserPassword" />
+                <button class="button-73" @onclick="LogInToTrainer">Log In</button>
+            
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome Back!</h1>
+                    <p>Are You a Trainer?</p>
+                    <button class="ghost" @onclick="TogglePanel">Log In here</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello, Friend!</h1>
+                        <p>Are You a Coach?</p>
+                    <button class="ghost" @onclick="TogglePanel">Log In Here</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</center>
 <style>
-    body {
-        background: -webkit-linear-gradient(bottom, #E0DCC8, #FFBF00);
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        font-family: 'Arial', sans-serif;
+    .button-73 {
+        appearance: none;
+        background-color: #FFFFFF;
+        border-radius: 40em;
+        border-style: none;
+        box-shadow: #ADCFFF 0 -12px 6px inset;
+        box-sizing: border-box;
+        color: #000000;
+        cursor: pointer;
+        display: inline-block;
+        font-family: -apple-system,sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: -.24px;
+        margin: 0;
+        outline: none;
+        padding: 1rem 1.3rem;
+        quotes: auto;
+        text-align: center;
+        text-decoration: none;
+        transition: all .15s;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
     }
 
-    .auth-container {
-        margin-top: 10px;
-        background-color: white;
+        .button-73:hover {
+            background-color: #FFC229;
+            box-shadow: #FF6314 0 -6px 8px inset;
+            transform: scale(1.125);
+        }
+
+        .button-73:active {
+            transform: scale(1.025);
+        }
+
+    @@media (min-width: 768px) {
+        .button-73 {
+            font-size: 1.5rem;
+            padding: .75rem 2rem;
+        }
+    }
+    @@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+    body
+    {
+        background: -webkit-linear-gradient(bottom, #E0DCC8, #FFBF00);
+    }
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-family: 'Montserrat', sans-serif;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .panel {
+        background-color: #ffffff;
         position: relative;
         overflow: hidden;
         width: 768px;
-        max-width: 90%;
+        max-width: 100%;
         min-height: 480px;
+        transition: 0.6s;
     }
 
-    .auth-panel {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
+    .form-container {
         position: absolute;
         top: 0;
         height: 100%;
-        width: 50%;
-        transition: transform 0.7s ease-in-out, opacity 0.7s ease-in-out;
-    }
-
-    .signin-panel {
-        transform: translateX(0);
-        opacity: 1;
-    }
-
-    .signup-panel {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-
-    .input-container {
-        background-color: #eee;
-        border-radius: 25px;
-        border: none;
-        padding: 12px 15px;
-        margin: 15px 0;
-        width: 100%;
+        transition: all 0.6s ease-in-out;
         display: flex;
         align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 0 50px;
+        text-align: center;
     }
 
-        .input-container input {
-            background: transparent;
-            border: none;
-            flex-grow: 1;
-            outline: none;
-            width: 100%;
-        }
-
-    .auth-button {
-        border-radius: 20px;
-        border: 1px solid #ff4b2b;
-        background-color: #ff4b2b;
-        color: #ffffff;
-        font-size: 12px;
-        font-weight: bold;
-        padding: 12px 45px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        transition: transform 80ms ease-in;
-        margin-top: 20px;
-        cursor: pointer;
+    .sign-in-container {
+        position: absolute;
+        left: 0;
+        width: 50%;
+        z-index: 2;
+        transform: translateX(0);
+        opacity: 1;
+        transition: all 0.6s ease-in-out;
     }
 
-        .auth-button:hover {
-            opacity: 0.8;
-        }
 
+    .sign-up-container {
+        position: absolute;
+        left: 0;
+        width: 50%;
+        z-index: 1;
+        transform: translateX(0);
+        opacity: 0;
+        transition: all 0.6s ease-in-out;
+    }
     .overlay-container {
         position: absolute;
         top: 0;
@@ -107,222 +224,237 @@
         width: 50%;
         height: 100%;
         overflow: hidden;
-        transition: transform 0.7s ease-in-out;
+        transition: transform 0.6s ease-in-out;
         z-index: 100;
-        background: linear-gradient(to right, #ff4b2b, #ff416c);
-        color: white;
+    }
+
+    .overlay {
+        background: #FF416C;
+        background: linear-gradient(to top, #FFBF00, #E0DCC8);
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: 0 0;
+        color: #FFFFFF;
+        position: relative;
+        left: -100%;
+        height: 100%;
+        width: 200%;
+        transform: translateX(0);
+        transition: transform 0.6s ease-in-out;
     }
 
     .overlay-panel {
         position: absolute;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
         align-items: center;
-        text-align: center;
-        height: 100%;
-        width: 100%;
+        justify-content: center;
+        flex-direction: column;
         padding: 0 40px;
+        text-align: center;
+        top: 0;
+        height: 100%;
+        width: 50%;
+        transform: translateX(0);
+        transition: transform 0.6s ease-in-out;
     }
 
-    .auth-container.active .overlay-container {
-        transform: translateX(-100%);
+    .overlay-left {
+        transform: translateX(-20%);
     }
 
-    .auth-container.active .signin-panel {
-        transform: translateX(-100%);
-        opacity: 0;
+    .overlay-right {
+        right: 0;
+        transform: translateX(0);
     }
 
-    .auth-container.active .signup-panel {
+    .login-panel .sign-in-container {
         transform: translateX(100%);
-        opacity: 1;
+        opacity: 0; /* Hide the "Sign In" panel */
+        z-index: 1; /* Push to the back */
+    }
+
+    .login-panel .sign-up-container {
+        transform: translateX(100%);
+        opacity: 1; /* Show the "Sign Up" panel */
+        z-index: 5; /* Bring to the front */
+    }
+
+    .login-panel .overlay-container {
+        transform: translateX(-100%);
+    }
+
+    .login-panel .overlay {
+        transform: translateX(50%);
+    }
+
+    .login-panel .overlay-left {
+        transform: translateX(0);
+    }
+
+    .login-panel .overlay-right {
+        transform: translateX(20%);
+    }
+
+    button {
+        border-radius: 20px;
+        border: 1px solid #FF4B2B;
+        background-color: #FF4B2B;
+        color: #FFFFFF;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 12px 45px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: transform 80ms ease-in;
+        cursor: pointer;
+    }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button.ghost {
+            background-color: transparent;
+            border-color: #FFFFFF;
+        }
+
+    input {
+        background-color: #eee;
+        border: none;
+        padding: 12px 15px;
+        margin: 8px 0;
+        width: 100%;
+    }
+
+    h1 {
+        font-weight: bold;
+        margin: 0;
+        margin-bottom: 15px;
+    }
+
+    p {
+        font-size: 14px;
+        font-weight: 100;
+        line-height: 20px;
+        letter-spacing: 0.5px;
+        margin: 20px 0 30px;
     }
 </style>
 
-<body>
-    <center>
-        <header class="header_section">
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-lg custom_nav-container ">
-                    <a class="navbar-brand" href="/">
-                        <span>SportSync</span>
-                    </a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+<script>
+    function initializePanel() {
+        console.log("Panel initialized");
+    }
 
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
-                            <ul class="navbar-nav">
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="/">Home </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/r">Sign Up</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/p">Your Profile</a>
-                                </li>
-                            </ul>
-                            
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </header>
-        <div class="auth-container" id="authContainer">
-            <div class="auth-panel signin-panel" id="signinPanel">
-                <h1>Sign In</h1>
-                <div class="input-container">
-                    <input type="text" id="signinUsername" placeholder="Username" />
-                </div>
-                <div class="input-container">
-                    <input type="password" id="signinPassword" placeholder="Password" />
-                </div>
-                <button class="auth-button" id="signinButton">Sign In</button>
-            </div>
+       function animatePanel(isLogin) {
+        const panel = document.querySelector('.panel');
+        if (isLogin) {
+            if (!panel.classList.contains('login-panel')) {
+                panel.classList.add('login-panel');
+            }
+        } else {
+            if (panel.classList.contains('login-panel')) {
+                panel.classList.remove('login-panel');
+            }
+        }
+    }
 
-            <div class="auth-panel signup-panel" id="signupPanel">
-                <h1>Create Account</h1>
-                <div class="input-container">
-                    <input type="text" id="signupUsername" placeholder="Username" />
-                </div>
-                <div class="input-container">
-                    <input type="email" id="signupEmail" placeholder="Email" />
-                </div>
-                <div class="input-container">
-                    <input type="password" id="signupPassword" placeholder="Password" />
-                </div>
-                <button class="auth-button" id="signupButton">Sign Up</button>
-            </div>
-
-            <div class="overlay-container">
-                <div class="overlay-panel">
-                    <div id="switchToSignup">
-                        <h2>Hello, Friend!</h2>
-                        <p>Enter your details and start your journey</p>
-                        <button class="auth-button" id="switchSignupBtn">Switch to Sign Up</button>
-                    </div>
-                    <div id="switchToSignin" style="display:none;">
-                        <h2>Welcome Back!</h2>
-                        <p>Login with your personal information</p>
-                        <button class="auth-button" id="switchSigninBtn">Switch to Sign In</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            const authContainer = document.getElementById('authContainer');
-            const switchSignupBtn = document.getElementById('switchSignupBtn');
-            const switchSigninBtn = document.getElementById('switchSigninBtn');
-            const switchToSignup = document.getElementById('switchToSignup');
-            const switchToSignin = document.getElementById('switchToSignin');
-            const signinButton = document.getElementById('signinButton');
-            const signupButton = document.getElementById('signupButton');
-
-            switchSignupBtn.addEventListener('click', () => {
-                authContainer.classList.add('active');
-                switchToSignup.style.display = 'none';
-                switchToSignin.style.display = 'block';
-            });
-
-            switchSigninBtn.addEventListener('click', () => {
-                authContainer.classList.remove('active');
-                switchToSignup.style.display = 'block';
-                switchToSignin.style.display = 'none';
-            });
-
-            signinButton.addEventListener('click', () => {
-                const username = document.getElementById('signinUsername').value;
-                const password = document.getElementById('signinPassword').value;
-                if (username && password) {
-                    alert('Sign In Successful!');
-                } else {
-                    alert('Please enter username and password');
-                }
-            });
-
-            signupButton.addEventListener('click', () => {
-                const username = document.getElementById('signupUsername').value;
-                const email = document.getElementById('signupEmail').value;
-                const password = document.getElementById('signupPassword').value;
-                if (username && email && password) {
-                    alert('Sign Up Successful!');
-                } else {
-                    alert('Please enter all details');
-                }
-            });
-
-            window.addEventListener('load', () => {
-                authContainer.classList.remove('active');
-            });
-        </script>
-    </center>
-</body>
-
-
-
+    function showMessage(message) {
+        alert(message);
+    }
+</script>
 @code {
-
-
     private string UserEmail = "";
     private string CoachEmail = "";
     private string CoachPassword = "";
     private string UserPassword = "";
-
     private bool isFirstRender = true;
+    private bool isLogin = false;
+    private string panelClass
+    {
+        get
+        {
+            if (isLogin)
+            {
+                return "login-panel";
+            }
+            return "";
+        }
+    }
 
+    private void TogglePanel()
+    {
+        isLogin = !isLogin;
+        if (js != null)
+        {
+            js.InvokeVoidAsync("animatePanel", isLogin);
+        }
+        StateHasChanged();
+    }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (js != null)
+            {
+                await js.InvokeVoidAsync("initializePanel");
+            }
+        }
+    }
 
     public async Task LogInToTrainer()
     {
         TrainerDB UserDB = new TrainerDB();
         Trainer User = await UserDB.LoginAsync(UserEmail, UserPassword);
-        GroupDB groupDB = new GroupDB();
+
         if (User != null)
         {
-
-            await MySession.SetAsync("Trainer", User);
-
-            navigationManager.NavigateTo("/");
-
-
+            if (MySession != null)
+            {
+                await MySession.SetAsync("Trainer", User);
+            }
+            if (navigationManager != null)
+            {
+                navigationManager.NavigateTo("/");
+            }
         }
         else
         {
-            await js.InvokeVoidAsync("alert", $"The email or password you entered does not match!");
+            if (js != null)
+            {
+                await js.InvokeVoidAsync("alert", "The email or password you entered does not match!");
+            }
             UserEmail = "";
             UserPassword = "";
-
         }
-
     }
+
     public async Task LogInToCoach()
     {
         CoachDB CoachDB = new CoachDB();
-        GroupDB groupDB = new GroupDB();
         Coach Coach = await CoachDB.LoginAsync(CoachEmail, CoachPassword);
+
         if (Coach != null)
         {
-            await MySession.SetAsync("Coach", Coach);
-
-
-            navigationManager.NavigateTo("");
-
+            if (MySession != null)
+            {
+                await MySession.SetAsync("Coach", Coach);
+            }
+            if (navigationManager != null)
+            {
+                navigationManager.NavigateTo("/");
+            }
         }
         else
         {
-            await js.InvokeVoidAsync("alert", $"The email or password you entered does not match!");
-            UserEmail = "";
-            UserPassword = "";
-
+            if (js != null)
+            {
+                await js.InvokeVoidAsync("alert", "The email or password you entered does not match!");
+            }
+            CoachEmail = "";
+            CoachPassword = "";
         }
-
-
-
     }
-
 }
 

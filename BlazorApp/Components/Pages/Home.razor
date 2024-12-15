@@ -68,16 +68,20 @@
                                         <a class="nav-link" href="/login">Log In</a>
                                     </li>
                                     }
+
                                 <li class="nav-item">
                                     <a class="nav-link" href="/p">Your Profile</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/searchG">Search Groups</a>
                                 </li>
                                
                                 
                             </ul>
                             <div class="user_option">
-                                <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                                <div class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
                                     <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -113,6 +117,10 @@
                                         else if (coach != null && coach.groupname != "" && coach.groupname != null)
                                         {
                                             <a href="ShowG/@(coach.groupname)" class="button">Show Group Info</a>
+                                        }
+                                        @if(UserS !=null)
+                                        {
+                                            <a href="BW" class="button">Bulid a WorkOut</a>
                                         }
                                     </div>
                                 </div>
@@ -169,11 +177,11 @@
                     <div class="box">
                         <div class="name">
                             <h5>
-                                Smirth Jon
+                                Yair BuchBut
                             </h5>
                         </div>
                         <div class="img-box">
-                            <img src="homepage/images/t1.jpg" alt="">
+                            <img src="homepage/images/Yair.jpg" alt="">
                         </div>
 
                     </div>
@@ -182,11 +190,11 @@
                     <div class="box">
                         <div class="name">
                             <h5>
-                                Jean Doe
+                               Jonathan Levi
                             </h5>
                         </div>
                         <div class="img-box">
-                            <img src="homepage/images/t2.jpg" alt="">
+                            <img src="homepage/images/joni.png"alt="">
                         </div>
 
                     </div>
@@ -195,11 +203,11 @@
                     <div class="box">
                         <div class="name">
                             <h5>
-                                Alex Den
+                                Marom VineBloom
                             </h5>
                         </div>
-                        <div class="img-box">
-                            <img src="homepage/images/t3.jpg" alt="">
+                        <div class="img-box">                   
+                            <img src=" homepage/images/Marom.jpg"  alt="">
                         </div>
 
                     </div>

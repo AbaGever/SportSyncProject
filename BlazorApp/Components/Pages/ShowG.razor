@@ -6,189 +6,575 @@
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject IJSRuntime js
 
+<HeadContent>
+    <!-- Basic -->
+
+
+
+    <link rel="icon" href="/download.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+
+    <!-- slider stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="homepage/css/bootstrap.css">
+
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&amp;display=swap" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="homepage/css/style.css" rel="stylesheet">
+    <!-- responsive style -->
+    <link href="homepage/css/responsive.css" rel="stylesheet">
+</HeadContent>
 @if (group != null)
 {
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+            <a class="navbar-brand" href="/">
+                <span>
+                    SportSync
+                </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-    @if (coach != null)
-    {
-        <section>
-            <div class="container">
-                <div class="content">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                    <ul class="navbar-nav  ">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        @if (c == null && coach == null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="/r">Sign Up</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">Log In</a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link" href="/p">Your Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/searchG">Search Groups</a>
+                        </li>
 
-                    <div>
-                        <h1>@group.name</h1>
-
-                        <h3>
-                            Sport : @group.sport <br /> Max Capacity : @group.maxcapacity <br />
-                        </h3>
-                        <h2><u> Coach Info</u>  <br />@coach.firstName   @coach.lastName</h2>
-                        <h3>
-                            Email: @coach.emailaddress
-                            <br />Experience: @coach.exp
-                        </h3>
-
+                    </ul>
+                    <div class="user_option">
+                        <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                            <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                        </form>
                     </div>
-
-                    <div>
-                        <h2>Edit Group</h2>
-
-                        <h3 for="inputEmail">
-                            Max Capacity
-                            <input @bind-value="max" type="int" placeholder="Max capacity">
-                        </h3>
-                        <button class="button" @onclick="doEditgroup" type="submit">Update</button>
-
-                        <br /> <br />
+                </div>
+            </div>
+        </nav>
+    </div>
+    <section class=" slider_section position-relative">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="col-lg-10 col-md-11 mx-auto">
+                            <div class="detail-box">
+                                <div>
+                                    <h1>@group.name</h1>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <!-- Table for Users in the Group (Visible to both Coach and Regular User) -->
-                    @if (usersInGroup != null && usersInGroup.Count > 0)
-                    {
-                        <center>
-                            <h2><u>Players in Group</u></h2>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="wrapper">
+        <center>
+            @if (coach != null &&coach.id ==group.coachid)
+            {
 
-                            <table class="table">
 
-                                <thead>
+
+                <div>
+
+
+                    <h3>
+
+                        Sport : @group.sport <br /> Max Capacity : @group.maxcapacity <br />
+                    </h3>
+                    <h2><u> Coach Info</u>  <br />@coach.firstName   @coach.lastName</h2>
+                    <h3>
+                        Email: @coach.emailaddress
+                        <br />Experience: @coach.exp
+                    </h3>
+
+                </div>
+
+                <div>
+                    <h2>Edit Group</h2>
+
+                    <h3 for="inputEmail">
+                        Max Capacity
+                        <input @bind-value="max" type="int" placeholder="Max capacity">
+                    </h3>
+                    <button class="button-73" @onclick="doEditgroup" type="submit">Update</button>
+
+                    <br /> <br />
+                </div>
+                <!-- Table for Users in the Group (Visible to both Coach and Regular User) -->
+                @if (usersInGroup != null && usersInGroup.Count > 0)
+                {
+                    <center>
+                        <h2><u>Players in Group</u></h2>
+
+                        <table class="table">
+
+                            <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    @if (coach != null) // If coach is logged in, show delete button
+                                    {
+                                        <th>Action</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in usersInGroup)
+                                {
                                     <tr>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
+                                        <td>@user.firstName</td>
+                                        <td>@user.lastName</td>
                                         @if (coach != null) // If coach is logged in, show delete button
                                         {
-                                            <th>Action</th>
+                                            <td>
+                                                <button Class="button-24" @onclick="() => RemoveUserFromGroup(user.id)">Remove</button>
+                                            </td>
                                         }
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var user in usersInGroup)
-                                    {
-                                        <tr>
-                                            <td>@user.firstName</td>
-                                            <td>@user.lastName</td>
-                                            @if (coach != null) // If coach is logged in, show delete button
-                                            {
-                                                <td>
-                                                    <button style="background-color:white;border-color:white" @onclick="() => RemoveUserFromGroup(user.id)" class="btn btn-danger">Remove</button>
-                                                </td>
-                                            }
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
+                                }
+                            </tbody>
+                        </table>
 
-                        </center>
+                    </center>
 
-                    }
-            <center>
-                <button  @onclick="() => Delete(groupname)" class="remove">Delete Group</button>
-            </center>
-                </div>
+                }
+                <center>
+                    <button @onclick="() => Delete(groupname)" class="button-24">Delete Group</button>
+                </center>
 
-            </div>
-        </section>
-    }
-    else if (coach == null && c != null)
-    {
-        @* If user is not a coach, show only the table without the delete button *@
-        <section>
-            <div class="container">
-                <div class="content">
-                    <div>
-                        <h1>@group.name</h1>
-                        <h2>
-                            Sport: @group.sport <br />
-                            Max Capacity: @group.maxcapacity <br />
-                        </h2>
+            }
+            else if (coach == null && c != null)
+            {
+                @* If user is not a coach, show only the table without the delete button *@
+                <section>
+                    <div >
+                        <div >
+                            <div>
+                                <h2>
+                                    Coach : @c1.firstName @c1.lastName<br />
+                                    Sport: @group.sport <br />
+                                    Max Capacity: @group.maxcapacity <br />
+                                </h2>
+                            </div>
+
+
+                            <!-- Table for Users in the Group (Visible for regular user as well) -->
+                            @if (c.groupname == group.name)
+                            {
+                                @if (usersInGroup != null && usersInGroup.Count > 0)
+                                {
+                                    <center>
+                                        <h2>Players in Group</h2>
+
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var user in usersInGroup)
+                                                {
+                                                    <tr>
+                                                        <td>@user.firstName</td>
+                                                        <td>@user.lastName</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </center>
+                                }
+                               
+                                    <center>
+                                        <button class="button-24" @onclick="() => RemoveUserFromGroup2(c.id)">Leave Group</button>
+                                   </center>
+                               
+                            }
+                            else if (c.groupname== ""&&c.groupname == null)
+                            {
+                                <center>
+                                    <button @onclick="() => JoinGroup(c.id)" class="button-73">Join Group</button>
+                                </center>
+                            }
+                        </div>
                     </div>
+                </section>
+            }
+            else if (c == null && coach == null &&c1 != null || coach != null && coach.id != group.coachid && c1 != null)
+            {
+
+                @* If user is not a coach, show only the table without the delete button *@
+                <section>
+                    <div >
+                        <div>
+                            <div>
+                                <h2>
+                                    Coach : @c1.firstName @c1.lastName<br />
+                                    Sport: @group.sport <br />
+                                    Max Capacity: @group.maxcapacity <br />
+                                </h2>
+                            </div>
 
 
-                    <!-- Table for Users in the Group (Visible for regular user as well) -->
-                    @if (c.groupname == group.name)
-                    {
-                        @if (usersInGroup != null && usersInGroup.Count > 0)
-                        {
-                            <center>
-                                <h2>Players in Group</h2>
+                            <!-- Table for Users in the Group (Visible for regular user as well) -->
+                            @if (usersInGroup != null && usersInGroup.Count > 0)
+                            {
+                                <center>
+                                    <h2>Players in Group</h2>
 
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var user in usersInGroup)
-                                        {
+                                    <table class="table">
+                                        <thead>
                                             <tr>
-                                                <td>@user.firstName</td>
-                                                <td>@user.lastName</td>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
                                             </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </center>
-                        }
-
-                        <center>
-                            <button style="background-color:darkred;padding:10px 30px" @onclick="() => RemoveUserFromGroup2(c.id)" class="btn btn-lg btn-primary btn-block m-1">Leave Group</button>
-                        </center>
-                    }
-                    else
-                    {
-                        <center>
-                            <button style="background-color:green;padding:10px 30px" @onclick="() => JoinGroup(c.id)" class="btn btn-lg btn-primary btn-block m-1">Join Group</button>
-                        </center>
-                    }
-                </div>
-            </div>
-        </section>
-    }
-    else if (c == null && coach == null)
-    {
-
-        @* If user is not a coach, show only the table without the delete button *@
-        <section>
-            <div class="container">
-                <div class="content">
-                    <div>
-                        <h1 class="display-5 fw-bolder">@group.name</h1>
-                        <h2>
-                            Sport: @group.sport <br />
-                            Max Capacity: @group.maxcapacity <br />
-                        </h2>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var user in usersInGroup)
+                                            {
+                                                <tr>
+                                                    <td>@user.firstName</td>
+                                                    <td>@user.lastName</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </center>
+                            }
+                        </div>
                     </div>
+                </section>
 
-
-                    <!-- Table for Users in the Group (Visible for regular user as well) -->
-                    @if (usersInGroup != null && usersInGroup.Count > 0)
-                    {
-                        <center>
-                            <h2>Players in Group</h2>
-
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var user in usersInGroup)
-                                    {
-                                        <tr>
-                                            <td>@user.firstName</td>
-                                            <td>@user.lastName</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </center>
-                    }
-                </div>
-            </div>
-        </section>
-    }
+            }
+        </center>
+    </div>
 }
+<style>
+
+    @@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    }
+
+    html, body {
+    height: 100%;
+    width: 100%;
+    place-items: center;
+    background: -webkit-linear-gradient(bottom, #E0DCC8, #FFBF00);
+    }
+
+
+
+
+    /* CSS */
+    .button-24 {
+    background: #FF4742;
+    border: 1px solid #FF4742;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 16px;
+    min-height: 40px;
+    outline: 0;
+    padding: 12px 14px;
+    text-align: center;
+    text-rendering: geometricprecision;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    }
+
+    .button-24:hover,
+    .button-24:active {
+    background-color: initial;
+    background-position: 0 0;
+    color: #FF4742;
+    }
+
+    .button-24:active {
+    opacity: .5;
+    }
+
+    .button-73 {
+    appearance: none;
+    background-color: #FFFFFF;
+    border-radius: 40em;
+    border-style: none;
+    box-shadow: #ADCFFF 0 -12px 6px inset;
+    box-sizing: border-box;
+    color: #000000;
+    cursor: pointer;
+    display: inline-block;
+    font-family: -apple-system,sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -.24px;
+    margin: 0;
+    outline: none;
+    padding: 1rem 1.3rem;
+    quotes: auto;
+    text-align: center;
+    text-decoration: none;
+    transition: all .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    }
+
+    .button-73:hover {
+    background-color: #FFC229;
+    box-shadow: #FF6314 0 -6px 8px inset;
+    transform: scale(1.125);
+    }
+
+    .button-73:active {
+    transform: scale(1.025);
+    }
+
+    @@media (min-width: 768px) {
+    .button-73 {
+    font-size: 1.5rem;
+    padding: .75rem 2rem;
+    }
+    }
+
+    ::selection {
+    background: Grey;
+    color: #fff;
+    }
+
+    .wrapper {
+    overflow: hidden;
+    margin: auto;
+    max-width: 500px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
+    }
+
+    .wrapper .title-text {
+    display: flex;
+    width: 200%;
+    }
+
+    .wrapper .title {
+    width: 50%;
+    font-size: 35px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+    }
+
+    .wrapper .slide-controls {
+    position: relative;
+    display: flex;
+    height: 50px;
+    width: 100%;
+    overflow: hidden;
+    margin: 30px 0 10px 0;
+    justify-content: space-between;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+    }
+
+    .slide-controls .slide {
+    height: 100%;
+    width: 100%;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 48px;
+    cursor: pointer;
+    z-index: 1;
+    transition: all 0.6s ease;
+    }
+
+    .slide-controls label.Coach {
+    color: #000;
+    }
+
+    .slide-controls .slider-tab {
+    position: absolute;
+    height: 100%;
+    width: 50%;
+    left: 0;
+    z-index: 0;
+    border-radius: 5px;
+    background: -webkit-linear-gradient(left, white,Grey,Grey,white);
+    transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+    }
+
+    input[type="radio"] {
+    display: none;
+    }
+
+    #Coach:checked ~ .slider-tab {
+    left: 50%;
+    }
+
+    #Coach:checked ~ label.Coach {
+    color: #fff;
+    cursor: default;
+    user-select: none;
+    }
+
+    #Coach:checked ~ label.Trainer {
+    color: #000;
+    }
+
+    #Trainer:checked ~ label.Coach {
+    color: #000;
+    }
+
+    #Trainer:checked ~ label.Trainer {
+    cursor: default;
+    user-select: none;
+    }
+
+    .wrapper .form-container {
+    width: 100%;
+    overflow: hidden;
+    }
+
+    .form-container .form-inner {
+    display: flex;
+    width: 200%;
+    }
+
+    .form-container .form-inner form {
+    width: 50%;
+    transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+    }
+
+    .form-inner form .field {
+    height: 50px;
+    width: 100%;
+    margin-top: 20px;
+    }
+
+    .form-inner form .field input {
+    height: 100%;
+    width: 100%;
+    outline: none;
+    padding-left: 15px;
+    border-radius: 5px;
+    border: 1px solid lightgrey;
+    border-bottom-width: 2px;
+    font-size: 17px;
+    transition: all 0.3s ease;
+    }
+
+    .form-inner form .field input:focus {
+    border-color: #FFBF00;
+    /* box-shadow: inset 0 0 3px #fb6aae; */
+    }
+
+    .form-inner form .field input::placeholder {
+    color: #999;
+    transition: all 0.3s ease;
+    }
+
+    form .field input:focus::placeholder {
+    color: #b3b3b3;
+    }
+
+    .form-inner form .pass-link {
+    margin-top: 5px;
+    }
+
+    .form-inner form .Coach-link {
+    text-align: center;
+    margin-top: 30px;
+    }
+
+    .form-inner form .pass-link a,
+    .form-inner form .Coach-link a {
+    color: #fa4299;
+    text-decoration: none;
+    }
+
+    .form-inner form .pass-link a:hover,
+    .form-inner form .Coach-link a:hover {
+    text-decoration: underline;
+    }
+
+    form .btn {
+    height: 50px;
+    width: 100%;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+    }
+
+    form .btn .btn-layer {
+    height: 100%;
+    width: 300%;
+    position: absolute;
+    left: -100%;
+    background: -webkit-linear-gradient(right,#E0DCC8,#FFBF00,#E0DCC8,#FFBF00);
+    border-radius: 5px;
+    transition: all 0.4s ease;
+    ;
+    }
+
+    form .btn:hover .btn-layer {
+    left: 0;
+    }
+
+    form .btn input[type="submit"] {
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    position: relative;
+    background: none;
+    border: none;
+    color: #fff;
+    padding-left: 0;
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    }
+</style>
+
+
 
 @code {
     [Parameter]
@@ -201,6 +587,7 @@
     List<Trainer> usersInGroup = new List<Trainer>();
     GroupDB groupDB = new GroupDB();
     CoachDB coachDB = new CoachDB();
+    Coach c1 = null;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -214,7 +601,7 @@
             group = await groupDB.SelectByPkAsync(groupname);
             StateHasChanged();
             max = group.maxcapacity;
-
+            c1 = await coachDB.SelectByPkAsync(group.coachid);
 
 
         }
@@ -339,7 +726,7 @@
     {
         TrainerDB trainerDB = new TrainerDB();
         List<Trainer> TS = await trainerDB.SelectAllInGroup(gname);
-       
+
         GroupDB groupDB = new GroupDB();
         Group group = await groupDB.SelectByPkAsync(gname);
         if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {group.name}?"))

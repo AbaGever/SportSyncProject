@@ -35,6 +35,8 @@
     <!-- responsive style -->
     <link href="homepage/css/responsive.css" rel="stylesheet">
 </HeadContent>
+<center>
+    <header class="header_section">
         <div class="container-fluid">
             <nav class="navbar navbar-expand-lg custom_nav-container ">
                 <a class="navbar-brand" href="/">
@@ -53,10 +55,6 @@
                                 <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                             </li>
 
-
-                            <li class="nav-item">
-                                <a class="nav-link" href="/r">Sign Up</a>
-                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/login">Log In</a>
                             </li>
@@ -64,7 +62,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="/p">Your Profile</a>
                             </li>
-
+                            <li class="nav-item">
+                                <a class="nav-link" href="/searchG">Search Groups</a>
+                            </li>
 
                         </ul>
                         <div class="user_option">
@@ -76,116 +76,112 @@
                 </div>
             </nav>
         </div>
-    <section class=" slider_section position-relative">
-        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="container">
+    </header>
+    <div class="container">
+        <section style="flex:0;width:1000px;" class=" slider_section position-relative">
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+
                         <div class="col-lg-10 col-md-11 mx-auto">
                             <div class="detail-box">
-                                <div>
+                                <div >
                                     <h1>Register</h1>
                                 </div>
                             </div>
                         </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="panel @panelClass">
+            <div class="form-container sign-up-container">
+                <h1>Register</h1>
+                <input type="text" placeholder="First Name" @bind-value="@coach.firstName" />
+                <input type="text" placeholder="Last Name" @bind-value="@coach.lastName" />
+                <input type="email" placeholder="Email" @bind-value="@coach.emailaddress" />
+                <input type="text" placeholder="Phone Number" @bind-value="@coach.phonenumber" />
+                <input type="password" placeholder="Password" @bind-value="@coach.password" />
+                <input type="text" placeholder="Phone Number" @bind-value="@coach.sport" />
+                <input type="number" placeholder="Password" @bind-value="@coach.exp" />
+                <button class="button-73" @onclick="RegCoach">Register</button>
+            </div>
+            <div class="form-container sign-in-container">
+                <h1>Register</h1>
+                <input type="text" placeholder="First Name" @bind-value="@cus.firstName" />
+                <input type="text" placeholder="Last Name" @bind-value="@cus.lastName" />
+                <input type="email" placeholder="Email" @bind-value="@cus.emailaddress" />
+                <input type="text" placeholder="Phone Number" @bind-value="@cus.phonenumber" />
+                <input type="password" placeholder="Password" @bind-value="@cus.password" />
+                <button class="button-73" @onclick="RegTrainer">Register</button>
+
+            </div>
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <h1>Welcome</h1>
+                        <p>Are You a Trainer?</p>
+                        <button class="ghost" @onclick="TogglePanel">Log In here</button>
+                    </div>
+                    <div class="overlay-panel overlay-right">
+                        <h1>Hi!</h1>
+                        <p>Are You a Coach?</p>
+                        <button class="ghost" @onclick="TogglePanel">Log In Here</button>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <div class="wrapper">
-        <div class="title-text">
-            <div class="title Trainer">
-                Trainer
-            </div>
-            <div class="title Coach">
-                Coach
-            </div>
-        </div>
-        <div class="form-container">
-            <div class="slide-controls">
-                <input type="radio" name="slide" id="Trainer" checked>
-                <input type="radio" name="slide" id="Coach">
-                <label for="Trainer" class="slide Trainer">Trainer</label>
-                <label for="Coach" class="slide Coach">Coach</label>
-                <div class="slider-tab"></div>
-            </div>
-            <div class="form-inner">
-                <form action="#" class="Trainer">
-                    <div class="field">
-                        <input @bind-value="cus.firstName" type="text" Placeholder="Enter First Name" required />
-
-                    </div>
-                    <div class="field">
-                        <input @bind-value="cus.lastName" type=" text" Placeholder="Enter Last Name" required />
-                    </div>
-                    <div class="field">
-                        <input @bind-value="cus.emailaddress" type="email" Placeholder="Enter Email Address " required />
-                    </div>
-                    <div class="field">
-                        <input @bind-value="cus.phonenumber" type="text" Placeholder="Enter Phone Number" required />
-                    </div>
-                    <div class="field">
-                        <input @bind-value="cus.password" type="password" Placeholder="Enter Password" required />
-                    </div>
-                    <div class="field btn">
-                        <div class="btn-layer"></div>
-                        <input @onclick="RegTrainer" type="submit" value="Sign Up" class="submit">Sign Up</input>
-                    </div>
-
-                </form>
-                <form action="#" class="Coach">
-                    <div class="field">
-                        <input @bind-value="coach.firstName" type="text" Placeholder="Enter First Name" required />
-
-                    </div>
-                    <div class="field">
-                        <input @bind-value="coach.lastName" type=" text" Placeholder="Enter Last Name" required />
-                    </div>
-                    <div class="field">
-                        <input @bind-value="coach.emailaddress" type="email" Placeholder="Enter Email Address " required />
-                    </div>
-                    <div class="field">
-                        <input @bind-value="coach.phonenumber" type="text" Placeholder="Enter Phone Number " required />
-                    </div>
-                    <div class="field">
-                        <input @bind-value="coach.sport" type="text" Placeholder="Enter Sport " required />
-                    </div>
-                    <div class="field">
-                        <input @bind-value="coach.exp" type="text" Placeholder="Enter Years Of Experience" required />
-                    </div>
-                    <div class="field">
-                        <input @bind-value="coach.password" type="password" Placeholder="Enter Password" required />
-                    </div>
-                    <div class="field btn">
-                        <div class="btn-layer"></div>
-                        <input @onclick="RegCoach" type="submit" value="Sign Up" class="submit">Sign Up</input>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
-
-<script>
-    function triggerAnimation() {
-    const loginText = document.querySelector(".title-text .Trainer");
-    const loginForm = document.querySelector("form.Trainer");
-    const loginBtn = document.querySelector("label.Trainer");
-    const signupBtn = document.querySelector("label.Coach");
-    const signupLink = document.querySelector("form .Coach-link a");
-    signupBtn.onclick = (()=>{
-      loginForm.style.marginLeft = "-50%";
-      loginText.style.marginLeft = "-50%";
-    });
-    loginBtn.onclick = (()=>{
-      loginForm.style.marginLeft = "0%";
-      loginText.style.marginLeft = "0%";
-    });
-    }
-</script>
-
+</center>
 <style>
-    import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+    .button-73 {
+        appearance: none;
+        background-color: #FFFFFF;
+        border-radius: 40em;
+        border-style: none;
+        box-shadow: #ADCFFF 0 -12px 6px inset;
+        box-sizing: border-box;
+        color: #000000;
+        cursor: pointer;
+        display: inline-block;
+        font-family: -apple-system,sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: -.24px;
+        margin: 0;
+        outline: none;
+        padding: 1rem 1.3rem;
+        quotes: auto;
+        text-align: center;
+        text-decoration: none;
+        transition: all .15s;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
+        .button-73:hover {
+            background-color: #FFC229;
+            box-shadow: #FF6314 0 -6px 8px inset;
+            transform: scale(1.125);
+        }
+
+        .button-73:active {
+            transform: scale(1.025);
+        }
+
+    @@media (min-width: 768px) {
+        .button-73 {
+            font-size: 1.5rem;
+            padding: .75rem 2rem;
+        }
+    }
+
+
+    @@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
     * {
         margin: 0;
         padding: 0;
@@ -193,343 +189,239 @@
         font-family: 'Poppins', sans-serif;
     }
 
-    html, body {
-        height: 100%;
-        width: 100%;
-        place-items: center;
+    body {
         background: -webkit-linear-gradient(bottom, #E0DCC8, #FFBF00);
     }
 
-    ::selection {
-        background: Grey;
-        color: #fff;
-    }
-
-    .wrapper {
-        overflow: hidden;
-        margin:auto ;
-        max-width: 500px;
-        background: #fff;
-        padding: 30px;
-        border-radius: 5px;
-        box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
-    }
-
-        .wrapper .title-text {
-            display: flex;
-            width: 200%;
-        }
-
-        .wrapper .title {
-            width: 50%;
-            font-size: 35px;
-            font-weight: 600;
-            text-align: center;
-            transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
-        }
-
-        .wrapper .slide-controls {
-            position: relative;
-            display: flex;
-            height: 50px;
-            width: 100%;
-            overflow: hidden;
-            margin: 30px 0 10px 0;
-            justify-content: space-between;
-            border: 1px solid lightgrey;
-            border-radius: 5px;
-        }
-
-    .slide-controls .slide {
-        height: 100%;
-        width: 100%;
-        color: #fff;
-        font-size: 18px;
-        font-weight: 500;
-        text-align: center;
-        line-height: 48px;
-        cursor: pointer;
-        z-index: 1;
-        transition: all 0.6s ease;
-    }
-
-    .slide-controls label.Coach {
-        color: #000;
-    }
-
-    .slide-controls .slider-tab {
-        position: absolute;
-        height: 100%;
-        width: 50%;
-        left: 0;
-        z-index: 0;
-        border-radius: 5px;
-        background: -webkit-linear-gradient(left, white,Grey,Grey,white);
-        transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
-    }
-
-    input[type="radio"] {
-        display: none;
-    }
-
-    #Coach:checked ~ .slider-tab {
-        left: 50%;
-    }
-
-    #Coach:checked ~ label.Coach {
-        color: #fff;
-        cursor: default;
-        user-select: none;
-    }
-
-    #Coach:checked ~ label.Trainer {
-        color: #000;
-    }
-
-    #Trainer:checked ~ label.Coach {
-        color: #000;
-    }
-
-    #Trainer:checked ~ label.Trainer {
-        cursor: default;
-        user-select: none;
-    }
-
-    .wrapper .form-container {
-        width: 100%;
-        overflow: hidden;
-    }
-
-    .form-container .form-inner {
+    .container {
         display: flex;
-        width: 200%;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-family: 'Montserrat', sans-serif;
+        height: 100vh;
+        margin: 0;
     }
 
-        .form-container .form-inner form {
-            width: 50%;
-            transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
-        }
-
-    .form-inner form .field {
-        height: 50px;
-        width: 100%;
-        margin-top: 20px;
-    }
-
-        .form-inner form .field input {
-            height: 100%;
-            width: 100%;
-            outline: none;
-            padding-left: 15px;
-            border-radius: 5px;
-            border: 1px solid lightgrey;
-            border-bottom-width: 2px;
-            font-size: 17px;
-            transition: all 0.3s ease;
-        }
-
-            .form-inner form .field input:focus {
-                border-color: #FFBF00;
-                /* box-shadow: inset 0 0 3px #fb6aae; */
-            }
-
-            .form-inner form .field input::placeholder {
-                color: #999;
-                transition: all 0.3s ease;
-            }
-
-    form .field input:focus::placeholder {
-        color: #b3b3b3;
-    }
-
-    .form-inner form .pass-link {
-        margin-top: 5px;
-    }
-
-    .form-inner form .Coach-link {
-        text-align: center;
-        margin-top: 30px;
-    }
-
-        .form-inner form .pass-link a,
-        .form-inner form .Coach-link a {
-            color: #fa4299;
-            text-decoration: none;
-        }
-
-            .form-inner form .pass-link a:hover,
-            .form-inner form .Coach-link a:hover {
-                text-decoration: underline;
-            }
-
-    form .btn {
-        height: 50px;
-        width: 100%;
-        border-radius: 5px;
+    .panel {
+        background-color: #ffffff;
         position: relative;
         overflow: hidden;
+        width: 768px;
+        max-width: 100%;
+        min-height: 600px;
+        transition: 0.6s;
     }
 
-        form .btn .btn-layer {
-            height: 100%;
-            width: 300%;
-            position: absolute;
-            left: -100%;
-            background: -webkit-linear-gradient(right,#E0DCC8,#FFBF00,#E0DCC8,#FFBF00);
-            border-radius: 5px;
-            transition: all 0.4s ease;
-            ;
+    .form-container {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        transition: all 0.6s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 0 50px;
+        text-align: center;
+    }
+
+    .sign-in-container {
+        position: absolute;
+        left: 0;
+        width: 50%;
+        z-index: 2;
+        transform: translateX(0);
+        opacity: 1;
+        transition: all 0.6s ease-in-out;
+    }
+
+
+    .sign-up-container {
+        position: absolute;
+        left: 0;
+        width: 50%;
+        z-index: 1;
+        transform: translateX(0);
+        opacity: 0;
+        transition: all 0.6s ease-in-out;
+    }
+
+    .overlay-container {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 50%;
+        height: 100%;
+        overflow: hidden;
+        transition: transform 0.6s ease-in-out;
+        z-index: 100;
+    }
+
+    .overlay {
+        background: #FF416C;
+        background: linear-gradient(to top, #FFBF00, #E0DCC8);
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: 0 0;
+        color: #FFFFFF;
+        position: relative;
+        left: -100%;
+        height: 100%;
+        width: 200%;
+        transform: translateX(0);
+        transition: transform 0.6s ease-in-out;
+    }
+
+    .overlay-panel {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 0 40px;
+        text-align: center;
+        top: 0;
+        height: 100%;
+        width: 50%;
+        transform: translateX(0);
+        transition: transform 0.6s ease-in-out;
+    }
+
+    .overlay-left {
+        transform: translateX(-20%);
+    }
+
+    .overlay-right {
+        right: 0;
+        transform: translateX(0);
+    }
+
+    .login-panel .sign-in-container {
+        transform: translateX(100%);
+        opacity: 0; /* Hide the "Sign In" panel */
+        z-index: 1; /* Push to the back */
+    }
+
+    .login-panel .sign-up-container {
+        transform: translateX(100%);
+        opacity: 1; /* Show the "Sign Up" panel */
+        z-index: 5; /* Bring to the front */
+    }
+
+    .login-panel .overlay-container {
+        transform: translateX(-100%);
+    }
+
+    .login-panel .overlay {
+        transform: translateX(50%);
+    }
+
+    .login-panel .overlay-left {
+        transform: translateX(0);
+    }
+
+    .login-panel .overlay-right {
+        transform: translateX(20%);
+    }
+
+    button {
+        border-radius: 20px;
+        border: 1px solid #FF4B2B;
+        background-color: #FF4B2B;
+        color: #FFFFFF;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 12px 45px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: transform 80ms ease-in;
+        cursor: pointer;
+    }
+
+        button:active {
+            transform: scale(0.95);
         }
 
-        form .btn:hover .btn-layer {
-            left: 0;
+        button.ghost {
+            background-color: transparent;
+            border-color: #FFFFFF;
         }
 
-        form .btn input[type="submit"] {
-            height: 100%;
-            width: 100%;
-            z-index: 1;
-            position: relative;
-            background: none;
-            border: none;
-            color: #fff;
-            padding-left: 0;
-            border-radius: 5px;
-            font-size: 20px;
-            font-weight: 500;
-            cursor: pointer;
-        }
+    input {
+        background-color: #eee;
+        border: none;
+        padding: 12px 15px;
+        margin: 8px 0;
+        width: 100%;
+    }
+
+    h1 {
+        font-weight: bold;
+        margin: 0;
+        margin-bottom: 15px;
+    }
+
+    p {
+        font-size: 14px;
+        font-weight: 100;
+        line-height: 20px;
+        letter-spacing: 0.5px;
+        margin: 20px 0 30px;
+    }
 </style>
 
-
-
-
-
-
-
-
-
-
-
-
-
-@* 
-<div class="cont">
-    <div class="form sign-in">
-        <h2>Welcome Trainer</h2>
-        <label>
-            <span>First Name</span>
-            <input @bind-value="cus.firstName" type="text" required />
-        </label>
-        <label>
-            <span>Last Name</span>
-            <input @bind-value="cus.lastName" type=" text" required />
-        </label>
-        <label>
-            <span>Email</span>
-            <input @bind-value="cus.emailaddress" type="email" required />
-        </label>
-        <label>
-            <span>Phone Number</span>
-            <input @bind-value="cus.phonenumber" type="text" required />
-        </label>
-        <label>
-            <span>Password</span>
-            <input @bind-value="cus.password" type="password" required />
-        </label>
-        <button @onclick="RegTrainer" type="button" class="submit">Sign Up</button>
-
-    </div>
-    <div class="sub-cont">
-        <div class="img">
-            <div class="img__text m--up">
-
-                <h3>Are you a Coach?</h3>
-            </div>
-            <div class="img__text m--in">
-
-                <h3>Are you a Trainer?</h3>
-            </div>
-            <div class="img__btn">
-                <span class="m--up">Sign Up Here</span>
-                <span class="m--in">Sign Up Here</span>
-            </div>
-        </div>
-        <div class="form sign-up">
-            <h2>Create your Account</h2>
-            <label>
-                <span>First Name</span>
-                <input @bind-value="coach.firstName" type="text" required />
-            </label>
-            <label>
-                <span>Last Name</span>
-                <input @bind-value="coach.lastName" type=" text" required />
-            </label>
-            <label>
-                <span>Email</span>
-                <input @bind-value="coach.emailaddress" type="email" required />
-            </label>
-            <label>
-                <span>Phone Number</span>
-                <input @bind-value="coach.phonenumber" type="text" required />
-            </label>
-            <label>
-                <span>Sport</span>
-                <input @bind-value="coach.sport" type="text" required />
-            </label>
-            <label>
-                <span>Experience</span>
-                <input @bind-value="coach.exp" type="int" required />
-            </label>
-            <label>
-                <span>Password</span>
-                <input @bind-value="coach.password" type="password" required />
-            </label>
-            <button @onclick="RegCoach" type="button" class="submit">Sign Up</button>
-
-        </div>
-    </div>
-</div>
-
 <script>
-    document.querySelector('.img__btn').addEventListener('click', function () {
-        document.querySelector('.cont').classList.toggle('s--signup');
-    });
-</script>
+    function initializePanel() {
+        console.log("Panel initialized");
+    }
 
-
-*@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@code {
-    private bool isFirstRender = true;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender || !isFirstRender)
-        {
-            // Call your JavaScript function to trigger the animation
-            await JS.InvokeVoidAsync("triggerAnimation");
-
-            isFirstRender = false;  // Prevent animation from firing on subsequent renders
+       function animatePanel(isLogin) {
+        const panel = document.querySelector('.panel');
+        if (isLogin) {
+            if (!panel.classList.contains('login-panel')) {
+                panel.classList.add('login-panel');
+            }
+        } else {
+            if (panel.classList.contains('login-panel')) {
+                panel.classList.remove('login-panel');
+            }
         }
     }
+
+    function showMessage(message) {
+        alert(message);
+    }
+</script>
+@code {
+    private string UserEmail = "";
+    private string CoachEmail = "";
+    private string CoachPassword = "";
+    private string UserPassword = "";
+    private bool isFirstRender = true;
+    private bool isLogin = false;
+    private string panelClass
+    {
+        get
+        {
+            if (isLogin)
+            {
+                return "login-panel";
+            }
+            return "";
+        }
+    }
+
+    private void TogglePanel()
+    {
+        isLogin = !isLogin;
+        if (JS != null)
+        {
+            JS.InvokeVoidAsync("animatePanel", isLogin);
+        }
+        StateHasChanged();
+    }
+
     Trainer cus = new Trainer();
     TrainerDB db = new TrainerDB();
     Coach coach = new Coach();
