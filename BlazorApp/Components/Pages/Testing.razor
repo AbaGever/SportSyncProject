@@ -4,31 +4,83 @@
 
 <center>
     <h3>Testing</h3>
-    <label for="fruitSelect">Choose a fruit:</label>
-    <select id="fruitSelect">
+    <select @onchange="OnChange" >
         <option value="default">None</option>
         @foreach (string m in Muscles)
         {
-            <option value="@selectedmuscle">@m</option>
+            <option value="@m">@m</option>
         }
-        <option value="@selectedmuscle">Aerobic</option>
+
 
     </select>
-    <input type="date" min="@time" max="@maxDate"/> 
+    <input @bind-value="selectedDate" type="date" min="@time" max="@maxDate" />
+    <input  @bind-value="nameofdrill" placeholder="Search Group By Sport">
+    <button class="button-73" @onclick="Search">Search Drills</button>
 
-    @selectedmuscle1
+    @if (list == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <center>
+            <table style="width:100%">
+                <thead>
+                    <tr>
+                        <th><center>Name</center></th>
+                        <th><center>Muscle</center></th>
+                        <th><center>Sets</center></th>
+                        <th><center>Reps</center></th>
+                        <th><center>Duration</center></th>
+                        <th><center>Description</center></th>
+
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in list)
+                    {
+                        <tr>
+                            <td><center>@item.name</center></td>
+                            <td><center>@item.muscle</center></td>
+                            <td><center>@item.sets</center></td>
+                            <td><center>@item.reps</center></td>
+                            <td><center>@item.duration Seconds</center></td>
+                            <td><center>@item.description</center></td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </center>
+    }
+
+    @selectedDate.ToString()
+
+   @*  <iframe width="560" height="315" src="https://www.youtube.com/embed/JZOfWU3x4rI?si=m7-5GWUzwH4kIrS5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> *@
+
 </center>
 @code {
+    List<Drill> list;
+    string nameofdrill = "";    
+    string selectedmuscle = "";
+    time time = new time();
+    private DateTime selectedDate = DateTime.Now;
+    private string maxDate;
     List<string> Muscles = new List<string>
     {
-        "Arms","Back","Chest","Core","Full Body","Legs","Shoulders"
+        "Aerobic","Arms","Back","Chest","Core","Full Body","Legs","Shoulders"
     };
-    string selectedmuscle1;
-    string selectedmuscle ; 
-    time time = new time();
-    private DateTime selectedDate;
-    private string maxDate;
-
+    private void OnChange(ChangeEventArgs args)
+    {
+        selectedmuscle = args.Value.ToString();
+    }
+    async Task Search()
+    {
+        DrillDB drillDB = new DrillDB();
+        list = await drillDB.SelectByMuscleOrNameAsync(nameofdrill, selectedmuscle);
+    }
     protected override void OnInitialized()
     {
         // Calculate the maximum date (next month)

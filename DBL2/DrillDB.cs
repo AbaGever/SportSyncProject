@@ -115,9 +115,21 @@ namespace DBL2
             return list;
         }
 
+        
 
-
-       
+        public async Task<List<Drill>> SelectByMuscleOrNameAsync(string name,string muscle)
+        {
+            string sql = @"SELECT * FROM drills WHERE name RLIKE @name OR muscle RLIKE @muscle;";
+            Dictionary<string, object> p = new Dictionary<string, object>();
+            if (name == "")
+                name = "_";
+            if (muscle == "")
+                muscle = "_";
+            p.Add("@name", name);
+            p.Add("@muscle", muscle);
+            List<Drill> list = (List<Drill>)await SelectAllAsync(sql, p);
+            return list;
+        }
     }
 }
 
