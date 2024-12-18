@@ -3,18 +3,16 @@
 @using DBL2
 
 <center>
-    <h3>Testing</h3>
-    <select @onchange="OnChange" >
+    <h3>Workout Management</h3>
+    <select @onchange="OnChange">
         <option value="default">None</option>
         @foreach (string m in Muscles)
         {
             <option value="@m">@m</option>
         }
-
-
     </select>
     <input @bind-value="selectedDate" type="date" min="@time" max="@maxDate" />
-    <input  @bind-value="nameofdrill" placeholder="Search Group By Sport">
+    <input @bind-value="nameofdrill" placeholder="Search Group By Sport" />
     <button class="button-73" @onclick="Search">Search Drills</button>
 
     @if (list == null)
@@ -33,9 +31,7 @@
                         <th><center>Reps</center></th>
                         <th><center>Duration</center></th>
                         <th><center>Description</center></th>
-
-
-
+                        <th><center>Actions</center></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,22 +44,40 @@
                             <td><center>@item.reps</center></td>
                             <td><center>@item.duration Seconds</center></td>
                             <td><center>@item.description</center></td>
+                            <td>
+                                <center>
+                                    <button @onclick="() => AddDrillToWorkout(item.name)">Add</button>
+                                </center>
+                            </td>
                         </tr>
                     }
-
                 </tbody>
             </table>
         </center>
     }
 
-    @selectedDate.ToString()
+    @if (selectedDrills.Count > 0)
+    {
+        <div>
+            <h4>Selected Drills</h4>
+            <ul>
+                @foreach (var drill in selectedDrills)
+                {
+                    <li>
+                        @drill
+                        <button @onclick="() => RemoveDrill(drill)">Remove</button>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
 
-   @*  <iframe width="560" height="315" src="https://www.youtube.com/embed/JZOfWU3x4rI?si=m7-5GWUzwH4kIrS5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> *@
-
+    <button class="button-73" @onclick="CreateWorkout">Create Workout</button>
 </center>
+
 @code {
     List<Drill> list;
-    string nameofdrill = "";    
+    string nameofdrill = "";
     string selectedmuscle = "";
     time time = new time();
     private DateTime selectedDate = DateTime.Now;
@@ -72,15 +86,83 @@
     {
         "Aerobic","Arms","Back","Chest","Core","Full Body","Legs","Shoulders"
     };
+
+    // State to store selected drills for the workout
+    List<string> selectedDrills = new List<string>();
+
     private void OnChange(ChangeEventArgs args)
     {
         selectedmuscle = args.Value.ToString();
     }
+
     async Task Search()
     {
         DrillDB drillDB = new DrillDB();
         list = await drillDB.SelectByMuscleOrNameAsync(nameofdrill, selectedmuscle);
     }
+
+    void AddDrillToWorkout(string drillName)
+    {
+        if (!selectedDrills.Contains(drillName))
+        {
+            selectedDrills.Add(drillName);
+        }
+    }
+
+    void RemoveDrill(string drillName)
+    {
+        selectedDrills.Remove(drillName);
+    }
+
+    async Task CreateWorkout()
+    {
+        WorkoutDB workoutDB = new WorkoutDB();
+        DrillsListDB drillsListDB = new DrillsListDB();
+
+        int totalDuration = 0;
+
+        // Iterate over the selected drills to calculate the total duration
+        foreach (var selectedDrillName in selectedDrills)
+        {
+            // Directly match the drill name with the selectedDrillName
+            var drillDetail = list.FirstOrDefault(d => d.name == selectedDrillName); // Fetch the drill details from the available list
+            if (drillDetail != null)
+            {
+                totalDuration += drillDetail.duration; // Add the duration of the selected drill
+            }
+        }
+
+        Workout newWorkout = new Workout
+            {
+                trainerid = 1, // Assuming a trainer ID
+                date = selectedDate.ToString("yyyy-MM-dd"),
+                duration = totalDuration, // Use the calculated total duration
+                Isgroup = "false",
+                hour = selectedDate.Hour
+            };
+
+        // Insert the workout and get its ID
+        bool isInserted = await workoutDB.InsertWorkout(newWorkout);
+        if (isInserted)
+        {
+            int workoutId = newWorkout.id;
+
+            // Insert each selected drill into drillslist
+            foreach (var drillName in selectedDrills)
+            {
+                drillslist dl = new drillslist(workoutId, drillName);
+                await drillsListDB.InsertDLAsync(dl);
+            }
+
+            // Clear the selection and notify the user
+            selectedDrills.Clear();
+            list = null;
+            await Task.Yield(); // Re-render the UI
+            Console.WriteLine("Workout created successfully!");
+        }
+    }
+
+
     protected override void OnInitialized()
     {
         // Calculate the maximum date (next month)
@@ -89,6 +171,5 @@
 
         // Convert to string in "yyyy-MM-dd" format
         maxDate = nextMonth.ToString("yyyy-MM-dd");
-
     }
 }
