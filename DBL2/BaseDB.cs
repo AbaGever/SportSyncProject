@@ -83,7 +83,7 @@ namespace DBL2
                 Dictionary<string, object> p = new Dictionary<string, object>();
                 p.Add("id", res.ToString());
                 string sql;
-                if (GetPrimaryKeyName()[1] == null)
+                if (GetPrimaryKeyName().Count == 1)
                     sql = @$"SELECT * FROM {GetTableName()} WHERE ({GetPrimaryKeyName()[0]} = @id)";
                 else
                     sql = @$"SELECT * FROM {GetTableName()} WHERE ({GetPrimaryKeyName()[0]},{GetPrimaryKeyName()[1]} = @id)";

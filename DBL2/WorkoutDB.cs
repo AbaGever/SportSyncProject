@@ -115,7 +115,19 @@ namespace DBL2
                 return null;
         }
 
-
+        public async Task<Workout> InsertGetWorkout(Workout w)
+        {
+            Dictionary<string, object> data = new Dictionary<string, object>()
+            {
+            {"trainerid",w.trainerid},
+            {"date",w.date},
+            {"duration",w.duration},
+            {"Isgroup",w.Isgroup},
+            {"hour",w.hour}
+            };
+            Workout workout = (Workout)await base.InsertGetObjAsync(data);
+            return workout;
+        }
 
 
     }
