@@ -23,77 +23,77 @@
 </HeadContent>
 
 
+<body>
 
+<div class="ALLLL">
+    <header class="header_section">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg custom_nav-container ">
+                <a class="navbar-brand" href="/">
+                    <span>
+                        SportSync
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-        <div class="ALLLL"> 
-        <header class="header_section">
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-lg custom_nav-container ">
-                    <a class="navbar-brand" href="/">
-                        <span>
-                            SportSync
-                        </span>
-                    </a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                        <ul class="navbar-nav  ">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                            </li>
 
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
-                            <ul class="navbar-nav  ">
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/p">Your Profile</a>
-                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/p">Your Profile</a>
+                            </li>
 
                             <li class="nav-item">
                                 <a class="nav-link" href="/searchG">Search Groups</a>
                             </li>
-                            </ul>
-                            <div class="user_option">
-                                <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                                    <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
-                                </form>
-                            </div>
+                        </ul>
+                        <div class="user_option">
+                            <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                            </form>
                         </div>
                     </div>
-                </nav>
-            </div>
-        </header>
+                </div>
+            </nav>
+        </div>
+    </header>
 </div>
-        <section class=" slider_section position-relative">
-            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="container">
-                            <div class="col-lg-10 col-md-11 mx-auto">
-                                <div class="detail-box">
-                                    <div>
-                                        <h1>All Users</h1>
-                                    </div>
-                                </div>
+<section class=" slider_section position-relative">
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="container">
+                    <div class="col-lg-10 col-md-11 mx-auto">
+                        <div class="detail-box">
+                            <div>
+                                <h1>All Users</h1>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-        @if (ps == null)
-        {
-            <p><em>Loading...</em></p>
-        }
-        else
-        {
-            <div>
+        </div>
+    </div>
+</section>
+@if (ps == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div>
         <center>
-                <table style="width:2000px;border:2px">
-                    <thead>
-                        <tr>
-                            
-                            <th><center>ID</center></th>
+            <table style="width:2000px;border:2px">
+                <thead>
+                    <tr>
+
+                        <th><center>ID</center></th>
                         <th><center>First Name</center></th>
                         <th><center>Last Name</center></th>
                         <th><center>Email</center></th>
@@ -103,55 +103,58 @@
                         <th><center>Admin</center></th>
                         <th><center>Date Joined</center></th>
 
-                        </tr>
-                    </thead>
-                    
-                    <tbody>
-                        @foreach (var item in ps)
-                        {
-                            
-                            <tr>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in ps)
+                    {
+
+                        <tr>
                             <td><center>@item.id</center></td>
                             <td><center>@item.firstName</center></td>
                             <td><center>@item.lastName</center></td>
                             <td><center>@item.emailaddress</center></td>
                             <td><center>@item.phonenumber</center></td>
                             <td><center>@item.password</center></td>
-                                @if (item.groupname != "" && item.groupname != null)
-                                {
-                                    <td><center>
+                            @if (item.groupname != "" && item.groupname != null)
+                            {
+                                <td>
+                                    <center>
                                         <a href="ShowG/@item.groupname">@item.groupname</a>
                                     </center>
-                                    </td>
+                                </td>
 
-                                }
-                                else
-                                {
-                                    <td>@item.groupname</td>
-                                }
-                                <td>@item.isadmin</td>
-                                <td>@item.datejoined</td>
-                            </tr>
-                        }
+                            }
+                            else
+                            {
+                                <td>@item.groupname</td>
+                            }
+                            <td>@item.isadmin</td>
+                            <td>@item.datejoined</td>
+                        </tr>
+                    }
 
-                    </tbody>
-            
-                </table>
-                </center>
-            </div>
-        }
+                </tbody>
+
+            </table>
+        </center>
+    </div>
+}
 
 
-
+</body>
 <style>
 
     table, th, td {
         border: 1px solid black;
         border-collapse: collapse;
     }
-    .ALLLL{
+
+    .ALLLL {
         width: 100%;
     }
+
     @@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
     * {
@@ -355,7 +358,6 @@
         width: 200%;
     }
 
-     
 </style>
 
 
