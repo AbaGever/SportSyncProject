@@ -60,7 +60,7 @@ namespace DBL2
         {
             Dictionary<string, object> data = new Dictionary<string, object>()
             {
-            
+
             {"trainerid",w.trainerid},
             {"date",w.date},
             {"duration",w.duration},
@@ -90,8 +90,8 @@ namespace DBL2
             {"hour",w.hour}
             };
 
-        
-            filterValues.Add("id",w.id);
+
+            filterValues.Add("id", w.id);
             return await base.UpdateAsync(fillValues, filterValues);
         }
 
@@ -102,6 +102,13 @@ namespace DBL2
                 { "id", w.id }
             };
             return await base.DeleteAsync(filterValues);
+        }
+
+        public async Task<bool> IsWorkoutEmpty(int trainerid, string date, int hour)
+        {
+            string sql = @$"SELECT * FROM sportsync_db.workouts WHERE trainerid={trainerid} AND date ='{date}' AND hour =@hour;";
+            var results = await SelectAllAsync(sql);
+            return !results.Any();
         }
         public async Task<Workout> SelectByPkAsync(int id)
         {
@@ -117,7 +124,9 @@ namespace DBL2
 
         public async Task<Workout> InsertGetWorkout(Workout w)
         {
-            Dictionary<string, object> data = new Dictionary<string, object>()
+            if (await IsWorkoutEmpty(w.trainerid, w.date, w.hour))
+            {
+                Dictionary<string, object> data = new Dictionary<string, object>()
             {
             {"trainerid",w.trainerid},
             {"date",w.date},
@@ -125,10 +134,14 @@ namespace DBL2
             {"Isgroup",w.Isgroup},
             {"hour",w.hour}
             };
-            Workout workout = (Workout)await base.InsertGetObjAsync(data);
-            return workout;
+                Workout workout = (Workout)await base.InsertGetObjAsync(data);
+                return workout;
+            }
+            else
+            {
+                return null;
+            }
         }
-
 
     }
 }
