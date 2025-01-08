@@ -1,0 +1,101 @@
+﻿@page "/ShowW/{Wid}"
+<h3>ShowW</h3>
+@using Models2
+@using DBL2
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage MySession
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@inject IJSRuntime js
+
+<HeadContent>
+    <!-- Basic -->
+
+
+
+    <link rel="icon" href="/download.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+
+    <!-- slider stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="homepage/css/bootstrap.css">
+
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&amp;display=swap" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="homepage/css/style.css" rel="stylesheet">
+    <!-- responsive style -->
+    <link href="homepage/css/responsive.css" rel="stylesheet">
+</HeadContent>
+<div class="container-fluid">
+    <nav class="navbar navbar-expand-lg custom_nav-container ">
+        <a class="navbar-brand" href="/">
+            <span>
+                SportSync
+            </span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                <ul class="navbar-nav  ">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    @if (c == null && coach == null)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="/r">Sign Up</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">Log In</a>
+                        </li>
+                    }
+                    <li class="nav-item">
+                        <a class="nav-link" href="/p">Your Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/searchG">Search Groups</a>
+                    </li>
+
+                </ul>
+                <div class="user_option">
+                    <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                        <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+
+
+@code {
+    [Parameter]
+    public int Wid { get; set; }
+    Trainer c;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        if (firstRender)
+        {
+
+            var user1 = await MySession.GetAsync<Trainer>("Trainer");
+            if (user1.Success)
+            {
+                c = user1.Value;
+                StateHasChanged();
+            }
+            if (c == null)
+            {
+                navigationManager.NavigateTo("/login");
+
+            }
+
+        }
+    }
+}
