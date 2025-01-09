@@ -1,5 +1,4 @@
-﻿@page "/ShowW/{Wid}"
-<h3>ShowW</h3>
+﻿@page "/ShowW/{Wid:int}"
 @using Models2
 @using DBL2
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
@@ -28,54 +27,123 @@
     <!-- responsive style -->
     <link href="homepage/css/responsive.css" rel="stylesheet">
 </HeadContent>
-<div class="container-fluid">
-    <nav class="navbar navbar-expand-lg custom_nav-container ">
-        <a class="navbar-brand" href="/">
-            <span>
-                SportSync
-            </span>
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+@if (workout != null)
+{
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+            <a class="navbar-brand" href="/">
+                <span>
+                    SportSync
+                </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
-                <ul class="navbar-nav  ">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    @if (c == null && coach == null)
-                    {
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                    <ul class="navbar-nav  ">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        @if (c == null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="/r">Sign Up</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">Log In</a>
+                            </li>
+                        }
                         <li class="nav-item">
-                            <a class="nav-link" href="/r">Sign Up</a>
+                            <a class="nav-link" href="/p">Your Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/login">Log In</a>
+                            <a class="nav-link" href="/searchG">Search Groups</a>
                         </li>
-                    }
-                    <li class="nav-item">
-                        <a class="nav-link" href="/p">Your Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/searchG">Search Groups</a>
-                    </li>
 
-                </ul>
-                <div class="user_option">
-                    <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                        <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
-                    </form>
+                    </ul>
+                    <div class="user_option">
+                        <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                            <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </nav>
-</div>
+        </nav>
+    </div>
+    @if (c != null && c.id == workout.trainerid)
+    {
 
+
+        <div class="wrapper">
+            <center>
+                <h1> Hi @c.firstName</h1>
+                <h3> This is Your Workout </h3>
+                <h3> The Workout is in @workout.date at @hour1</h3>
+                <h3> The duration of the Workout is @(workout.duration / 60) Minutes</h3>
+                @if (workout.Isgroup == "false")
+                {
+                    <h3>Private Workout</h3>
+                }
+                else
+                {
+                    <h3>Group`s Workout</h3>
+
+                }
+
+
+            </center>
+        </div>
+        @if (Drills != null && Drills.Count > 0)
+        {
+            <div class="container">
+                <center><h3 style="color:white">Drills for This Workout</h3> </center>
+                
+                <div class="row">
+                    @foreach (var drill in Drills)
+                    {
+                        <div class="col-md-6 mb-4">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary">@drill.name</h5>
+                                    <p class="card-text">
+                                        <strong>Muscle Group:</strong> @drill.muscle <br />
+                                        <strong>Sets:</strong> @drill.sets <br />
+                                        <strong>Reps:</strong> @drill.reps <br />
+                                        <strong>Duration:</strong> @drill.duration minutes <br />
+                                    </p>
+                                    @if (!string.IsNullOrEmpty(drill.description))
+                                    {
+                                        <p class="card-text"><em>@drill.description</em></p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <p>No drills available for this workout.</p>
+        }
+        <center>
+            <button @onclick="() => Delete()" class="button-24">Delete Workout</button>
+        </center>
+    }
+}
 
 @code {
     [Parameter]
     public int Wid { get; set; }
+    Workout workout;
+    WorkoutDB workoutDB = new WorkoutDB();
+    DrillsListDB drillsListDB = new DrillsListDB();
+    List<drillslist> Drillsnames;
+    List<Drill> Drills = new List<Drill>();
+    DrillDB drillDB = new DrillDB();
+    string hour1;
     Trainer c;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -90,6 +158,10 @@
                 c = user1.Value;
                 StateHasChanged();
             }
+            if (c != null && c.id != workout.trainerid)
+            {
+                navigationManager.NavigateTo("/");
+            }
             if (c == null)
             {
                 navigationManager.NavigateTo("/login");
@@ -98,4 +170,223 @@
 
         }
     }
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Wid == null)
+        {
+            workout = null;
+            Drillsnames = null;
+        }
+        else
+        {
+
+            workout = await workoutDB.SelectByPkAsync(Wid);
+            if(workout == null)
+            {
+                navigationManager.NavigateTo("/");
+
+            }
+            Drillsnames = await drillsListDB.SelectAllInWorkoutAsync(Wid);
+            foreach (var dl in Drillsnames)
+            {
+                Drill drill = await drillDB.SelectByPkAsync(dl.Drillname);
+                Drills.Add(drill);
+            }
+            hour1 = workout.hour.ToString("D4").Insert(2, ":");
+            StateHasChanged();
+
+
+
+        }
+    }
+
+    async Task Delete()
+    {
+        if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete Workout?"))
+        {
+            List<drillslist> Ds = await drillsListDB.SelectAllInWorkoutAsync(Wid);
+            foreach (var dl in Ds)
+            {
+                await drillsListDB.DeleteDLAsync(dl);
+            }
+            await workoutDB.DeleteAsync(workout);
+            navigationManager.NavigateTo("/");
+
+        }
+    }
 }
+<style>
+
+
+
+    .card {
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        background-color: #fff;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #007BFF;
+    }
+
+    .card-text {
+        font-size: 14px;
+        color: #555;
+    }
+
+    .container {
+        margin-top: 20px;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    @@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    html, body {
+        width: 100%;
+        place-items: center;
+        background: -webkit-linear-gradient(bottom, #E0DCC8, #FFBF00);
+    }
+
+
+
+
+    /* CSS */
+    .button-24 {
+        background: #FF4742;
+        border: 1px solid #FF4742;
+        border-radius: 6px;
+        box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+        box-sizing: border-box;
+        color: #FFFFFF;
+        cursor: pointer;
+        display: inline-block;
+        font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 16px;
+        min-height: 40px;
+        outline: 0;
+        padding: 12px 14px;
+        text-align: center;
+        text-rendering: geometricprecision;
+        text-transform: none;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        vertical-align: middle;
+    }
+
+        .button-24:hover,
+        .button-24:active {
+            background-color: initial;
+            background-position: 0 0;
+            color: #FF4742;
+        }
+
+        .button-24:active {
+            opacity: .5;
+        }
+
+    .button-73 {
+        appearance: none;
+        background-color: #FFFFFF;
+        border-radius: 40em;
+        border-style: none;
+        box-shadow: #ADCFFF 0 -12px 6px inset;
+        box-sizing: border-box;
+        color: #000000;
+        cursor: pointer;
+        display: inline-block;
+        font-family: -apple-system,sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: -.24px;
+        margin: 0;
+        outline: none;
+        padding: 1rem 1.3rem;
+        quotes: auto;
+        text-align: center;
+        text-decoration: none;
+        transition: all .15s;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
+        .button-73:hover {
+            background-color: #FFC229;
+            box-shadow: #FF6314 0 -6px 8px inset;
+            transform: scale(1.125);
+        }
+
+        .button-73:active {
+            transform: scale(1.025);
+        }
+
+    @@media (min-width: 768px) {
+        .button-73 {
+            font-size: 1.5rem;
+            padding: .75rem 2rem;
+        }
+    }
+
+    ::selection {
+        background: Grey;
+        color: #fff;
+    }
+
+    .wrapper {
+        overflow: hidden;
+        margin: auto;
+        max-width: 500px;
+        background: #fff;
+        padding: 30px;
+        border-radius: 5px;
+        box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
+    }
+
+        .wrapper .title-text {
+            display: flex;
+            width: 200%;
+        }
+
+        .wrapper .title {
+            width: 50%;
+            font-size: 35px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+        }
+
+        .wrapper .slide-controls {
+            position: relative;
+            display: flex;
+            height: 50px;
+            width: 100%;
+            overflow: hidden;
+            margin: 30px 0 10px 0;
+            justify-content: space-between;
+            border: 1px solid lightgrey;
+            border-radius: 5px;
+        }
+
+    }
+</style>
