@@ -143,6 +143,54 @@ namespace DBL2
             }
         }
 
+        public async Task<List<Workout>> GetWorkoutsByTrainerIdAsync(int trainerid)
+        {
+            // בניית השאילתה SQL כדי לקבל את כל האימונים של המתאמן
+            string sql = "SELECT * FROM sportsync_db.workouts WHERE trainerid = @trainerid ORDER BY date, hour;";
+
+            // יצירת פרמטרים לשאילתה
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { "@trainerid", trainerid }
+            };
+
+            // שליחת השאילתה לקבלת האימונים
+            List<Workout> workouts = (List<Workout>)await SelectAllAsync(sql, parameters);
+
+            return workouts;
+        }
+
+        public async Task<List<Workout>> GetWorkoutsByWeekAsync(int trainerid, DateTime startOfWeek)
+        {
+            // חישוב סוף השבוע - אנחנו מניחים שיום ראשון הוא תחילת השבוע
+            DateTime endOfWeek = startOfWeek.AddDays(6);
+
+            // המרת התאריכים לפורמט שמתאים לשאילתה
+            string startDate = startOfWeek.ToString("yyyy-MM-dd");
+            string endDate = endOfWeek.ToString("yyyy-MM-dd");
+
+            // בניית שאילתה SQL כדי לקבל את האימונים בטווח התאריכים
+            string sql = @$"
+        SELECT * FROM sportsync_db.workouts
+        WHERE trainerid = @trainerid
+        AND date >= @startDate AND date <= @endDate
+        ORDER BY date, hour;
+    ";
+
+            // יצירת פרמטרים לשאילתה
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+    {
+        { "@trainerid", trainerid },
+        { "@startDate", startDate },
+        { "@endDate", endDate }
+    };
+
+            // שליחת השאילתה לקבלת האימונים
+            List<Workout> workouts = (List<Workout>)await SelectAllAsync(sql, parameters);
+
+            return workouts;
+        }
+
     }
 }
 

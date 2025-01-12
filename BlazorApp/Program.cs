@@ -1,5 +1,6 @@
 using BlazorApp.Components;
 
+
 namespace BlazorApp
 {
     public class Program
