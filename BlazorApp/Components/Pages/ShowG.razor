@@ -611,6 +611,7 @@
     string error = "";
     string duration = "";
     TrainerDB TrainerDB = new TrainerDB();
+    string IsReccuring1 = "false";
 
     protected override async Task OnParametersSetAsync()
     {
@@ -804,7 +805,8 @@
                     date = selectedDate.ToString("yyyy-MM-dd"),
                     duration = totalDuration,
                     Isgroup = "true",
-                    hour = hourAsInt // Convert the integer to string for storage
+                    hour = hourAsInt , // Convert the integer to string for storage
+                    IsReccuring = IsReccuring1
 
                 };
 

@@ -14,12 +14,13 @@ namespace Models2
         public int duration { get; set; }
         public string Isgroup { get; set; }
         public int hour { get; set; }
+        public string IsReccuring { get; set; }
 
         public Workout()
         {
 
         }
-        public Workout(int id, int trainerid, string date, int duration, string isgroup, int hour)
+        public Workout(int id, int trainerid, string date, int duration, string isgroup, int hour,string ir)
         {
             this.id = id;
             this.trainerid = trainerid;
@@ -27,6 +28,7 @@ namespace Models2
             this.duration = duration;
             this.Isgroup = isgroup;
             this.hour = hour;
+            this.IsReccuring = ir; 
         }
     }
 

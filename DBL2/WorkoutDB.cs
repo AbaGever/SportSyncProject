@@ -31,6 +31,7 @@ namespace DBL2
                 w.duration = int.Parse(row[3].ToString());
                 w.Isgroup = row[4].ToString();
                 w.hour = int.Parse(row[5].ToString());
+                w.IsReccuring = row[6].ToString();
 
             }
             catch (Exception ex)
@@ -65,7 +66,8 @@ namespace DBL2
             {"date",w.date},
             {"duration",w.duration},
             {"Isgroup",w.Isgroup},
-            {"hour",w.hour}
+            {"hour",w.hour},
+            {"IsReccuring",w.IsReccuring }
             };
             int num = await base.InsertAsync(data);
             if (num > 0)
@@ -87,7 +89,8 @@ namespace DBL2
             {"date",w.date},
             {"duration",w.duration},
             {"Isgroup",w.Isgroup},
-            {"hour",w.hour}
+            {"hour",w.hour},
+            {"IsReccuring",w.IsReccuring }
             };
 
 
@@ -132,7 +135,8 @@ namespace DBL2
             {"date",w.date},
             {"duration",w.duration},
             {"Isgroup",w.Isgroup},
-            {"hour",w.hour}
+            {"hour",w.hour},
+            {"IsReccuring",w.IsReccuring }
             };
                 Workout workout = (Workout)await base.InsertGetObjAsync(data);
                 return workout;

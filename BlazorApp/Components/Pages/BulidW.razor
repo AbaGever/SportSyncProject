@@ -156,6 +156,15 @@
                         <input @bind="selectedDate" type="date" class="form-control mb-3" min="@time" max="@maxDate" />
                         <input type="time" class="form-control mb-3" @bind-value="selectedHour" required />
                         <button class="button-73 w-100" @onclick="CreateWorkout">Create Workout</button>
+
+
+                        <select @onchange="SelectedDaysChanged" multiple>
+                            @foreach (var d in DaysOfWeek)
+                            {
+                                <option value="@d">@d</option>
+                            }
+
+                        </select>
                     </div>
                 </div>
             </div>
@@ -271,8 +280,13 @@
     string nameofdrill = "";
     string selectedmuscle = "";
     time time = new time();
+    List<string> DaysOfWeek = new List<string>
+    {
+    "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"
+    };
     private DateTime selectedDate = DateTime.Today;
     private string maxDate;
+    string IsReccuring1 = "false";
     List<string> Muscles = new List<string>
     {
     "Aerobic","Arms","Back","Chest","Core","Full Body","Legs","Shoulders"
@@ -281,6 +295,25 @@
 
     // State to store selected drills for the workout
     List<string> selectedDrills = new List<string>();
+
+    string[] selectedDays { get; set; } = new string[] { };
+
+
+    public void SelectedDaysChanged(ChangeEventArgs e)
+    {
+        selectedDays = (string[])e.Value;
+    }
+
+    static DateTime GetNextDay(DateTime startDate, DayOfWeek targetDay)
+    {
+        // מחשב כמה ימים להוסיף כדי להגיע ליום הרצוי
+        int daysToAdd = ((int)targetDay - (int)startDate.DayOfWeek + 7) % 7;
+        daysToAdd = daysToAdd == 0 ? 7 : daysToAdd; // מבטיח שהיום הרצוי הוא בשבוע הבא אם היום זהה
+        return startDate.AddDays(daysToAdd);
+    }
+
+
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -362,7 +395,8 @@
                 date = selectedDate.ToString("yyyy-MM-dd"),
                 duration = totalDuration,
                 Isgroup = "false",
-                hour = hourAsInt // Convert the integer to string for storage
+                hour = hourAsInt, // Convert the integer to string for storage
+                IsReccuring = IsReccuring1
             };
 
         // Insert the workout using InsertGetWorkout and retrieve the workout object with the new ID
