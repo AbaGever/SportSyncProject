@@ -43,17 +43,17 @@
                             @if (UserS == null)
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link"  href="/r">Sign Up</a>
+                                    <a class="nav-link" href="/r">Sign Up</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="/login">Log In</a>
                                 </li>
                             }
 
-                            <li class="nav-item" >
-                                <a class="nav-link"  href="/p">Your Profile</a>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/p">Your Profile</a>
                             </li>
-                            <li class="nav-item" >
+                            <li class="nav-item">
                                 <a class="nav-link" href="/searchG">Search Groups</a>
                             </li>
 
@@ -73,7 +73,7 @@
     <!-- Main Content -->
     <div class="container mt-5">
         <h2 class="text-center text-white mb-4">Workout Management</h2>
-        
+
         <div class="row">
             <!-- Search and Drill List -->
             <div class="col-md-7">
@@ -158,13 +158,28 @@
                         <button class="button-73 w-100" @onclick="CreateWorkout">Create Workout</button>
 
 
-                        <select @onchange="SelectedDaysChanged" multiple>
-                            @foreach (var d in DaysOfWeek)
+                        <div>
+                            <h2>Choose Weekly reccuring</h2>
+                            @foreach (var option in DaysOfWeek)
                             {
-                                <option value="@d">@d</option>
+                                <div>
+                                    <label>
+                                        <input type="checkbox" @onchange="(e) => OnOptionChanged(e, option)" />
+                                        @option
+                                    </label>
+                                </div>
                             }
+                        </div>
 
-                        </select>
+                        <h4>Selected Options:</h4>
+                        <ul>
+                            @foreach (var item in SelectedOptions)
+                            {
+                                <li>@item</li>
+                            }
+                        </ul>
+                        <button @onclick="Dosomething">wewewewewew </button>
+
                     </div>
                 </div>
             </div>
@@ -200,9 +215,9 @@
         transition: all 0.3s ease;
     }
 
-    .selected-drill-item:hover {
-        background: #e9ecef;
-    }
+        .selected-drill-item:hover {
+            background: #e9ecef;
+        }
 
     .button-73 {
         appearance: none;
@@ -218,11 +233,11 @@
         transition: all 0.15s;
     }
 
-    .button-73:hover {
-        background-color: #FFC229;
-        box-shadow: #FF6314 0 -6px 8px inset;
-        transform: scale(1.05);
-    }
+        .button-73:hover {
+            background-color: #FFC229;
+            box-shadow: #FF6314 0 -6px 8px inset;
+            transform: scale(1.05);
+        }
 
     .button-24 {
         background: #FF4742;
@@ -234,10 +249,10 @@
         transition: all 0.3s ease;
     }
 
-    .button-24:hover {
-        background-color: #FFFFFF;
-        color: #FF4742;
-    }
+        .button-24:hover {
+            background-color: #FFFFFF;
+            color: #FF4742;
+        }
 
     .table {
         background: white;
@@ -245,10 +260,10 @@
         overflow: hidden;
     }
 
-    .table th {
-        background: #f8f9fa;
-        border-top: none;
-    }
+        .table th {
+            background: #f8f9fa;
+            border-top: none;
+        }
 
     .form-control {
         border-radius: 8px;
@@ -263,12 +278,15 @@
         transition: all 0.3s ease;
     }
 
-    .nav-link:hover {
-        color: #FFC229 !important;
-    }
+        .nav-link:hover {
+            color: #FFC229 !important;
+        }
 
-   
 </style>
+
+
+
+
 <script src="homepage/js/jquery-3.4.1.min.js"></script>
 <script src="homepage/js/bootstrap.js"></script>
 @code {
@@ -296,14 +314,32 @@
     // State to store selected drills for the workout
     List<string> selectedDrills = new List<string>();
 
-    string[] selectedDays { get; set; } = new string[] { };
+
+    // List of all available options
 
 
-    public void SelectedDaysChanged(ChangeEventArgs e)
+    // List to store selected options
+    private List<string> SelectedOptions = new List<string>();
+
+    void Dosomething()
     {
-        selectedDays = (string[])e.Value;
-    }
 
+    }
+    // Event handler for checkbox changes
+    private void OnOptionChanged(ChangeEventArgs e, string option)
+    {
+        bool isChecked = (bool)e.Value;
+        if (isChecked)
+        {
+            // Add option to the selected list if checked
+            SelectedOptions.Add(option);
+        }
+        else
+        {
+            // Remove option from the selected list if unchecked
+            SelectedOptions.Remove(option);
+        }
+    }
     static DateTime GetNextDay(DateTime startDate, DayOfWeek targetDay)
     {
         // מחשב כמה ימים להוסיף כדי להגיע ליום הרצוי
@@ -387,10 +423,14 @@
             Console.WriteLine("Invalid DateTime input. Workout creation aborted.");
             return;
         }
-
+        if (SelectedOptions.Count != 0 || SelectedOptions != null)
+        {
+            IsReccuring1 = "true";
+        }
         // Create a new workout instance
         Workout newWorkout = new Workout
             {
+
                 trainerid = UserS.id, // Assuming this is the ID of the currently logged-in trainer
                 date = selectedDate.ToString("yyyy-MM-dd"),
                 duration = totalDuration,
@@ -399,53 +439,53 @@
                 IsReccuring = IsReccuring1
             };
 
-        // Insert the workout using InsertGetWorkout and retrieve the workout object with the new ID
-        if (await workoutDB.IsWorkoutEmpty(UserS.id, selectedDate.ToString("yyyy-MM-dd"), hourAsInt))
-        {
-            Workout createdWorkout = await workoutDB.InsertGetWorkout(newWorkout);
+    // Insert the workout using InsertGetWorkout and retrieve the workout object with the new ID
+    if (await workoutDB.IsWorkoutEmpty(UserS.id, selectedDate.ToString("yyyy-MM-dd"), hourAsInt))
+    {
+        Workout createdWorkout = await workoutDB.InsertGetWorkout(newWorkout);
 
-            if (createdWorkout != null)
+        if (createdWorkout != null)
+        {
+            int workoutId = createdWorkout.id;
+
+            // Associate each selected drill with the new workout
+            foreach (var drillName in selectedDrills)
             {
-                int workoutId = createdWorkout.id;
+                drillslist dl = new drillslist(workoutId, drillName);
+    await drillsListDB.InsertDLAsync(dl);
+    }
 
-                // Associate each selected drill with the new workout
-                foreach (var drillName in selectedDrills)
-                {
-                    drillslist dl = new drillslist(workoutId, drillName);
-                    await drillsListDB.InsertDLAsync(dl);
-                }
+    // Clear the selection and notify the user
+    error = "Inserted Workout";
+            await Task.Delay(1000);
+    selectedDrills.Clear();
 
-                // Clear the selection and notify the user
-                error = "Inserted Workout";
-                await Task.Delay(1000);
-                selectedDrills.Clear();
-               
-                list = null; // Reset the drill list
-                await Task.Yield(); // Re-render the UI
+            list = null; // Reset the drill list
+            await Task.Yield(); // Re-render the UI
 
-            }
-        }
-        else
-        {
+}
+    }
+    else
+{
 
-            error = "Unable to insert Workout, Date and hour already occupied";
-        }
+    error = "Unable to insert Workout, Date and hour already occupied";
+}
     }
 
     private int ConvertDateTimeToInt(DateTime dateTime)
-    {
-        // Combine the hour and minute into an integer
-        int combined = dateTime.Hour * 100 + dateTime.Minute;
-        return combined;
-    }
+{
+    // Combine the hour and minute into an integer
+    int combined = dateTime.Hour * 100 + dateTime.Minute;
+    return combined;
+}
 
-    protected override void OnInitialized()
-    {
-        // Calculate the maximum date (next month)
-        var today = DateTime.Today;
-        var nextMonth = today.AddMonths(1);
+protected override void OnInitialized()
+{
+    // Calculate the maximum date (next month)
+    var today = DateTime.Today;
+    var nextMonth = today.AddMonths(1);
 
-        // Convert to string in "yyyy-MM-dd" format
-        maxDate = nextMonth.ToString("yyyy-MM-dd");
-    }
+    // Convert to string in "yyyy-MM-dd" format
+    maxDate = nextMonth.ToString("yyyy-MM-dd");
+}
 }
