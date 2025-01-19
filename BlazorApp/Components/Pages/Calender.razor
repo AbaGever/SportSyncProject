@@ -1,259 +1,364 @@
-﻿@page "/c"
+﻿@page "/ws"
 @using Models2
+@using DBL2
 
-@using DBL2;
-<div class="calendar-container">
-    <div class="calendar-header">
-        <div class="controls">
-            <button class="nav-button" @onclick="PreviousWeek">&lt;</button>
-            <h2>@CurrentWeek.ToString("MMMM yyyy")</h2>
-            <button class="nav-button" @onclick="NextWeek">&gt;</button>
-        </div>
+
+<style>
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+
+    .day-button {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background-color: white;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+        .day-button:hover {
+            background-color: #f7fafc;
+        }
+
+        .day-button.selected {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+    .workout-card {
+        background-color: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 12px;
+    }
+
+    .timeline {
+        border-left: 2px solid #e2e8f0;
+        margin-left: 70px;
+        padding-left: 20px;
+        position: relative;
+    }
+
+    .time-slot {
+        display: flex;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .time-label {
+        position: absolute;
+        left: -90px;
+        width: 60px;
+        text-align: right;
+        color: #64748b;
+    }
+
+    .workout-item {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 8px;
+        margin-left: 10px;
+        flex: 1;
+    }
+
+    .nav-button {
+        background-color: #3b82f6;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+        .nav-button:hover {
+            background-color: #2563eb;
+        }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .badge {
+        background-color: #3b82f6;
+        color: white;
+        border-radius: 9999px;
+        padding: 2px 8px;
+        font-size: 0.75rem;
+        display: inline-block;
+        margin-top: 4px;
+    }
+
+    .tag {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        margin-right: 4px;
+    }
+
+    .tag-group {
+        background-color: #dbeafe;
+        color: #1e40af;
+    }
+
+    .tag-recurring {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+</style>
+
+<div class="container">
+    <!-- Week Navigation -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <button class="nav-button" @onclick="PreviousWeek">Previous Week</button>
+        <h2 style="font-size: 1.5rem; font-weight: bold;">Week of @CurrentWeekStart.ToString("MMMM dd, yyyy")</h2>
+        <button class="nav-button" @onclick="NextWeek">Next Week</button>
     </div>
 
-    <div class="calendar-wrapper">
-        <div class="weekdays-header">
-            <div class="time-header"></div>
-            @foreach (var day in WeekDays)
+    <!-- Calendar Grid -->
+    <div class="calendar-grid">
+        @foreach (var day in WeekDays)
+        {
+            <button class="day-button @(SelectedDate?.Date == day.Date ? "selected" : "")"
+                    @onclick="() => SelectDate(day)">
+                <div style="font-weight: bold;">@day.ToString("ddd")</div>
+                <div>@day.ToString("MMM dd")</div>
+                @{
+                    var workoutCount = GetWorkoutCountForDay(day);
+                    if (workoutCount > 0)
+                    {
+                        <div class="badge">@workoutCount</div>
+                    }
+                }
+            </button>
+        }
+    </div>
+
+    <!-- Two Column Layout -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+        <!-- Timeline -->
+        <div class="timeline">
+            @for (int hour = 6; hour <= 22; hour++)
             {
-                <div class="weekday">
-                    <div class="day-name">@day.ToString("dddd")</div>
-                    <div class="day-date">@day.ToString("MM/dd")</div>
+                var currentHour = hour;
+                var workoutsAtHour = DailyWorkouts.Where(w => w.hour == currentHour).ToList();
+
+                <div class="time-slot">
+                    <div class="time-label">@($"{hour:00}:00")</div>
+                    @if (workoutsAtHour.Any())
+                    {
+                        foreach (var workout in workoutsAtHour)
+                        {
+                            <div class="workout-item">
+                                <div>Duration: @workout.duration min</div>
+                                @if (workout.Isgroup == "1")
+                                {
+                                    <span class="tag tag-group">Group</span>
+                                }
+                                @if (workout.IsReccuring == "1")
+                                {
+                                    <span class="tag tag-recurring">Recurring</span>
+                                }
+                            </div>
+                        }
+                    }
                 </div>
             }
         </div>
 
-        <div class="calendar-grid">
-            <div class="time-column">
-                @for (int hour = 6; hour <= 22; hour++)
-                {
-                    <div class="time-slot">@($"{hour:00}:00")</div>
-                }
+        <!-- Workout Details -->
+        <div style="background-color: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="font-size: 1.25rem; font-weight: bold;">
+                    @(SelectedDate.HasValue ? SelectedDate.Value.ToString("MMMM dd, yyyy") : "Select a date")
+                </h3>
+                <button class="nav-button" style="background-color: #22c55e;">
+                    Add Workout
+                </button>
             </div>
 
-            @foreach (var day in WeekDays)
+            @if (SelectedDate.HasValue && DailyWorkouts.Any())
             {
-                <div class="day-column">
-                    @for (int hour = 6; hour <= 22; hour++)
-                    {
-                        <div class="hour-slot">
-                            @{
-                                var workoutsInSlot = Workouts
-                                .Where(w =>
-                                DateTime.Parse(w.date).Date == day.Date &&
-                                w.hour == hour)
-                                .ToList();
-
-                                foreach (var workout in workoutsInSlot)
-                                {
-                                    <div class="workout-item @(workout.Isgroup == "1" ? "group" : "personal")"
-                                         style="height: @(workout.duration * 60)px">
-                                        <div class="workout-time">
-                                            @($"{workout.hour:00}:00 - {(workout.hour + workout.duration):00}:00")
-                                        </div>
-                                        <div class="workout-type">
-                                            @(workout.Isgroup == "1" ? "Group Session" : "Personal Training")
-                                        </div>
-                                    </div>
-                                }
-                            }
+                foreach (var workout in DailyWorkouts.OrderBy(w => w.hour))
+                {
+                    <div class="workout-card">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div>
+                                <div style="font-weight: bold;">@GetFormattedHour(workout.hour)</div>
+                                <div style="color: #64748b; margin-top: 4px;">
+                                    Duration: @workout.duration minutes
+                                </div>
+                                <div style="margin-top: 8px;">
+                                    @if (workout.Isgroup == "1")
+                                    {
+                                        <span class="tag tag-group">Group</span>
+                                    }
+                                    @if (workout.IsReccuring == "1")
+                                    {
+                                        <span class="tag tag-recurring">Recurring</span>
+                                    }
+                                </div>
+                            </div>
+                            <div>
+                                <button style="color: #3b82f6; padding: 4px; margin-right: 8px;">Edit</button>
+                                <button style="color: #ef4444; padding: 4px;">Delete</button>
+                            </div>
                         </div>
-                    }
+                    </div>
+                }
+            }
+            else if (SelectedDate.HasValue)
+            {
+                <div style="text-align: center; color: #64748b; padding: 32px 0;">
+                    <p>No workouts scheduled for this day.</p>
+                    <p style="margin-top: 8px; font-size: 0.875rem;">Click the Add Workout button to schedule one.</p>
+                </div>
+            }
+            else
+            {
+                <div style="text-align: center; color: #64748b; padding: 32px 0;">
+                    <p>Select a day to view or schedule workouts.</p>
                 </div>
             }
         </div>
     </div>
 </div>
 
-@code {
-    [Parameter]
-    public int TrainerId { get; set; }
 
-    private DateTime CurrentWeek = DateTime.Now;
-    private List<DateTime> WeekDays = new List<DateTime>();
-    private List<Workout> Workouts = new List<Workout>();
-    private WorkoutDB workoutDB = new WorkoutDB();
+@code {
+    private DateTime CurrentWeekStart = GetStartOfWeek(DateTime.Today);
+    private DateTime? SelectedDate;
+    private List<DateTime> WeekDays = new();
+    private List<Workout> DailyWorkouts = new();
+    private List<Workout> AllWeekWorkouts = new();
+    WorkoutDB workoutDB = new WorkoutDB();
+    private int TrainerId = 42; // Replace with actual trainer ID from authentication
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadWeek();
+        await UpdateWeekDays();
+        if (!SelectedDate.HasValue)
+        {
+            await SelectDate(DateTime.Today);
+        }
     }
 
-    private async Task LoadWeek()
+    private static DateTime GetStartOfWeek(DateTime date)
     {
-        // Get the start of the week (Sunday)
-        var sunday = CurrentWeek.AddDays(-(int)CurrentWeek.DayOfWeek);
-        WeekDays = Enumerable.Range(0, 7)
-            .Select(i => sunday.AddDays(i))
-            .ToList();
+        // Calculate days to subtract to get to previous Sunday
+        int daysToSubtract = (int)date.DayOfWeek;
+        return date.AddDays(-daysToSubtract).Date;
+    }
 
-        await LoadWorkouts();
+    private async Task UpdateWeekDays()
+    {
+        WeekDays = Enumerable.Range(0, 7)
+            .Select(offset => CurrentWeekStart.AddDays(offset))
+            .ToList();
+        await LoadWeekWorkouts();
+    }
+
+    private async Task LoadWeekWorkouts()
+    {
+        // שליפת כל האימונים לשבוע הנוכחי ממסד הנתונים
+        var rawWorkouts = await workoutDB.GetWorkoutsByWeekAsync(TrainerId, CurrentWeekStart);
+
+        // יצירת רשימה של האימונים לשבוע
+        AllWeekWorkouts = new List<Workout>();
+
+        // מעבר על כל האימונים שנטענו
+        foreach (var workout in rawWorkouts)
+        {
+            // הוספת האימון לרשימה הראשית
+            AllWeekWorkouts.Add(workout);
+
+            // אם האימון מחזורי, נוסיף אותו גם לימים המתאימים
+            if (workout.IsReccuring == "true")
+            {
+                DateTime workoutDate = DateTime.Parse(workout.date);
+                DayOfWeek recurringDay = workoutDate.DayOfWeek;
+
+                // מעבר על ימי השבוע הנוכחיים והבאים
+                foreach (var day in WeekDays)
+                {
+                    // אם היום הנוכחי תואם ליום המחזורי (לדוגמה, שני)
+                    if (day.DayOfWeek == recurringDay)
+                    {
+                        // הוספת האימון למחזור לכל יום מתאים בשבוע הנוכחי
+                        if (!AllWeekWorkouts.Contains(workout))
+                        {
+                            AllWeekWorkouts.Add(workout);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private int GetWorkoutCountForDay(DateTime date)
+    {
+        return AllWeekWorkouts.Count(w => DateTime.Parse(w.date).Date == date.Date);
+    }
+
+    private async Task SelectDate(DateTime date)
+    {
+        SelectedDate = date;
+        if (AllWeekWorkouts.Any())
+        {
+            DailyWorkouts = AllWeekWorkouts
+                .Where(w => DateTime.Parse(w.date).Date == date.Date)
+                .ToList();
+        }
+        else
+        {
+            await LoadWorkouts();
+        }
     }
 
     private async Task LoadWorkouts()
     {
-        try
+        if (SelectedDate.HasValue)
         {
-            // Get workouts for the specific trainer
-            var allWorkouts = await workoutDB.GetWorkoutsByTrainerIdAsync(TrainerId);
-
-            // Filter workouts for the current week
-            Workouts = allWorkouts;
-
-            // .Where(w =>
-            // {
-            //     var workoutDate = DateTime.Parse(w.date);
-            //     return workoutDate >= WeekDays.First() && workoutDate <= WeekDays.Last();
-            // }).ToList();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error loading workouts: {ex.Message}");
-            Workouts = new List<Workout>();
+            var allWorkouts = await workoutDB.GetWorkoutsByWeekAsync(TrainerId, CurrentWeekStart);
+            DailyWorkouts = allWorkouts
+                .Where(w => DateTime.Parse(w.date).Date == SelectedDate.Value.Date)
+                .ToList();
         }
     }
 
     private async Task PreviousWeek()
     {
-        // Navigate to the previous week
-        CurrentWeek = CurrentWeek.AddDays(-7);
-        await LoadWeek();  // Reload the week and workouts
+        CurrentWeekStart = CurrentWeekStart.AddDays(-7);
+        await UpdateWeekDays();
+        if (SelectedDate.HasValue)
+        {
+            await LoadWorkouts();
+        }
     }
 
     private async Task NextWeek()
     {
-        // Navigate to the next week
-        CurrentWeek = CurrentWeek.AddDays(7);
-        await LoadWeek();  // Reload the week and workouts
+        CurrentWeekStart = CurrentWeekStart.AddDays(7);
+        await UpdateWeekDays();
+        if (SelectedDate.HasValue)
+        {
+            await LoadWorkouts();
+        }
+    }
+
+    private string GetFormattedHour(int hour)
+    {
+        return DateTime.Today.AddHours(hour).ToString("HH:mm");
     }
 }
 
-<style>
-    .calendar-container {
-        width: 100%;
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 20px;
-        font-family: system-ui, -apple-system, sans-serif;
-    }
-
-    .calendar-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    .calendar-wrapper {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-    }
-
-    .controls {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-    }
-
-    .nav-button {
-        padding: 8px 16px;
-        background-color: #f0f0f0;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .weekdays-header {
-        display: grid;
-        grid-template-columns: 60px repeat(7, 1fr);
-        background-color: #f8f9fa;
-        border-bottom: 1px solid #dee2e6;
-    }
-
-    .time-header {
-        width: 60px;
-    }
-
-    .weekday {
-        padding: 10px;
-        text-align: center;
-        border-left: 1px solid #dee2e6;
-    }
-
-    .day-name {
-        font-weight: bold;
-        color: #495057;
-    }
-
-    .day-date {
-        font-size: 0.9em;
-        color: #6c757d;
-        margin-top: 4px;
-    }
-
-    .calendar-grid {
-        display: grid;
-        grid-template-columns: 60px repeat(7, 1fr);
-        background-color: white;
-    }
-
-    .time-column {
-        background-color: #f8f9fa;
-        border-right: 1px solid #dee2e6;
-    }
-
-    .time-slot {
-        height: 60px;
-        padding: 5px;
-        border-bottom: 1px solid #dee2e6;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.8em;
-        color: #495057;
-    }
-
-    .day-column {
-        border-right: 1px solid #dee2e6;
-    }
-
-    .hour-slot {
-        height: 60px;
-        border-bottom: 1px solid #dee2e6;
-        position: relative;
-    }
-
-    .workout-item {
-        position: absolute;
-        width: 90%;
-        left: 5%;
-        border-radius: 4px;
-        padding: 8px;
-        font-size: 0.8em;
-        overflow: hidden;
-        z-index: 1;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-        .workout-item.group {
-            background-color: #d4edda;
-            border-left: 4px solid #28a745;
-        }
-
-        .workout-item.personal {
-            background-color: #fff3cd;
-            border-left: 4px solid #ffc107;
-        }
-
-    .workout-time {
-        font-weight: bold;
-        margin-bottom: 4px;
-        color: #212529;
-    }
-
-    .workout-type {
-        color: #495057;
-    }
-</style>

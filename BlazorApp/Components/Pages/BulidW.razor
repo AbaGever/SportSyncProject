@@ -153,9 +153,9 @@
 
                 <div class="schedule-area">
                     <div class="schedule-controls">
-                        <input @bind="selectedDate" type="date" class="form-control mb-3" min="@time" max="@maxDate" />
+                        <input @bind="selectedDate" type="date" class="form-control mb-3" min="@DateTime.Today.ToString("yyyy-MM-dd")" max="@maxDate" />
                         <input type="time" class="form-control mb-3" @bind-value="selectedHour" required />
-                        <button class="button-73 w-100" @onclick="CreateWorkout">Create Workout</button>
+                        <button class="button-73 w-100" @onclick="CheckReccuring">Create Workout</button>
 
 
                         <div>
@@ -192,95 +192,95 @@
 
 <style>
     .main-container {
-        min-height: 100vh;
-        background: #FFBF00;
-        font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: #FFBF00;
+    font-family: 'Poppins', sans-serif;
     }
 
     .search-area, .selected-drills-area, .schedule-area {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 15px;
-        padding: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .selected-drill-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        margin: 8px 0;
-        background: #f8f9fa;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 8px 0;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: all 0.3s ease;
     }
 
-        .selected-drill-item:hover {
-            background: #e9ecef;
-        }
+    .selected-drill-item:hover {
+    background: #e9ecef;
+    }
 
     .button-73 {
-        appearance: none;
-        background-color: #FFFFFF;
-        border-radius: 40em;
-        border-style: none;
-        box-shadow: #ADCFFF 0 -12px 6px inset;
-        color: #000000;
-        cursor: pointer;
-        font-weight: 700;
-        letter-spacing: -0.24px;
-        padding: 0.8rem 1.2rem;
-        transition: all 0.15s;
+    appearance: none;
+    background-color: #FFFFFF;
+    border-radius: 40em;
+    border-style: none;
+    box-shadow: #ADCFFF 0 -12px 6px inset;
+    color: #000000;
+    cursor: pointer;
+    font-weight: 700;
+    letter-spacing: -0.24px;
+    padding: 0.8rem 1.2rem;
+    transition: all 0.15s;
     }
 
-        .button-73:hover {
-            background-color: #FFC229;
-            box-shadow: #FF6314 0 -6px 8px inset;
-            transform: scale(1.05);
-        }
+    .button-73:hover {
+    background-color: #FFC229;
+    box-shadow: #FF6314 0 -6px 8px inset;
+    transform: scale(1.05);
+    }
 
     .button-24 {
-        background: #FF4742;
-        border: 1px solid #FF4742;
-        border-radius: 6px;
-        color: #FFFFFF;
-        padding: 8px 16px;
-        font-size: 14px;
-        transition: all 0.3s ease;
+    background: #FF4742;
+    border: 1px solid #FF4742;
+    border-radius: 6px;
+    color: #FFFFFF;
+    padding: 8px 16px;
+    font-size: 14px;
+    transition: all 0.3s ease;
     }
 
-        .button-24:hover {
-            background-color: #FFFFFF;
-            color: #FF4742;
-        }
+    .button-24:hover {
+    background-color: #FFFFFF;
+    color: #FF4742;
+    }
 
     .table {
-        background: white;
-        border-radius: 8px;
-        overflow: hidden;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
     }
 
-        .table th {
-            background: #f8f9fa;
-            border-top: none;
-        }
+    .table th {
+    background: #f8f9fa;
+    border-top: none;
+    }
 
     .form-control {
-        border-radius: 8px;
-        border: 1px solid #ced4da;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
     }
 
 
     .nav-link {
-        color: white !important;
-        font-weight: 500;
-        padding: 8px 16px !important;
-        transition: all 0.3s ease;
+    color: white !important;
+    font-weight: 500;
+    padding: 8px 16px !important;
+    transition: all 0.3s ease;
     }
 
-        .nav-link:hover {
-            color: #FFC229 !important;
-        }
+    .nav-link:hover {
+    color: #FFC229 !important;
+    }
 
 </style>
 
@@ -297,7 +297,7 @@
     List<Drill> list;
     string nameofdrill = "";
     string selectedmuscle = "";
-    time time = new time();
+    DateTime time = DateTime.Today;
     List<string> DaysOfWeek = new List<string>
     {
     "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"
@@ -396,7 +396,28 @@
         selectedDrills.Remove(drillName);
     }
 
-    async Task CreateWorkout()
+
+    async Task CheckReccuring()
+    {
+        if (SelectedOptions.Count > 0 || SelectedOptions != null)
+        {
+            IsReccuring1 = "true";
+
+            foreach (var d in SelectedOptions)
+            {
+                DayOfWeek dayOfWeek = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), d, true);
+                
+                DateTime rd = GetNextDay(DateTime.Today, dayOfWeek);
+               await CreateWorkout(rd, IsReccuring1);
+
+            }
+        }
+       
+       await CreateWorkout(selectedDate, "false");
+    }
+
+
+    async Task CreateWorkout(DateTime date, string isReccuring2)
     {
         WorkoutDB workoutDB = new WorkoutDB();
         DrillsListDB drillsListDB = new DrillsListDB();
@@ -423,69 +444,80 @@
             Console.WriteLine("Invalid DateTime input. Workout creation aborted.");
             return;
         }
-        if (SelectedOptions.Count != 0 || SelectedOptions != null)
-        {
-            IsReccuring1 = "true";
-        }
+        
         // Create a new workout instance
         Workout newWorkout = new Workout
             {
 
                 trainerid = UserS.id, // Assuming this is the ID of the currently logged-in trainer
-                date = selectedDate.ToString("yyyy-MM-dd"),
+                date = date.ToString("yyyy-MM-dd"),
                 duration = totalDuration,
                 Isgroup = "false",
                 hour = hourAsInt, // Convert the integer to string for storage
-                IsReccuring = IsReccuring1
+                IsReccuring = isReccuring2
             };
 
-    // Insert the workout using InsertGetWorkout and retrieve the workout object with the new ID
-    if (await workoutDB.IsWorkoutEmpty(UserS.id, selectedDate.ToString("yyyy-MM-dd"), hourAsInt))
-    {
-        Workout createdWorkout = await workoutDB.InsertGetWorkout(newWorkout);
-
-        if (createdWorkout != null)
+        // Insert the workout using InsertGetWorkout and retrieve the workout object with the new ID
+        if (await workoutDB.IsWorkoutEmpty(UserS.id, date.ToString("yyyy-MM-dd"), hourAsInt))
         {
-            int workoutId = createdWorkout.id;
+            Workout createdWorkout = await workoutDB.InsertGetWorkout(newWorkout);
 
-            // Associate each selected drill with the new workout
-            foreach (var drillName in selectedDrills)
+            if (createdWorkout != null)
             {
-                drillslist dl = new drillslist(workoutId, drillName);
-    await drillsListDB.InsertDLAsync(dl);
+                int workoutId = createdWorkout.id;
+
+                // Associate each selected drill with the new workout
+                foreach (var drillName in selectedDrills)
+                {
+                    drillslist dl = new drillslist(workoutId, drillName);
+                    await drillsListDB.InsertDLAsync(dl);
+                }
+
+                // Clear the selection and notify the user
+                error = "Inserted Workout";
+                await Task.Delay(1000);
+                selectedDrills.Clear();
+
+                list = null; // Reset the drill list
+                await Task.Yield(); // Re-render the UI
+
+            }
+        }
+        else
+        {
+
+            error = "Unable to insert Workout, Date and hour already occupied";
+        }
     }
 
-    // Clear the selection and notify the user
-    error = "Inserted Workout";
-            await Task.Delay(1000);
-    selectedDrills.Clear();
 
-            list = null; // Reset the drill list
-            await Task.Yield(); // Re-render the UI
 
-}
-    }
-    else
-{
 
-    error = "Unable to insert Workout, Date and hour already occupied";
-}
-    }
+
+
+
+
+
+
+
+
+
+
 
     private int ConvertDateTimeToInt(DateTime dateTime)
-{
-    // Combine the hour and minute into an integer
-    int combined = dateTime.Hour * 100 + dateTime.Minute;
-    return combined;
-}
+    {
+        // Combine the hour and minute into an integer
+        int combined = dateTime.Hour * 100 + dateTime.Minute;
+        return combined;
+    }
 
-protected override void OnInitialized()
-{
-    // Calculate the maximum date (next month)
-    var today = DateTime.Today;
-    var nextMonth = today.AddMonths(1);
+    protected override void OnInitialized()
+    {
+        // Calculate the maximum date (next month)
+        var today = DateTime.Today;
+        var nextMonth = today.AddMonths(1);
 
-    // Convert to string in "yyyy-MM-dd" format
-    maxDate = nextMonth.ToString("yyyy-MM-dd");
-}
+        // Convert to string in "yyyy-MM-dd" format
+        maxDate = nextMonth.ToString("yyyy-MM-dd");
+    }
 }
