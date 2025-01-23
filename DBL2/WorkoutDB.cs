@@ -175,10 +175,10 @@ namespace DBL2
 
             // בניית שאילתה SQL כדי לקבל את האימונים בטווח התאריכים
             string sql = @$"
-                            SELECT * FROM sportsync_db.workouts
-                            WHERE trainerid = @trainerid
-                            AND date >= @startDate AND date <= @endDate
-                            ORDER BY date, hour;
+                           SELECT * FROM sportsync_db.workouts
+                           WHERE trainerid = @trainerid
+                           AND ((date >= @startDate AND date <= @endDate ) OR (IsReccuring = 'true') AND date <= @startDate)
+                           ORDER BY date, hour
                             ";
 
             // יצירת פרמטרים לשאילתה

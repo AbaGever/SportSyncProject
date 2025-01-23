@@ -139,7 +139,7 @@
             <!-- Selected Drills and Schedule -->
             <div class="col-md-5">
                 <div class="selected-drills-area mb-4">
-                    <h4 class="text-center mb-3">Selected Drills</h4>
+                    <h4 class="text-center mb-3"> <u>Selected Drills </u></h4>
                     <div class="selected-drills-list">
                         @foreach (var drill in selectedDrills)
                         {
@@ -159,7 +159,7 @@
 
 
                         <div>
-                            <h2>Choose Weekly reccuring</h2>
+                            <h2> <u>Choose Weekly reccuring </u></h2>
                             @foreach (var option in DaysOfWeek)
                             {
                                 <div>
@@ -170,15 +170,6 @@
                                 </div>
                             }
                         </div>
-
-                        <h4>Selected Options:</h4>
-                        <ul>
-                            @foreach (var item in SelectedOptions)
-                            {
-                                <li>@item</li>
-                            }
-                        </ul>
-                        <button @onclick="Dosomething">wewewewewew </button>
 
                     </div>
                 </div>
@@ -406,14 +397,17 @@
             foreach (var d in SelectedOptions)
             {
                 DayOfWeek dayOfWeek = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), d, true);
-                
+
                 DateTime rd = GetNextDay(DateTime.Today, dayOfWeek);
-               await CreateWorkout(rd, IsReccuring1);
+                await CreateWorkout(rd, IsReccuring1);
 
             }
         }
-       
-       await CreateWorkout(selectedDate, "false");
+
+        await CreateWorkout(selectedDate, "false");
+        selectedDrills.Clear();
+        list.Clear();
+        SelectedOptions.Clear();
     }
 
 
@@ -476,9 +470,7 @@
                 // Clear the selection and notify the user
                 error = "Inserted Workout";
                 await Task.Delay(1000);
-                selectedDrills.Clear();
-
-                list = null; // Reset the drill list
+                
                 await Task.Yield(); // Re-render the UI
 
             }
