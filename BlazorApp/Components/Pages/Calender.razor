@@ -1,7 +1,10 @@
 ﻿@page "/ws"
 @using Models2
 @using DBL2
-
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage MySession
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@inject IJSRuntime js
 
 <style>
     .calendar-grid {
@@ -212,16 +215,43 @@
     private List<Workout> DailyWorkouts = new();
     private List<Workout> AllWeekWorkouts = new();
     WorkoutDB workoutDB = new WorkoutDB();
-    private int TrainerId = 42; // Replace with actual trainer ID from authentication
+    Trainer c; // Replace with actual trainer ID from authentication
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await UpdateWeekDays();
-        if (!SelectedDate.HasValue)
+
+        if (firstRender)
         {
-            await SelectDate(DateTime.Today);
+
+
+            var user1 = await MySession.GetAsync<Trainer>("Trainer");
+            if (user1.Success)
+            {
+                c = user1.Value;               
+                await UpdateWeekDays();
+                if (!SelectedDate.HasValue)
+                {
+                    await SelectDate(DateTime.Today);
+                }
+                    
+                
+                StateHasChanged();
+            }
+            if (c == null)
+            {
+                navigationManager.NavigateTo("/login");
+
+            }
+            else{
+                
+            }
+            
+
         }
     }
+
+
+   
 
     private static DateTime GetStartOfWeek(DateTime date)
     {
@@ -241,7 +271,7 @@
     private async Task LoadWeekWorkouts()
     {
         // שליפת כל האימונים לשבוע הנוכחי ממסד הנתונים
-        var rawWorkouts = await workoutDB.GetWorkoutsByWeekAsync(TrainerId, CurrentWeekStart);
+        var rawWorkouts = await workoutDB.GetWorkoutsByWeekAsync(c.id, CurrentWeekStart);
 
         // יצירת רשימה של האימונים לשבוע
         AllWeekWorkouts = new List<Workout>();
@@ -306,7 +336,7 @@
     {
         if (SelectedDate.HasValue)
         {
-            var allWorkouts = await workoutDB.GetWorkoutsByWeekAsync(TrainerId, CurrentWeekStart);
+            var allWorkouts = await workoutDB.GetWorkoutsByWeekAsync(c.id, CurrentWeekStart);
             DailyWorkouts = allWorkouts
                 .Where(w => DateTime.Parse(w.date).Date == SelectedDate.Value.Date)
                 .ToList();

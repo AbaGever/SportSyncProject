@@ -435,7 +435,7 @@
             Console.WriteLine("Invalid DateTime input. Workout creation aborted.");
             return;
         }
-        
+
         // Create a new workout instance
         Workout newWorkout = new Workout
             {
@@ -449,7 +449,7 @@
             };
 
         // Insert the workout using InsertGetWorkout and retrieve the workout object with the new ID
-        if (await workoutDB.IsWorkoutEmpty(UserS.id, date.ToString("yyyy-MM-dd"), hourAsInt))
+        if (await workoutDB.IsWorkoutEmpty(UserS.id, date.ToString("yyyy-MM-dd"), hourAsInt))          
         {
             Workout createdWorkout = await workoutDB.InsertGetWorkout(newWorkout);
 
@@ -467,15 +467,41 @@
                 // Clear the selection and notify the user
                 error = "Inserted Workout";
                 await Task.Delay(1000);
-                
+
                 await Task.Yield(); // Re-render the UI
 
             }
         }
-        else
+        else 
         {
+            bool confirm = await js.InvokeAsync<bool>("confirm", $"You Already have a workout or a team practice on {selectedHour}, are you sure you want to add another workout?");
+            if (confirm)
+            {
+                Workout createdWorkout = await workoutDB.InsertGetWorkout(newWorkout);
 
-            error = "Unable to insert Workout, Date and hour already occupied";
+                if (createdWorkout != null)
+                {
+                    int workoutId = createdWorkout.id;
+
+                    // Associate each selected drill with the new workout
+                    foreach (var drillName in selectedDrills)
+                    {
+                        drillslist dl = new drillslist(workoutId, drillName);
+                        await drillsListDB.InsertDLAsync(dl);
+                    }
+
+                    // Clear the selection and notify the user
+                    error = "Inserted Workout";
+                    await Task.Delay(1000);
+
+                    await Task.Yield(); // Re-render the UI
+
+                }
+            }
+            else
+            {
+                error = "Unable to Insert Workout,date and hour already taken";
+            }
         }
     }
 

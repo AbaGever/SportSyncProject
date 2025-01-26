@@ -109,7 +109,7 @@ namespace DBL2
 
         public async Task<bool> IsWorkoutEmpty(int trainerid, string date, int hour)
         {
-            string sql = @$"SELECT * FROM sportsync_db.workouts WHERE trainerid={trainerid} AND date ='{date}' AND hour =@hour;";
+            string sql = @$"SELECT * FROM sportsync_db.workouts WHERE trainerid={trainerid} AND date ='{date}' AND hour ={hour};";
             var results = await SelectAllAsync(sql);
             return !results.Any();
         }
@@ -127,9 +127,8 @@ namespace DBL2
 
         public async Task<Workout> InsertGetWorkout(Workout w)
         {
-            if (await IsWorkoutEmpty(w.trainerid, w.date, w.hour))
-            {
-                Dictionary<string, object> data = new Dictionary<string, object>()
+
+            Dictionary<string, object> data = new Dictionary<string, object>()
             {
             {"trainerid",w.trainerid},
             {"date",w.date},
@@ -138,13 +137,13 @@ namespace DBL2
             {"hour",w.hour},
             {"IsReccuring",w.IsReccuring }
             };
-                Workout workout = (Workout)await base.InsertGetObjAsync(data);
-                return workout;
-            }
-            else
-            {
-                return null;
-            }
+
+
+
+            Workout workout = (Workout)await base.InsertGetObjAsync(data);
+            return workout;
+
+
         }
 
         public async Task<List<Workout>> GetWorkoutsByTrainerIdAsync(int trainerid)
