@@ -171,8 +171,21 @@
                             <input @bind="selectedDate" type="date" class="form-control mb-3" min="@time" max="@maxDate" />
                             <input type="time" class="form-control mb-3" @bind-value="selectedHour" required />
                             <input @bind="duration" class="form-control mb-3" min="@time" max="@maxDate" placeholder="Enter Duration of Practice in Mins" />
-                            <button class="button-73 w-100" @onclick="CreateWorkout">Create Workout</button>
+                            <button class="button-73 w-100" @onclick="CheckReccuring">Create Workout</button>
 
+
+                            <div>
+                                <h2> <u>Choose Weekly reccuring </u></h2>
+                                @foreach (var option in DaysOfWeek)
+                                {
+                                    <div>
+                                        <label>
+                                            <input type="checkbox" @onchange="(e) => OnOptionChanged(e, option)" />
+                                            @option
+                                        </label>
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>
                 </center>
@@ -297,7 +310,6 @@
     }
 
     html, body {
-        height: 100%;
         width: 100%;
         place-items: center;
         background: -webkit-linear-gradient(bottom, #E0DCC8, #FFBF00);
@@ -612,6 +624,54 @@
     string duration = "";
     TrainerDB TrainerDB = new TrainerDB();
     string IsReccuring1 = "false";
+    List<string> DaysOfWeek = new List<string>
+    {
+    "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"
+    };
+    private List<string> SelectedOptions = new List<string>();
+
+    private void OnOptionChanged(ChangeEventArgs e, string option)
+    {
+        bool isChecked = (bool)e.Value;
+        if (isChecked)
+        {
+            // Add option to the selected list if checked
+            SelectedOptions.Add(option);
+        }
+        else
+        {
+            // Remove option from the selected list if unchecked
+            SelectedOptions.Remove(option);
+        }
+    }
+    async Task CheckReccuring()
+    {
+        if (SelectedOptions.Count > 0 || SelectedOptions != null)
+        {
+            IsReccuring1 = "true";
+
+            foreach (var d in SelectedOptions)
+            {
+                DayOfWeek dayOfWeek = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), d, true);
+
+                DateTime rd = GetNextDay(DateTime.Today, dayOfWeek);
+                await CreateWorkout(rd, IsReccuring1);
+
+            }
+        }
+
+        await CreateWorkout(selectedDate, "false");
+        
+        list.Clear();
+        SelectedOptions.Clear();
+    }
+    static DateTime GetNextDay(DateTime startDate, DayOfWeek targetDay)
+    {
+        // מחשב כמה ימים להוסיף כדי להגיע ליום הרצוי
+        int daysToAdd = ((int)targetDay - (int)startDate.DayOfWeek + 7) % 7;
+        daysToAdd = daysToAdd == 0 ? 7 : daysToAdd; // מבטיח שהיום הרצוי הוא בשבוע הבא אם היום זהה
+        return startDate.AddDays(daysToAdd);
+    }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -778,7 +838,7 @@
             navigationManager.NavigateTo("/");
         }
     }
-    async Task CreateWorkout()
+    async Task CreateWorkout(DateTime date, string isReccuring2)
     {
         WorkoutDB workoutDB = new WorkoutDB();
         DrillsListDB drillsListDB = new DrillsListDB();
