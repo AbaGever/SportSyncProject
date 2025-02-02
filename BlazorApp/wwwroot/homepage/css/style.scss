@@ -1,6 +1,6 @@
 $black: #000000;
 $white: #ffffff;
-$primary1: #ffbf00;
+$primary1: #ff2953;
 
 @mixin main-font {
   font-family: 'Poppins', sans-serif;
@@ -76,7 +76,7 @@ body {
       left: 50%;
       width: 55px;
       height: 5px;
-      /*background-color: $primary1;*/
+      background-color: $primary1;
       transform: translateX(-50%);
     }
   }
@@ -84,12 +84,11 @@ body {
 
 /*header section*/
 .hero_area {
-    color: $black;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-size: cover;
-    background-attachment: fixed;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 .sub_page {
@@ -118,17 +117,19 @@ body {
 }
 
 .custom_nav-container.navbar-expand-lg .navbar-nav .nav-item {
-  .nav-link {
+  .
+  {
     margin: 10px 30px;
     padding: 0;
     padding-bottom: 3px;
-    color: #ffffff;
+    color: black;
     text-align: center;
     position: relative;
     text-transform: uppercase;
     font-size: 15px;
 
     &::after {
+        color:black;
       display: none;
       content: "";
       position: absolute;
@@ -146,8 +147,8 @@ body {
     a {
       &::after {
         display: block;
-/*        background-color: $primary1;
-*/      }
+        background-color: $primary1;
+      }
     }
   }
 }
@@ -226,7 +227,7 @@ a:focus {
   flex: 1;
   display: flex;
   align-items: center;
-  color: $black;
+  color: $white;
 
   #carouselExampleIndicators {
     width: 100%;
@@ -305,38 +306,38 @@ a:focus {
 // us section
 
 .us_section {
-    background-size: cover;
-    background-attachment: fixed;
-    color: $black;
+  background-size: cover;
+  background-attachment: fixed;
+  color: $white;
 
-    .us_container {
-        padding-top: 25px;
+  .us_container {
+    padding-top: 25px;
 
-        .box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            margin: 25px 10px 0 10px;
+    .box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin: 25px 10px 0 10px;
 
-            .img-box {
-                height: 100px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+      .img-box {
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-                img {
-                    max-width: 100%;
-                }
-            }
-
-            .detail-box {
-                h5 {
-                    font-weight: bold;
-                }
-            }
+        img {
+          max-width: 100%;
         }
+      }
+
+      .detail-box {
+        h5 {
+          font-weight: bold;
+        }
+      }
     }
+  }
 }
 
 
@@ -347,7 +348,7 @@ a:focus {
 .heathy_section {
   background-size: cover;
   background-attachment: fixed;
-  color: $black;
+  color: $white;
   text-align: center;
 
   h2 {
@@ -379,7 +380,7 @@ a:focus {
 .trainer_section {
   background-size: cover;
   background-attachment: fixed;
-  color: $black;
+  color: $white;
 
   .box {
     margin-top: 55px;
@@ -423,68 +424,69 @@ a:focus {
 
 // contact section
 .contact_section {
-    position: relative;
-    background-color: #27223f;
+  position: relative;
+  background-color: #27223f;
+  color: $white;
+
+  .heading_container {
+    justify-content: start;
+
+    h2 {
+      &::before {
+        text-align: left;
+        left: 0;
+        transform: none;
+      }
+    }
+  }
+
+  .row {
+    align-items: center;
+  }
+
+  .img-box {
+    img {
+      width: 100%;
+    }
+  }
+
+
+
+  .form_container {
+    padding: 45px 0 45px 15px;
+
+  }
+
+  form {}
+
+  input {
+    width: 100%;
+    border: none;
+    background-color: $white;
+    outline: none;
+    color: $black;
+    margin-top: 25px;
+    padding: 12px;
+
+    &::placeholder {
+      color: #2a2a2c;
+    }
+
+    &.message-box {
+      padding: 45px 12px;
+    }
+  }
+
+  button {
+    padding: 10px 65px;
+    outline: none;
+    border: none;
     color: $white;
+    background: #ff2953;
+    margin: 45px 0 0 auto;
+    text-transform: uppercase;
+  }
 
-    .heading_container {
-        justify-content: start;
-
-        h2 {
-            &::before {
-                text-align: left;
-                left: 0;
-                transform: none;
-            }
-        }
-    }
-
-    .row {
-        align-items: center;
-    }
-
-    .img-box {
-        img {
-            width: 100%;
-        }
-    }
-
-
-
-    .form_container {
-        padding: 45px 0 45px 15px;
-    }
-
-    form {
-    }
-
-    input {
-        width: 100%;
-        border: none;
-        background-color: $white;
-        outline: none;
-        color: $black;
-        margin-top: 25px;
-        padding: 12px;
-
-        &::placeholder {
-            color: #2a2a2c;
-        }
-
-        &.message-box {
-            padding: 45px 12px;
-        }
-    }
-
-    button {
-        padding: 10px 65px;
-        outline: none;
-        border: none;
-        color: $white;
-        background: #ffbf00;
-        margin: 45px 0 0 auto;
-        text-transform: uppercase;
-    }
 }
 
 // end contact section
@@ -536,15 +538,12 @@ a:focus {
   .item {
     .img-box {
       &.box-1 {
-        background-image: url(../images/location-white.png);
-      }
+=      }
 
       &.box-2 {
-        background-image: url(../images/telephone-white.png);
       }
 
       &.box-3 {
-        background-image: url(../images/envelope-white.png);
       }
     }
   }

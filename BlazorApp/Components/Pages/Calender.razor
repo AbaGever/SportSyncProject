@@ -7,6 +7,15 @@
 @inject IJSRuntime js
 
 <style>
+
+
+    html, body {
+        height: 100vh;
+        width: 100%;
+        place-items: center;
+        background: -webkit-linear-gradient(bottom, #E0DCC8, #3a506b);
+    }
+
     .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -313,18 +322,16 @@
     private async Task SelectDate(DateTime date)
     {
         SelectedDate = date;
+        DailyWorkouts.Clear(); // איפוס רשימת האימונים
         if (AllWeekWorkouts.Any())
         {
             foreach (var w in AllWeekWorkouts)
                 if (DateTime.Parse(w.date).DayOfWeek == date.DayOfWeek && w.IsReccuring == "true")
                 {
-
                     Workout workout = new Workout(w);
-
                     workout.date = date.ToString();
                     DailyWorkouts.Add(workout);
                 }
-           
         }
         else
         {
