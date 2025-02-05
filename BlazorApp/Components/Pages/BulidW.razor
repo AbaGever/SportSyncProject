@@ -21,54 +21,41 @@
 
 <div class="main-container">
     <!-- Navbar -->
-    <header class="header_section" style="color:white">
-        <div class="container-fluid">
-            <nav class="navbar navbar-expand-lg custom_nav-container ">
-                <a class="navbar-brand" href="/">
-                    <span>
-                        SportSync
-                    </span>
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+    <div class="container-fluid" style="color:black">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+            <a class="navbar-brand" href="/">
+                <span>
+                    SportSync
+                </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
-                        <ul class="navbar-nav  ">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-                            </li>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                    <ul class="navbar-nav  ">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                        </li>
 
-                            @if (UserS == null)
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/r">Sign Up</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/login">Log In</a>
-                                </li>
-                            }
+                        <li class="nav-item">
+                            <a class="nav-link" href="/p">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/searchG">Search Groups</a>
+                        </li>
 
-                            <li class="nav-item">
-                                <a class="nav-link" href="/p">Your Profile</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/searchG">Search Groups</a>
-                            </li>
-
-
-                        </ul>
-                        <div class="user_option">
-                            <div class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
-                            </div>
-                        </div>
+                    </ul>
+                    <div class="user_option">
+                        <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                            <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                        </form>
                     </div>
                 </div>
-            </nav>
-        </div>
-    </header>
+            </div>
+        </nav>
+    </div>
 
     <!-- Main Content -->
     <div class="container mt-5">
@@ -263,7 +250,7 @@
 
 
     .nav-link {
-    color: white !important;
+    color: black;
     font-weight: 500;
     padding: 8px 16px !important;
     transition: all 0.3s ease;

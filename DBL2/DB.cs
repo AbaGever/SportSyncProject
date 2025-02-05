@@ -17,7 +17,7 @@ namespace DBL2
                                     persistsecurityinfo=True;
                                     database=sportsync_db";
 
-        protected static DbConnection conn;
+        protected DbConnection conn;
         protected DbCommand cmd;
         protected DbDataReader reader;
 

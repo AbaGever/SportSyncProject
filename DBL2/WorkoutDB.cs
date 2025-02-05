@@ -173,12 +173,7 @@ namespace DBL2
             string endDate = endOfWeek.ToString("yyyy-MM-dd");
 
             // בניית שאילתה SQL כדי לקבל את האימונים בטווח התאריכים
-            string sql = @$"
-                           SELECT * FROM sportsync_db.workouts
-                           WHERE trainerid = @trainerid
-                           AND ((date >= @startDate AND date <= @endDate ) OR (IsReccuring = 'true') AND date <= @startDate)
-                           ORDER BY date, hour
-                            ";
+            string sql = @$"SELECT * FROM sportsync_db.workouts WHERE trainerid = @trainerid AND ((date >= @startDate AND date <= @endDate ) OR (IsReccuring = 'true') AND date <= @startDate) ORDER BY date, hour;";
 
             // יצירת פרמטרים לשאילתה
             Dictionary<string, object> parameters = new Dictionary<string, object>
@@ -199,6 +194,11 @@ namespace DBL2
             {
                 if (workout.IsReccuring == "true") // אם האימון מחזורי
                 {
+                    
+                    if(DateTime.Parse(workout.date)< DateTime.Parse(startDate))
+                    {
+
+                    }
                     // המרת תאריך האימון ל- DateTime
                     DateTime workoutDate = DateTime.Parse(workout.date);
                     DayOfWeek recurringDay = workoutDate.DayOfWeek;

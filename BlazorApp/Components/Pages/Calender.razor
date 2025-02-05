@@ -10,10 +10,10 @@
 
 
     html, body {
-        height: 100vh;
-        width: 100%;
-        place-items: center;
-        background: -webkit-linear-gradient(bottom, #E0DCC8, #3a506b);
+    height: 100vh;
+    width: 100%;
+    place-items: center;
+    background: -webkit-linear-gradient(bottom, #E0DCC8, #3a506b);
     }
 
     .calendar-grid {
@@ -82,7 +82,6 @@
 
     .nav-button {
     background-color: #3b82f6;
-    color: white;
     padding: 8px 16px;
     border-radius: 6px;
     border: none;
@@ -181,11 +180,11 @@
                                 Duration: @workout.duration minutes
                             </div>
                             <div style="margin-top: 8px;">
-                                @if (workout.Isgroup == "1")
+                                @if (workout.Isgroup == "true")
                                 {
                                     <span class="tag tag-group">Group</span>
                                 }
-                                @if (workout.IsReccuring == "1")
+                                @if (workout.IsReccuring == "true")
                                 {
                                     <span class="tag tag-recurring">Recurring</span>
                                 }
@@ -242,8 +241,8 @@
                 {
                     await SelectDate(DateTime.Today);
                 }
-                    
-                
+
+
                 StateHasChanged();
             }
             if (c == null)
@@ -252,15 +251,15 @@
 
             }
             else{
-                
+
             }
-            
+
 
         }
     }
 
 
-   
+
 
     private static DateTime GetStartOfWeek(DateTime date)
     {
@@ -326,7 +325,7 @@
         if (AllWeekWorkouts.Any())
         {
             foreach (var w in AllWeekWorkouts)
-                if (DateTime.Parse(w.date).DayOfWeek == date.DayOfWeek && w.IsReccuring == "true")
+                if (DateTime.Parse(w.date).DayOfWeek == date.DayOfWeek && w.IsReccuring == "true" || DateTime.Parse(w.date) == date)
                 {
                     Workout workout = new Workout(w);
                     workout.date = date.ToString();
@@ -372,7 +371,10 @@
 
     private string GetFormattedHour(int hour)
     {
-        return DateTime.Today.AddHours(hour).ToString("HH:mm");
+        int h = hour / 100;
+        int m = hour % 100;
+        string a = h.ToString("D2") + ":" + m.ToString("D2");
+        return a;
     }
 
 
