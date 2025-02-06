@@ -5,7 +5,27 @@
 @inject ProtectedSessionStorage MySession
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject IJSRuntime js
+<HeadContent>
+    <!-- Basic -->
 
+
+
+    <link rel="icon" href="/download.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+
+    <!-- slider stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="homepage/css/bootstrap.css">
+
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&amp;display=swap" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="homepage/css/style.css" rel="stylesheet">
+    <!-- responsive style -->
+    <link href="homepage/css/responsive.css" rel="stylesheet">
+</HeadContent>
 <style>
 
 
@@ -38,7 +58,7 @@
     }
 
     .day-button.selected {
-    background-color: #3b82f6;
+            background-color: #3a506b;
     color: white;
     }
 
@@ -81,7 +101,7 @@
     }
 
     .nav-button {
-    background-color: #3b82f6;
+        background-color: #4c6079;
     padding: 8px 16px;
     border-radius: 6px;
     border: none;
@@ -90,7 +110,7 @@
     }
 
     .nav-button:hover {
-    background-color: #2563eb;
+            background-color: #abb5c2;
     }
 
     .container {
@@ -100,7 +120,7 @@
     }
 
     .badge {
-    background-color: #3b82f6;
+    background-color: darkred;
     color: white;
     border-radius: 9999px;
     padding: 2px 8px;
@@ -126,13 +146,96 @@
     background-color: #dcfce7;
     color: #166534;
     }
+
+    .button-24:hover,
+    .button-24:active {
+        background-color: initial;
+        background-position: 0 0;
+        color: #FF4742;
+    }
+
+    .button-24:active {
+        opacity: .5;
+    }
+
+    .button-73 {
+        appearance: none;
+        background-color: #FFFFFF;
+        border-radius: 40em;
+        border-style: none;
+        box-shadow: #ADCFFF 0 -12px 6px inset;
+        box-sizing: border-box;
+        color: #000000;
+        cursor: pointer;
+        display: inline-block;
+        font-family: -apple-system,sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: -.24px;
+        margin: 0;
+        outline: none;
+        padding: 1rem 1.3rem;
+        quotes: auto;
+        text-align: center;
+        text-decoration: none;
+        transition: all .15s;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
+        .button-73:hover {
+            background-color: #FFC229;
+            box-shadow: #FF6314 0 -6px 8px inset;
+            transform: scale(1.125);
+        }
+
+        .button-73:active {
+            transform: scale(1.025);
+        }
 </style>
+
+<div class="container-fluid">
+    <nav class="navbar navbar-expand-lg custom_nav-container ">
+        <a class="navbar-brand" href="/">
+            <span>
+                SportSync
+            </span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                <ul class="navbar-nav  ">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/p">Your Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/searchG">Search Groups</a>
+                    </li>
+
+                </ul>
+                <div class="user_option">
+                    <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                        <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
 
 <div class="container">
     <!-- Week Navigation -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
         <button class="nav-button" @onclick="PreviousWeek">Previous Week</button>
-        <h2 style="font-size: 1.5rem; font-weight: bold;">Week of @CurrentWeekStart.ToString("MMMM dd, yyyy")</h2>
+        <h2 style="font-size: 1.5rem; font-weight: bold;color:white">Week of @CurrentWeekStart.ToString("MMMM dd, yyyy")</h2>
         <button class="nav-button" @onclick="NextWeek">Next Week</button>
     </div>
 
@@ -163,9 +266,8 @@
             <h3 style="font-size: 1.25rem; font-weight: bold;">
                 @(SelectedDate.HasValue ? SelectedDate.Value.ToString("MMMM dd, yyyy") : "Select a date")
             </h3>
-            <button class="nav-button" style="background-color: #22c55e;">
-                Add Workout
-            </button>
+           
+            <a href="t" class="nav-button" style="background-color: #22c55e;">Add WorkOut</a>
         </div>
 
         @if (SelectedDate.HasValue && DailyWorkouts.Any())
@@ -177,7 +279,7 @@
                         <div>
                             <div style="font-weight: bold;">@GetFormattedHour(workout.hour)</div>
                             <div style="color: #64748b; margin-top: 4px;">
-                                Duration: @workout.duration minutes
+                                Duration: @(workout.duration/60) minutes
                             </div>
                             <div style="margin-top: 8px;">
                                 @if (workout.Isgroup == "true")
@@ -191,8 +293,8 @@
                             </div>
                         </div>
                         <div>
-                            <button style="color: #3b82f6; padding: 4px; margin-right: 8px;">Edit</button>
-                            <button style="color: #ef4444; padding: 4px;">Delete</button>
+                            <a href="/ShowW/@(workout.id)/@(DateTime.Parse(workout.date).ToString("yyyy-MM-dd"))" class="button-73">Edit</a>
+                            
                         </div>
                     </div>
                 </div>
@@ -225,6 +327,7 @@
     WorkoutDB workoutDB = new WorkoutDB();
     Trainer c; // Replace with actual trainer ID from authentication
 
+  
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
 
@@ -315,7 +418,8 @@
 
     private int GetWorkoutCountForDay(DateTime date)
     {
-        return AllWeekWorkouts.Count(w => DateTime.Parse(w.date).Date == date.Date);
+        return AllWeekWorkouts.Count(w =>
+            w.IsReccuring == "true" && DateTime.Parse(w.date).DayOfWeek == date.DayOfWeek || w.IsReccuring == "false" && DateTime.Parse(w.date) == date);
     }
 
     private async Task SelectDate(DateTime date)

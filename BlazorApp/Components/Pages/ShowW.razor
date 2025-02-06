@@ -1,4 +1,4 @@
-﻿@page "/ShowW/{Wid:int}"
+﻿@page "/ShowW/{Wid:int}/{Wd}"
 @using Models2
 @using DBL2
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
@@ -80,7 +80,7 @@
             <center>
                 <h1> Hi @c.firstName</h1>
                 <h3> This is Your Workout </h3>
-                <h3> The Workout is in @workout.date at @hour1</h3>
+                <h3> The Workout is in @Wd at @hour1</h3>
                 <h3> The duration of the Workout is @(workout.duration / 60) Minutes</h3>
                 @if (workout.Isgroup == "false")
                 {
@@ -137,6 +137,8 @@
 @code {
     [Parameter]
     public int Wid { get; set; }
+    [Parameter]
+    public string Wd { get; set; }
     Workout workout;
     WorkoutDB workoutDB = new WorkoutDB();
     DrillsListDB drillsListDB = new DrillsListDB();
@@ -260,9 +262,10 @@
     }
 
     html, body {
+        height:100vh;
         width: 100%;
         place-items: center;
-        background: -webkit-linear-gradient(bottom, #E0DCC8, #3a506b);
+        background: -webkit-linear-gradient(bottom, white, #3a506b);
     }
 
 

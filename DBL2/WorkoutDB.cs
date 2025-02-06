@@ -165,17 +165,17 @@ namespace DBL2
 
         public async Task<List<Workout>> GetWorkoutsByWeekAsync(int trainerid, DateTime startOfWeek)
         {
-            // חישוב סוף השבוע - אנחנו מניחים שיום ראשון הוא תחילת השבוע
             DateTime endOfWeek = startOfWeek.AddDays(6);
 
-            // המרת התאריכים לפורמט שמתאים לשאילתה
             string startDate = startOfWeek.ToString("yyyy-MM-dd");
             string endDate = endOfWeek.ToString("yyyy-MM-dd");
 
-            // בניית שאילתה SQL כדי לקבל את האימונים בטווח התאריכים
-            string sql = @$"SELECT * FROM sportsync_db.workouts WHERE trainerid = @trainerid AND ((date >= @startDate AND date <= @endDate ) OR (IsReccuring = 'true') AND date <= @startDate) ORDER BY date, hour;";
+            string sql = @$"SELECT * FROM sportsync_db.workouts 
+                    WHERE trainerid = @trainerid 
+                    AND ((date >= @startDate AND date <= @endDate ) 
+                    OR (IsReccuring = 'true' AND date <= @startDate)) 
+                    ORDER BY date, hour;";
 
-            // יצירת פרמטרים לשאילתה
             Dictionary<string, object> parameters = new Dictionary<string, object>
     {
         { "@trainerid", trainerid },
@@ -183,56 +183,27 @@ namespace DBL2
         { "@endDate", endDate }
     };
 
-            // שליחת השאילתה לקבלת האימונים
             List<Workout> workouts = (List<Workout>)await SelectAllAsync(sql, parameters);
 
-            // יצירת רשימה חדשה לאימונים שתכיל גם את האימונים המחזוריים
-            List<Workout> allWorkouts = new List<Workout>(workouts);
-
-            // הוספת אימונים מחזוריים לכל יום תואם בשבוע
             foreach (var workout in workouts)
             {
-                if (workout.IsReccuring == "true") // אם האימון מחזורי
+                if (workout.IsReccuring == "true")
                 {
-                    
-                    if(DateTime.Parse(workout.date)< DateTime.Parse(startDate))
-                    {
-
-                    }
-                    // המרת תאריך האימון ל- DateTime
                     DateTime workoutDate = DateTime.Parse(workout.date);
-                    DayOfWeek recurringDay = workoutDate.DayOfWeek;
 
-                    // הוספת האימון לכל יום מתאים בשבוע
-                    foreach (var day in Enumerable.Range(0, 7)) // נעבור על כל הימים בשבוע
+                    // אם תאריך האימון קטן מה- startDate, נמצא את התאריך הבא שמתאים לאותו יום בשבוע אחרי startDate
+                    if (workoutDate < startOfWeek)
                     {
-                        DateTime newDate = startOfWeek.AddDays(day);
-                        if (newDate.DayOfWeek == recurringDay)
-                        {
-                            // יצירת אימון מחזורי שמתאים ליום הזה
-                            Workout recurringWorkout = new Workout
-                            {
-                                trainerid = workout.trainerid,
-                                date = newDate.ToString("yyyy-MM-dd"),
-                                duration = workout.duration,
-                                Isgroup = workout.Isgroup,
-                                hour = workout.hour,
-                                IsReccuring = workout.IsReccuring
-                            };
+                        int daysToNextOccurrence = ((int)workoutDate.DayOfWeek - (int)startOfWeek.DayOfWeek + 7) % 7;
+                        if (daysToNextOccurrence == 0)
+                            daysToNextOccurrence = 7; // אם זה אותו היום, נעביר לשבוע הבא
 
-                            // אם האימון לא קיים כבר ברשימה, נוסיף אותו
-                            if (!allWorkouts.Any(w => w.date == recurringWorkout.date && w.hour == recurringWorkout.hour))
-                            {
-                                allWorkouts.Add(recurringWorkout);
-                            }
-                        }
+                        workout.date = startOfWeek.AddDays(daysToNextOccurrence).ToString("yyyy-MM-dd");
                     }
                 }
             }
 
-            // מחזירים את כל האימונים, כולל מחזוריים, רק על בסיס הצגת תוצאות ולא שמירה במסד הנתונים
-            return allWorkouts.OrderBy(w => w.date).ThenBy(w => w.hour).ToList();
-
+            return workouts.OrderBy(w => w.date).ThenBy(w => w.hour).ToList();
         }
     }
 }
