@@ -58,7 +58,7 @@
     }
 
     .day-button.selected {
-            background-color: #3a506b;
+    background-color: #3a506b;
     color: white;
     }
 
@@ -101,7 +101,7 @@
     }
 
     .nav-button {
-        background-color: #4c6079;
+    background-color: #4c6079;
     padding: 8px 16px;
     border-radius: 6px;
     border: none;
@@ -110,7 +110,7 @@
     }
 
     .nav-button:hover {
-            background-color: #abb5c2;
+    background-color: #abb5c2;
     }
 
     .container {
@@ -149,50 +149,86 @@
 
     .button-24:hover,
     .button-24:active {
-        background-color: initial;
-        background-position: 0 0;
-        color: #FF4742;
+    background-color: initial;
+    background-position: 0 0;
+    color: #FF4742;
     }
 
     .button-24:active {
-        opacity: .5;
+    opacity: .5;
     }
 
     .button-73 {
-        appearance: none;
-        background-color: #FFFFFF;
-        border-radius: 40em;
-        border-style: none;
-        box-shadow: #ADCFFF 0 -12px 6px inset;
-        box-sizing: border-box;
-        color: #000000;
-        cursor: pointer;
-        display: inline-block;
-        font-family: -apple-system,sans-serif;
-        font-size: 1.2rem;
-        font-weight: 700;
-        letter-spacing: -.24px;
-        margin: 0;
-        outline: none;
-        padding: 1rem 1.3rem;
-        quotes: auto;
-        text-align: center;
-        text-decoration: none;
-        transition: all .15s;
-        user-select: none;
-        -webkit-user-select: none;
-        touch-action: manipulation;
+    appearance: none;
+    background-color: #FFFFFF;
+    border-radius: 40em;
+    border-style: none;
+    box-shadow: #ADCFFF 0 -12px 6px inset;
+    box-sizing: border-box;
+    color: #000000;
+    cursor: pointer;
+    display: inline-block;
+    font-family: -apple-system,sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -.24px;
+    margin: 0;
+    outline: none;
+    padding: 1rem 1.3rem;
+    quotes: auto;
+    text-align: center;
+    text-decoration: none;
+    transition: all .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
     }
 
-        .button-73:hover {
-            background-color: #FFC229;
-            box-shadow: #FF6314 0 -6px 8px inset;
-            transform: scale(1.125);
-        }
+    .button-73:hover {
+    background-color: #FFC229;
+    box-shadow: #FF6314 0 -6px 8px inset;
+    transform: scale(1.125);
+    }
 
-        .button-73:active {
-            transform: scale(1.025);
-        }
+    .button-73:active {
+    transform: scale(1.025);
+    }
+
+    .button-24 {
+    background: #FF4742;
+    border: 1px solid #FF4742;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 16px;
+    min-height: 40px;
+    outline: 0;
+    padding: 12px 14px;
+    text-align: center;
+    text-rendering: geometricprecision;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    }
+
+    .button-24:hover,
+    .button-24:active {
+    background-color: initial;
+    background-position: 0 0;
+    color: #FF4742;
+    }
+
+    .button-24:active {
+    opacity: .5;
+    }
 </style>
 
 <div class="container-fluid">
@@ -266,20 +302,21 @@
             <h3 style="font-size: 1.25rem; font-weight: bold;">
                 @(SelectedDate.HasValue ? SelectedDate.Value.ToString("MMMM dd, yyyy") : "Select a date")
             </h3>
-           
+
             <a href="t" class="nav-button" style="background-color: #22c55e;">Add WorkOut</a>
         </div>
 
         @if (SelectedDate.HasValue && DailyWorkouts.Any())
         {
-            foreach (var workout in DailyWorkouts.OrderBy(w => w.hour))
+            foreach (Workout workout in DailyWorkouts.OrderBy(w => w.hour))
             {
+
                 <div class="workout-card">
                     <div style="display: flex; justify-content: space-between;">
                         <div>
                             <div style="font-weight: bold;">@GetFormattedHour(workout.hour)</div>
                             <div style="color: #64748b; margin-top: 4px;">
-                                Duration: @(workout.duration/60) minutes
+                                Duration: @(workout.duration / 60) minutes
                             </div>
                             <div style="margin-top: 8px;">
                                 @if (workout.Isgroup == "true")
@@ -294,10 +331,11 @@
                         </div>
                         <div>
                             <a href="/ShowW/@(workout.id)/@(DateTime.Parse(workout.date).ToString("yyyy-MM-dd"))" class="button-73">Edit</a>
-                            
+                            <button class="button-24" @onclick="() => DeleteCurrent(workout)">Delete</button>
                         </div>
                     </div>
                 </div>
+
             }
         }
         else if (SelectedDate.HasValue)
@@ -327,7 +365,7 @@
     WorkoutDB workoutDB = new WorkoutDB();
     Trainer c; // Replace with actual trainer ID from authentication
 
-  
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
 
@@ -338,7 +376,7 @@
             var user1 = await MySession.GetAsync<Trainer>("Trainer");
             if (user1.Success)
             {
-                c = user1.Value;               
+                c = user1.Value;
                 await UpdateWeekDays();
                 if (!SelectedDate.HasValue)
                 {
@@ -353,7 +391,8 @@
                 navigationManager.NavigateTo("/login");
 
             }
-            else{
+            else
+            {
 
             }
 
@@ -361,7 +400,20 @@
         }
     }
 
+    private async Task DeleteCurrent(Workout w)
+    {
+        WorkoutDB workoutDB = new WorkoutDB();
+        Workout w1 = new Workout();
+        w1.trainerid = w.trainerid;
+        w1.date = DateTime.Parse(w.date).ToString("yyyy-MM-dd");
+        w1.duration = w.id * -1;
+        w1.Isgroup = w.Isgroup;
+        w1.hour = w.hour;
+        w1.IsReccuring = w.IsReccuring;
+        workoutDB.InsertWorkout(w1);
+        await LoadWeekWorkouts();
 
+    }
 
 
     private static DateTime GetStartOfWeek(DateTime date)
@@ -382,38 +434,65 @@
     private async Task LoadWeekWorkouts()
     {
         // שליפת כל האימונים לשבוע הנוכחי ממסד הנתונים
-        var rawWorkouts = await workoutDB.GetWorkoutsByWeekAsync(c.id, CurrentWeekStart);
+        List<Workout> rawWorkouts = await workoutDB.GetWorkoutsByWeekAsync(c.id, CurrentWeekStart);
+        List<Workout> DeletedWorkouts = new List<Workout>();
+
+        foreach (Workout workout in rawWorkouts)
+        {
+            if (workout.duration < 0)
+            {
+                DeletedWorkouts.Add(workout);
+            }
+
+
+        }
 
         // יצירת רשימה של האימונים לשבוע
         AllWeekWorkouts = new List<Workout>();
 
         // מעבר על כל האימונים שנטענו
-        foreach (var workout in rawWorkouts)
+        foreach (Workout workout in rawWorkouts)
         {
+
             // הוספת האימון לרשימה הראשית
-            AllWeekWorkouts.Add(workout);
+
 
             // אם האימון מחזורי, נוסיף אותו גם לימים המתאימים
             if (workout.IsReccuring == "true")
             {
-                DateTime workoutDate = DateTime.Parse(workout.date);
-                DayOfWeek recurringDay = workoutDate.DayOfWeek;
-
-                // מעבר על ימי השבוע הנוכחיים והבאים
-                foreach (var day in WeekDays)
+                if (DateTime.TryParse(workout.date, out DateTime workoutDate))
                 {
-                    // אם היום הנוכחי תואם ליום המחזורי (לדוגמה, שני)
-                    if (day.DayOfWeek == recurringDay)
+                    DayOfWeek recurringDay = workoutDate.DayOfWeek;
+
+                    // מעבר על ימי השבוע הנוכחיים והבאים
+                    foreach (var day in WeekDays)
                     {
-                        // הוספת האימון למחזור לכל יום מתאים בשבוע הנוכחי
-                        if (!AllWeekWorkouts.Contains(workout))
+                        // אם היום הנוכחי תואם ליום המחזורי (לדוגמה, שני)
+                        if (day.DayOfWeek == recurringDay&&workout.duration >0)
                         {
-                            AllWeekWorkouts.Add(workout);
+                            // הוספת האימון למחזור לכל יום מתאים בשבוע הנוכחי
+                            if (!AllWeekWorkouts.Any(w => w.id == workout.id))
+                            {
+                                int count = 0;
+                                foreach (Workout wd in DeletedWorkouts)
+                                {
+                                    if (wd.duration == workout.id * -1)
+                                    {
+                                        count++;
+
+                                    }
+                                }
+                                if (count == 0)
+                                    AllWeekWorkouts.Add(workout);
+                            }
                         }
                     }
                 }
             }
         }
+
+
+
     }
 
     private int GetWorkoutCountForDay(DateTime date)
@@ -444,11 +523,13 @@
 
     private async Task LoadWorkouts()
     {
-        if (SelectedDate.HasValue)
+        if (SelectedDate.HasValue && AllWeekWorkouts != null)
         {
-            var allWorkouts = await workoutDB.GetWorkoutsByWeekAsync(c.id, CurrentWeekStart);
-            DailyWorkouts = allWorkouts
-                .Where(w => DateTime.Parse(w.date).Date == SelectedDate.Value.Date)
+           
+            DailyWorkouts = AllWeekWorkouts
+                .Where(w => DateTime.TryParse(w.date, out DateTime workoutDate)
+                            && workoutDate.Date == SelectedDate.Value.Date
+                            && w.duration >= 0)
                 .ToList();
         }
     }
@@ -487,4 +568,3 @@
         return date.ToString("dddd", System.Globalization.CultureInfo.CurrentCulture);
     }
 }
- 

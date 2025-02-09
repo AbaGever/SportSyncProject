@@ -173,15 +173,15 @@ namespace DBL2
             string sql = @$"SELECT * FROM sportsync_db.workouts 
                     WHERE trainerid = @trainerid 
                     AND ((date >= @startDate AND date <= @endDate ) 
-                    OR (IsReccuring = 'true' AND date <= @startDate)) 
+                    OR (IsReccuring = 'true' AND date <= @startDate))
                     ORDER BY date, hour;";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>
-    {
+            {
         { "@trainerid", trainerid },
         { "@startDate", startDate },
         { "@endDate", endDate }
-    };
+             };
 
             List<Workout> workouts = (List<Workout>)await SelectAllAsync(sql, parameters);
 
@@ -205,6 +205,7 @@ namespace DBL2
 
             return workouts.OrderBy(w => w.date).ThenBy(w => w.hour).ToList();
         }
+        
     }
 }
 
