@@ -7,9 +7,16 @@
 @inject IJSRuntime js
 <HeadContent>
     <!-- Basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Site Metas -->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-
-
+    <title>SportSync</title>
     <link rel="icon" href="/download.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
 
@@ -412,6 +419,7 @@
         w1.IsReccuring = w.IsReccuring;
         workoutDB.InsertWorkout(w1);
         await LoadWeekWorkouts();
+        await Task.Yield();
 
     }
 
@@ -476,7 +484,7 @@
                                 int count = 0;
                                 foreach (Workout wd in DeletedWorkouts)
                                 {
-                                    if (wd.duration == workout.id * -1)
+                                    if (wd.duration == workout.id * -1 && DateTime.Parse(wd.date) == DateTime.Parse(workout.date))
                                     {
                                         count++;
 

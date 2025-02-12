@@ -187,7 +187,7 @@ namespace DBL2
 
             foreach (var workout in workouts)
             {
-                if (workout.IsReccuring == "true")
+                if (workout.IsReccuring == "true" &&workout.duration>0)
                 {
                     DateTime workoutDate = DateTime.Parse(workout.date);
 
