@@ -1,4 +1,4 @@
-﻿@page "/ws"
+﻿@page "/mr"
 @using Models2
 @using DBL2
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
@@ -37,206 +37,205 @@
 
 
     html, body {
-    height: 100vh;
-    width: 100%;
-    place-items: center;
+        width: 100%;
+        place-items: center;
         background: linear-gradient(to bottom, #3a506b, #E0DCC8);
         background-attachment: fixed;
     }
 
     .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
-    margin-bottom: 20px;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+        margin-bottom: 20px;
     }
 
     .day-button {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    background-color: white;
-    cursor: pointer;
-    transition: all 0.2s;
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background-color: white;
+        cursor: pointer;
+        transition: all 0.2s;
     }
 
-    .day-button:hover {
-    background-color: #f7fafc;
-    }
+        .day-button:hover {
+            background-color: #f7fafc;
+        }
 
-    .day-button.selected {
-    background-color: #3a506b;
-    color: white;
-    }
+        .day-button.selected {
+            background-color: #3a506b;
+            color: white;
+        }
 
     .workout-card {
-    background-color: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 12px;
+        background-color: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 12px;
     }
 
     .timeline {
-    border-left: 2px solid #e2e8f0;
-    margin-left: 70px;
-    padding-left: 20px;
-    position: relative;
+        border-left: 2px solid #e2e8f0;
+        margin-left: 70px;
+        padding-left: 20px;
+        position: relative;
     }
 
     .time-slot {
-    display: flex;
-    margin-bottom: 20px;
-    position: relative;
+        display: flex;
+        margin-bottom: 20px;
+        position: relative;
     }
 
     .time-label {
-    position: absolute;
-    left: -90px;
-    width: 60px;
-    text-align: right;
-    color: #64748b;
+        position: absolute;
+        left: -90px;
+        width: 60px;
+        text-align: right;
+        color: #64748b;
     }
 
     .workout-item {
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    padding: 8px;
-    margin-left: 10px;
-    flex: 1;
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 8px;
+        margin-left: 10px;
+        flex: 1;
     }
 
     .nav-button {
-    background-color: #4c6079;
-    padding: 8px 16px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.2s;
+        background-color: #4c6079;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
     }
 
-    .nav-button:hover {
-    background-color: #abb5c2;
-    }
+        .nav-button:hover {
+            background-color: #abb5c2;
+        }
 
     .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
     }
 
     .badge {
-    background-color: darkred;
-    color: white;
-    border-radius: 9999px;
-    padding: 2px 8px;
-    font-size: 0.75rem;
-    display: inline-block;
-    margin-top: 4px;
+        background-color: darkred;
+        color: white;
+        border-radius: 9999px;
+        padding: 2px 8px;
+        font-size: 0.75rem;
+        display: inline-block;
+        margin-top: 4px;
     }
 
     .tag {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    margin-right: 4px;
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        margin-right: 4px;
     }
 
     .tag-group {
-    background-color: #dbeafe;
-    color: #1e40af;
+        background-color: #dbeafe;
+        color: #1e40af;
     }
 
     .tag-recurring {
-    background-color: #dcfce7;
-    color: #166534;
+        background-color: #dcfce7;
+        color: #166534;
     }
 
     .button-24:hover,
     .button-24:active {
-    background-color: initial;
-    background-position: 0 0;
-    color: #FF4742;
+        background-color: initial;
+        background-position: 0 0;
+        color: #FF4742;
     }
 
     .button-24:active {
-    opacity: .5;
+        opacity: .5;
     }
 
     .button-73 {
-    appearance: none;
-    background-color: #FFFFFF;
-    border-radius: 40em;
-    border-style: none;
-    box-shadow: #ADCFFF 0 -12px 6px inset;
-    box-sizing: border-box;
-    color: #000000;
-    cursor: pointer;
-    display: inline-block;
-    font-family: -apple-system,sans-serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    letter-spacing: -.24px;
-    margin: 0;
-    outline: none;
-    padding: 1rem 1.3rem;
-    quotes: auto;
-    text-align: center;
-    text-decoration: none;
-    transition: all .15s;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
+        appearance: none;
+        background-color: #FFFFFF;
+        border-radius: 40em;
+        border-style: none;
+        box-shadow: #ADCFFF 0 -12px 6px inset;
+        box-sizing: border-box;
+        color: #000000;
+        cursor: pointer;
+        display: inline-block;
+        font-family: -apple-system,sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: -.24px;
+        margin: 0;
+        outline: none;
+        padding: 1rem 1.3rem;
+        quotes: auto;
+        text-align: center;
+        text-decoration: none;
+        transition: all .15s;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
     }
 
-    .button-73:hover {
-    background-color: #FFC229;
-    box-shadow: #FF6314 0 -6px 8px inset;
-    transform: scale(1.125);
-    }
+        .button-73:hover {
+            background-color: #FFC229;
+            box-shadow: #FF6314 0 -6px 8px inset;
+            transform: scale(1.125);
+        }
 
-    .button-73:active {
-    transform: scale(1.025);
-    }
+        .button-73:active {
+            transform: scale(1.025);
+        }
 
     .button-24 {
-    background: #FF4742;
-    border: 1px solid #FF4742;
-    border-radius: 6px;
-    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
-    box-sizing: border-box;
-    color: #FFFFFF;
-    cursor: pointer;
-    display: inline-block;
-    font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
-    font-size: 16px;
-    font-weight: 800;
-    line-height: 16px;
-    min-height: 40px;
-    outline: 0;
-    padding: 12px 14px;
-    text-align: center;
-    text-rendering: geometricprecision;
-    text-transform: none;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    vertical-align: middle;
+        background: #FF4742;
+        border: 1px solid #FF4742;
+        border-radius: 6px;
+        box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+        box-sizing: border-box;
+        color: #FFFFFF;
+        cursor: pointer;
+        display: inline-block;
+        font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 16px;
+        min-height: 40px;
+        outline: 0;
+        padding: 12px 14px;
+        text-align: center;
+        text-rendering: geometricprecision;
+        text-transform: none;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        vertical-align: middle;
     }
 
-    .button-24:hover,
-    .button-24:active {
-    background-color: initial;
-    background-position: 0 0;
-    color: #FF4742;
-    }
+        .button-24:hover,
+        .button-24:active {
+            background-color: initial;
+            background-position: 0 0;
+            color: #FF4742;
+        }
 
-    .button-24:active {
-    opacity: .5;
-    }
+        .button-24:active {
+            opacity: .5;
+        }
 </style>
 
 <div class="container-fluid">
@@ -284,45 +283,23 @@
     </div>
 
     <!-- Calendar Grid -->
-    <div class="calendar-grid">
-        @foreach (var day in WeekDays)
-        {
-            <button class="day-button @(SelectedDate?.Date == day.Date ? "selected" : "")"
-            @onclick="() => SelectDate(day)">
-                <div style="font-weight: bold;">@day.ToString("ddd")</div>
-                <div>@day.ToString("MMM dd")</div>
-                @{
-                    var workoutCount = GetWorkoutCountForDay(day);
-                    if (workoutCount > 0)
-                    {
-                        <div class="badge">@workoutCount</div>
-                    }
-                }
-            </button>
-        }
-    </div>
-
-
-
     <!-- Workout Details -->
     <div style="background-color: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-            <h3 style="font-size: 1.25rem; font-weight: bold;">
-                @(SelectedDate.HasValue ? SelectedDate.Value.ToString("MMMM dd, yyyy") : "Select a date")
-            </h3>
-
-            <a href="t" class="nav-button" style="background-color: #22c55e;">Add WorkOut</a>
         </div>
 
-        @if (SelectedDate.HasValue && DailyWorkouts.Any())
+        @if (SelectedDate.HasValue && AllWeekWorkouts.Any())
         {
-            foreach (Workout workout in DailyWorkouts.OrderBy(w => w.hour))
+            foreach (Workout workout in AllWeekWorkouts.OrderBy(w => w.date).ThenBy(w => w.hour))
             {
 
                 <div class="workout-card">
                     <div style="display: flex; justify-content: space-between;">
                         <div>
-                            <div style="font-weight: bold;">@GetFormattedHour(workout.hour)</div>
+
+                            <div style="font-weight: bold;">@(DateTime.Parse(workout.date).ToString("MM/dd"))</div>
+
+
                             <div style="color: #64748b; margin-top: 4px;">
                                 Duration: @(workout.duration / 60) minutes
                             </div>
@@ -338,25 +315,44 @@
                             </div>
                         </div>
                         <div>
-                            <a href="/ShowW/@(workout.id)/@(DateTime.Parse(workout.date).ToString("yyyy-MM-dd"))" class="button-73">Edit</a>
-                            <button class="button-24" @onclick="() => DeleteCurrent(workout)">Delete</button>
+                            <div style="font-weight: bold;"><button @onclick="() => OpenReport(workout.id)">Open Report</button></div>
+
+                        </div>
+                        <div>
+                            <div style="font-weight: bold;"> @GetFormattedHour(workout.hour)</div>
+
                         </div>
                     </div>
                 </div>
-
+                if (openReport == true)
+                {
+                    foreach(Drill drill in Drills)
+                    {
+                        <div style="display: flex; justify-content: space-between;">
+                            <div>
+                                 <h5 class="card-title text-primary">@drill.name</h5>
+                                   
+                                        <strong>Muscle Group:</strong> @drill.muscle <br />
+                                        <strong>Sets:</strong> @drill.sets <br />
+                                        <strong>Reps:</strong> @drill.reps <br />
+                                        <strong>Duration:</strong> @drill.duration minutes <br />
+                            </div>
+                        </div>
+                    }
+                    
+                }
             }
         }
         else if (SelectedDate.HasValue)
         {
             <div style="text-align: center; color: #64748b; padding: 32px 0;">
-                <p>No workouts scheduled for this day.</p>
-                <p style="margin-top: 8px; font-size: 0.875rem;">Click the Add Workout button to schedule one.</p>
+                <p>No workouts scheduled for this Week.</p>
             </div>
         }
         else
         {
             <div style="text-align: center; color: #64748b; padding: 32px 0;">
-                <p>Select a day to view or schedule workouts.</p>
+                <p>Select a Week to view or schedule workouts.</p>
             </div>
         }
     </div>
@@ -371,8 +367,12 @@
     private List<Workout> DailyWorkouts = new();
     private List<Workout> AllWeekWorkouts = new();
     WorkoutDB workoutDB = new WorkoutDB();
-    Trainer c; // Replace with actual trainer ID from authentication
-
+    DrillsListDB drillsListDB = new DrillsListDB();
+    List<drillslist> Drillsnames = new List<drillslist>();
+    List<Drill> Drills = new List<Drill>();
+    DrillDB drillDB = new DrillDB();
+    Trainer c;
+    bool openReport = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -407,7 +407,16 @@
 
         }
     }
-
+    private async Task OpenReport(int wid)
+    {
+        openReport = true;
+        Drillsnames = await drillsListDB.SelectAllInWorkoutAsync(wid);
+        foreach (var dl in Drillsnames)
+        {
+            Drill drill = await drillDB.SelectByPkAsync(dl.Drillname);
+            Drills.Add(drill);
+        }
+    }
     private async Task DeleteCurrent(Workout w)
     {
         WorkoutDB workoutDB = new WorkoutDB();
@@ -477,7 +486,7 @@
                     foreach (var day in WeekDays)
                     {
                         // אם היום הנוכחי תואם ליום המחזורי (לדוגמה, שני)
-                        if (day.DayOfWeek == recurringDay&&workout.duration >0)
+                        if (day.DayOfWeek == recurringDay && workout.duration > 0)
                         {
                             // הוספת האימון למחזור לכל יום מתאים בשבוע הנוכחי
                             if (!AllWeekWorkouts.Any(w => w.id == workout.id))
@@ -526,22 +535,11 @@
         }
         else
         {
-            await LoadWorkouts();
+            await LoadWeekWorkouts();
         }
     }
 
-    private async Task LoadWorkouts()
-    {
-        if (SelectedDate.HasValue && AllWeekWorkouts != null)
-        {
-           
-            DailyWorkouts = AllWeekWorkouts
-                .Where(w => DateTime.TryParse(w.date, out DateTime workoutDate)
-                            && workoutDate.Date == SelectedDate.Value.Date
-                            && w.duration >= 0)
-                .ToList();
-        }
-    }
+
 
     private async Task PreviousWeek()
     {
@@ -549,7 +547,7 @@
         await UpdateWeekDays();
         if (SelectedDate.HasValue)
         {
-            await LoadWorkouts();
+            await LoadWeekWorkouts();
         }
     }
 
@@ -559,7 +557,7 @@
         await UpdateWeekDays();
         if (SelectedDate.HasValue)
         {
-            await LoadWorkouts();
+            await LoadWeekWorkouts();
         }
     }
 
