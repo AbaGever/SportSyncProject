@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models2", "Models2\Models2.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTesting", "UnitTesting\UnitTesting.csproj", "{2F803F86-05B1-4F68-BBAF-713A25FCB082}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportSyncApp", "SportSyncApp\SportSyncApp.csproj", "{29581C6B-F683-4556-8CD5-8E6FF4330723}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportSyncAPI", "SportSyncAPI\SportSyncAPI.csproj", "{B932793D-A244-433E-8E62-3C621E237AE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,16 @@ Global
 		{2F803F86-05B1-4F68-BBAF-713A25FCB082}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F803F86-05B1-4F68-BBAF-713A25FCB082}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F803F86-05B1-4F68-BBAF-713A25FCB082}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29581C6B-F683-4556-8CD5-8E6FF4330723}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29581C6B-F683-4556-8CD5-8E6FF4330723}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29581C6B-F683-4556-8CD5-8E6FF4330723}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{29581C6B-F683-4556-8CD5-8E6FF4330723}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29581C6B-F683-4556-8CD5-8E6FF4330723}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29581C6B-F683-4556-8CD5-8E6FF4330723}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{B932793D-A244-433E-8E62-3C621E237AE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B932793D-A244-433E-8E62-3C621E237AE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B932793D-A244-433E-8E62-3C621E237AE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B932793D-A244-433E-8E62-3C621E237AE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
