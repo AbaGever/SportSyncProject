@@ -5,12 +5,14 @@
 @inject ProtectedSessionStorage MySession
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject IJSRuntime js
+@using System.Globalization
+
 <HeadContent>
     <!-- Basic -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Mobile Metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Site Metas -->
     <meta name="keywords" content="">
     <meta name="description" content="">
@@ -279,8 +281,7 @@
     <!-- Week Navigation -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
         <button class="nav-button" @onclick="PreviousWeek">Previous Week</button>
-        <h2 style="font-size: 1.5rem; font-weight: bold;color:white">Week of @CurrentWeekStart.ToString("MMMM dd, yyyy")</h2>
-        <button class="nav-button" @onclick="NextWeek">Next Week</button>
+        <h2 style="font-size: 1.5rem; font-weight: bold;color:white">Week of @CurrentWeekStart.ToString("MMMM dd, yyyy", System.Globalization.CultureInfo.InvariantCulture)</h2>        <button class="nav-button" @onclick="NextWeek">Next Week</button>
     </div>
 
     <!-- Calendar Grid -->
@@ -289,8 +290,8 @@
         {
             <button class="day-button @(SelectedDate?.Date == day.Date ? "selected" : "")"
             @onclick="() => SelectDate(day)">
-                <div style="font-weight: bold;">@day.ToString("ddd")</div>
-                <div>@day.ToString("MMM dd")</div>
+                <div style="font-weight: bold;">@day.ToString("ddd", System.Globalization.CultureInfo.InvariantCulture)</div>
+                <div>@day.ToString("MMM dd", System.Globalization.CultureInfo.InvariantCulture)</div>
                 @{
                     var workoutCount = GetWorkoutCountForDay(day);
                     if (workoutCount > 0)
@@ -498,6 +499,9 @@
                     }
                 }
             }
+            else
+            AllWeekWorkouts.Add(workout);
+
         }
 
 
@@ -574,6 +578,6 @@
 
     public static string GetDayOfWeekName(DateTime date)
     {
-        return date.ToString("dddd", System.Globalization.CultureInfo.CurrentCulture);
+        return date.ToString("dddd", System.Globalization.CultureInfo.InvariantCulture);
     }
 }

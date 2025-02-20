@@ -65,10 +65,6 @@
         </nav>
     </div>
     <section class=" slider_section position-relative">
-        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="container">
                         <div class="col-lg-10 col-md-11 mx-auto">
                             <div class="detail-box">
                                 <div>
@@ -76,10 +72,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </section>
     <div class="wrapper">
         <center>
@@ -92,14 +84,14 @@
                     @if (!showPass)
                     {
                         <h2>  Password: @password </h2>
-                        string tmp1 = "Show new Password ";
+                        string tmp1 = "Show  Password ";
                         @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" @onclick=" ShowPass" />
                         <br>
                     }
                     else
                     {
                         <h2>  Password: @c.password </h2>
-                        string tmp1 = "Show new Password ";
+                        string tmp1 = "Show Password ";
                         @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" checked="checked" @onclick="ShowPass" />
                         <br>
                     }
@@ -147,7 +139,7 @@
                     @if (!showPass)
                     {
                         <h2>  Password: @password </h2>
-                        string tmp1 = "Show new Password ";
+                        string tmp1 = "Show Password ";
                         @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" @onclick=" ShowPass" />
                         <br>
                     }
@@ -209,7 +201,7 @@
     }
 
     html, body {
-        height: 100%;
+        height:100vh;
         width: 100%;
         place-items: center;
         background: -webkit-linear-gradient(bottom, #E0DCC8, #3a506b);
@@ -306,7 +298,7 @@
     .wrapper {
         overflow: hidden;
         margin: auto;
-        max-width: 500px;
+        max-width: 1000px;
         background: #fff;
         padding: 30px;
         border-radius: 5px;

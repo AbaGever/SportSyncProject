@@ -9,7 +9,7 @@
 <HeadContent>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SportSync</title>
     <link rel="icon" href="/download.png">
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet">
@@ -268,19 +268,20 @@
 <script src="homepage/js/jquery-3.4.1.min.js"></script>
 <script src="homepage/js/bootstrap.js"></script>
 @code {
+    
     string error = "";
     string Now = DateTime.Now.ToString("yyyy-mm-dd");
-    DateTime selectedHour;
+    private DateTime selectedHour = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 0, 0, 0);
     string selectedhour = "";
     List<Drill> list;
     string nameofdrill = "";
     string selectedmuscle = "";
-    DateTime time = DateTime.Today;
+
     List<string> DaysOfWeek = new List<string>
     {
     "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"
     };
-    private DateTime selectedDate;
+    private DateTime selectedDate = DateTime.Today;
     private string maxDate;
     string IsReccuring1 = "false";
     List<string> Muscles = new List<string>
