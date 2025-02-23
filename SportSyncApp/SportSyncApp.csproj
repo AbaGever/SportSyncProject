@@ -64,4 +64,9 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DBL2\DBL2.csproj" />
+      <ProjectReference Include="..\Models2\Models2.csproj" />
+    </ItemGroup>
+
 </Project>

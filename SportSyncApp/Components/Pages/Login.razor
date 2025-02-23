@@ -1,6 +1,100 @@
 ﻿@page "/L"
-<h3>Login</h3>
+@using Models2
+@using DBL2
+@using System.Text.Json
+@inject NavigationManager navigateMg
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAUI Blazor Styling</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<style>
+
+    body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .wrapper {
+    text-align:center;
+    font-size : 30px;
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+</style>
+
+<body >
+    <div class="wrapper">
+        <h1 >SportSync Log-In</h1>
+
+        <div class="card-body">
+            <div class="form-group mt-2">
+                <label>Email</label>
+                <input type="text" class="form-control" @bind="UserEmail" />
+            </div>
+            <div class="form-group mt-2">
+                <label>Password</label>
+                <input type="password" class="form-control" @bind="UserPassword" />
+            </div>
+        </div>
+        <div class="card-footer">
+                     <button class="btn btn-primary" @onclick="HandleLogin">Login</button>
+    </div>
+    </div>
+</body>
 
 @code {
+    private string UserEmail = "";
+    private string UserPassword = "";
+    private string CoachEmail = "";
+    private string CoachPassword = "";
+    string ResultStr = "";
+    Trainer trainer;
+   
+    private async Task HandleLogin()
+    {
 
+        try
+        {
+            //CustomerList = new List<Customer>();
+            Trainer t = new Trainer();
+            t.emailaddress = UserEmail;
+            t.password = UserPassword;
+            //CustomerList.Add(customer);
+ HttpClient httpClient = new HttpClient();
+
+            var apiResponse = await httpClient.PostAsJsonAsync<Trainer>("https://g9l4sqwd-7112.euw.devtunnels.ms/api/Login/Login", t);
+        if (apiResponse.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                trainer = await apiResponse.Content.ReadFromJsonAsync<Trainer>();
+                ResultStr = "OK";
+                if (trainer.id > 0)
+                {
+                    string jsonString = JsonSerializer.Serialize(trainer);
+                    await SecureStorage.Default.SetAsync("Trainer", jsonString);
+                    navigateMg.NavigateTo("/", replace: true);
+                }
+                else
+                {
+
+                    await Application.Current.MainPage.DisplayAlert("Info", ResultStr, "Ok");
+                }
+            }
+            else
+            {
+                await Application.Current.MainPage.DisplayAlert("BlahBlah", ResultStr, "Ok");
+            }
+
+          
+        }
+        catch (Exception ex)
+        {
+            ResultStr = ex.Message;
+        }
+    }
 }

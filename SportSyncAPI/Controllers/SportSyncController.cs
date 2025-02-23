@@ -7,7 +7,7 @@ using Models2;
 namespace SportSyncAPI.Controllers
 {
     [ApiController]
-    [Route("api/[action]")]
+    [Route("api/[controller]/[action]")]
     public class LoginController : ControllerBase
     {
         
@@ -52,6 +52,21 @@ namespace SportSyncAPI.Controllers
             if (item is null) return BadRequest();
             TrainerDB UserDB = new TrainerDB();
             Trainer User = await UserDB.LoginAsync(item.emailaddress, item.password); if (User == null)
+            {
+                return BadRequest("User not found");
+            }
+            else
+            {
+                return Ok(User);
+            }
+        } // POST api/<ToDoListController>
+        [HttpPost]
+        [ActionName("Login1")]
+        public async Task<ActionResult<Coach>> Post3([FromBody] Coach item)
+        {
+            if (item is null) return BadRequest();
+            CoachDB UserDB = new CoachDB();
+            Coach User = await UserDB.LoginAsync(item.emailaddress, item.password); if (User == null)
             {
                 return BadRequest("User not found");
             }
