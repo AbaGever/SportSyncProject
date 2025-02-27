@@ -46,7 +46,7 @@ namespace SportSyncAPI.Controllers
 
         // POST api/<ToDoListController>
         [HttpPost]
-        [ActionName("Login")]
+        [ActionName("Log")]
         public async Task<ActionResult<Trainer>> Post2([FromBody] Trainer item)
         {
             if (item is null) return BadRequest();

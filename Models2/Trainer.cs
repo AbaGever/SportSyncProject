@@ -20,6 +20,7 @@ namespace Models2
 
         public Trainer()
         {
+
             isadmin = "false";
             time t = new time();
             datejoined = t.ToString();
