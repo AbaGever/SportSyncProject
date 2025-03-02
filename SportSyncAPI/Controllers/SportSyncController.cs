@@ -49,9 +49,23 @@ namespace SportSyncAPI.Controllers
         [ActionName("Log")]
         public async Task<ActionResult<Trainer>> Post2([FromBody] Trainer item)
         {
-            if (item is null) return BadRequest();
             TrainerDB UserDB = new TrainerDB();
-            Trainer User = await UserDB.LoginAsync(item.emailaddress, item.password); if (User == null)
+            Trainer User = await UserDB.LoginAsync(item.emailaddress, item.password); 
+           
+            return Ok(User);
+            
+        } // POST api/<ToDoListController>
+
+
+
+
+        [HttpGet]
+        [ActionName("GadiLogin")]
+        public async Task<ActionResult<Trainer>> GadiLogin(string a , string b)
+        {
+
+            TrainerDB UserDB = new TrainerDB();
+            Trainer User = await UserDB.LoginAsync(a,b); if (User == null)
             {
                 return BadRequest("User not found");
             }
@@ -59,7 +73,10 @@ namespace SportSyncAPI.Controllers
             {
                 return Ok(User);
             }
-        } // POST api/<ToDoListController>
+        }
+
+
+
         [HttpPost]
         [ActionName("Login1")]
         public async Task<ActionResult<Coach>> Post3([FromBody] Coach item)

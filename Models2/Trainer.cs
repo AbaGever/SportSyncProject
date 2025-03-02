@@ -14,17 +14,27 @@ namespace Models2
         public string emailaddress { get; set; }
         public string phonenumber { get; set; }
         public string password { get; set; }
-        public string groupname { get; set; }
-        public string isadmin { get; set; }
-        public string datejoined { get; set; }
+        public string groupname { get { return groupname; } set { groupname = null; } }
+        public string isadmin { get { return isadmin; } set { isadmin = "false"; } } 
+        public string datejoined 
+        { 
+            get {
+                return datejoined;
+            }
+
+            set 
+            {
+                time t = new time();
+
+                datejoined = t.ToString();
+
+            }
+        }
 
         public Trainer()
         {
 
-            isadmin = "false";
-            time t = new time();
-            datejoined = t.ToString();
-            groupname = null;
+            
 
         }
         public Trainer(int Id, string Fname, string Lname, string email, string number, string ps, string gname, string isAdmin, string datej)
