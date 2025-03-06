@@ -47,11 +47,16 @@ namespace SportSyncAPI.Controllers
         // POST api/<ToDoListController>
         [HttpPost]
         [ActionName("Log")]
-        public async Task<ActionResult<Trainer>> Post2([FromBody] Trainer item)
+        public async Task<ActionResult<Trainer>> Post2([FromBody] TrainerNew item)
         {
             TrainerDB UserDB = new TrainerDB();
-            Trainer User = await UserDB.LoginAsync(item.emailaddress, item.password); 
-           
+            Trainer User = await UserDB.LoginAsync(item.email, item.pass);
+            if (User == null)
+            {
+                return BadRequest("User not found");
+
+            }
+
             return Ok(User);
             
         } // POST api/<ToDoListController>

@@ -1,0 +1,63 @@
+﻿@page "/DW"
+@using Models2
+@using DBL2
+@using System.Text.Json
+@using System.Text;
+@inject NavigationManager navigateMgr
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAUI Blazor Styling</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<style>
+
+    body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .wrapper {
+    text-align:center;
+    font-size : 30px;
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+</style>
+<body>
+    <div class="wrapper">
+        <h1>SportSync</h1>
+
+    </div>
+</body>
+@code {
+     Trainer trainer { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        string jsonString = await SecureStorage.Default.GetAsync("Trainer");
+        if (jsonString == null)
+        {
+            trainer = new Trainer();
+        }
+        else
+        {
+            trainer = JsonSerializer.Deserialize<Trainer>(jsonString);
+        }
+
+        if (trainer.id <= 0)
+        {
+            navigateMgr.NavigateTo("/login", replace: true);
+        }
+        else
+        {
+            
+            
+        }
+    }
+}

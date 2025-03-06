@@ -57,92 +57,37 @@
     private string CoachPassword = "";
     string ResultStr = "";
     TrainerNew t = new TrainerNew();
-    // private async Task HandleLogin1()
-    // {
-    //     try
-    //     {
 
-    //         t.Emailaddress = UserEmail;
-    //         t.Password = UserPassword;
-    //         using HttpClient httpClient = new HttpClient();
-    //         var apiResponse = await httpClient.PostAsJsonAsync<Trainer>("https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/Log", t);
-
-    //         if (apiResponse.IsSuccessStatusCode)
-    //         {
-
-    //             t = await apiResponse.Content.ReadFromJsonAsync<Trainer>();
-
-    //             if (t != null && t.id > 0)
-    //             {
-    //                 string jsonString = JsonSerializer.Serialize(t);
-
-    //                 try
-    //                 {
-    //                     await SecureStorage.Default.SetAsync("Trainer", jsonString);
-    //                 }
-    //                 catch (Exception storageEx)
-    //                 {
-    //                     await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
-    //                     return;
-    //                 }
-
-    //                 navigateMg.NavigateTo("/", replace: true);
-    //                 return;
-    //             }
-    //         }
-
-    //         var errorMessage = await apiResponse.Content.ReadAsStringAsync();
-    //         await Application.Current.MainPage.DisplayAlert("Login Failed", $"Server Response: {apiResponse.StatusCode} - {errorMessage}", "OK");
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
-    //     }
-    // }
-    // private async Task HandleLogin2()
-    // {
-
-
-    //     t.Emailaddress = UserEmail;
-    //     t.Password = UserPassword;
-    //     HttpClient httpClient = new HttpClient();
-
-    //     t = await httpClient.GetFromJsonAsync<Trainer>("https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/GadiLogin?a=gadi&b=1234");
-
-    //     int aq = 9;
-
-
-
-    // }
 
     private async Task HandleLogin()
     {
 
-        Trainer tt = new Trainer();
-        tt.emailaddress = UserEmail;
-        tt.password = UserPassword;
+        TrainerNew tt = new TrainerNew();
+        tt.email = UserEmail;
+        tt.pass = UserPassword;
         HttpClient httpClient = new HttpClient();
+        Trainer trainer = new Trainer() ;
 
-        var xx = await httpClient.PostAsJsonAsync<Trainer>("https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/Log", tt);
+        var xx = await httpClient.PostAsJsonAsync<TrainerNew>("https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/Log", tt);
         // t = await xx.Content.ReadFromJsonAsync<Trainer>();
         if (tt != null)
         {
-        // //  Trainer trainer = await xx.content.ReadFromJsonAsync<Trainer>();
+          trainer = await xx.Content.ReadFromJsonAsync<Trainer>();
 
-        // // string jsonString = JsonSerializer.Serialize(trainer);
+            var jsonOSL = new StringContent(System.Text.Json.JsonSerializer.Serialize(trainer), Encoding.UTF8, "application/json");
 
-        // //     try
-        // //     {
-        // //         await SecureStorage.Default.SetAsync("Trainer", jsonString);
-        // //     }
-        // //     catch (Exception storageEx)
-        // //     {
-        // //         await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
-        // //         return;
-        // //     }
+            try
+            {
+                await SecureStorage.Default.SetAsync("Trainer", jsonOSL);
+            }
+            catch (Exception storageEx)
+            {
+                await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
+                return;
+            }
 
-        //     navigateMg.NavigateTo("/", replace: true);
-        //     return;
+            navigateMg.NavigateTo("/", replace: true);
+            return;
         }
     }
     
