@@ -64,21 +64,7 @@ namespace SportSyncAPI.Controllers
 
 
 
-        [HttpGet]
-        [ActionName("GadiLogin")]
-        public async Task<ActionResult<Trainer>> GadiLogin(string a , string b)
-        {
 
-            TrainerDB UserDB = new TrainerDB();
-            Trainer User = await UserDB.LoginAsync(a,b); if (User == null)
-            {
-                return BadRequest("User not found");
-            }
-            else
-            {
-                return Ok(User);
-            }
-        }
 
 
 

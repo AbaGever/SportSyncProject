@@ -1,4 +1,4 @@
-﻿@page "/DW"
+﻿@page "/P"
 @using Models2
 @using DBL2
 @using System.Text.Json
@@ -29,16 +29,26 @@
 </style>
 @if(trainer !=null)
 {
-    <body>
-        <div class="wrapper">
-            <h1>rnorngrg</h1>
+<body>
+    <div class="wrapper">
+        <h1>Profile</h1>
+        <h2>@trainer.firstName @trainer.lastName
+                <br />
+            Group : @trainer.groupname
+                <br />
+            Email : @trainer.emailaddress
+                <br />
+            Password :@trainer.password
+                <br />
+            DateJoined : @trainer.datejoined
 
-        </div>
-    </body>
+        </h2>
+
+    </div>
+</body>
 }
-
 @code {
-     Trainer trainer { get; set; }
+    Trainer trainer { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -57,6 +67,6 @@
         {
             navigateMgr.NavigateTo("/login", replace: true);
         }
-       
+
     }
 }

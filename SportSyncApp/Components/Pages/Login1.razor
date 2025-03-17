@@ -1,38 +1,38 @@
-﻿@page "/L"
+﻿@page "/Lg"
+@using Microsoft.Maui.Storage
 @using Models2
 @using DBL2
 @using System.Text.Json
 @using System.Text;
-
 @inject NavigationManager navigateMg
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAUI Blazor Styling</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <style>
 
     body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .wrapper {
-    text-align:center;
-    font-size : 30px;
-    max-width: 800px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        font-size: 30px;
+        max-width: 800px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
 </style>
 
-<body >
+<body>
     <div class="wrapper">
-        <h1 >SportSync Log-In</h1>
+        <h1>SportSync Log-In</h1>
 
         <div class="card-body">
             <div class="form-group mt-2">
@@ -50,6 +50,7 @@
     </div>
 </body>
 
+
 @code {
     private string UserEmail = "";
     private string UserPassword = "";
@@ -58,37 +59,30 @@
     string ResultStr = "";
     TrainerNew t = new TrainerNew();
 
-
     private async Task HandleLogin()
     {
-
         TrainerNew tt = new TrainerNew();
         tt.email = UserEmail;
         tt.pass = UserPassword;
         HttpClient httpClient = new HttpClient();
-        Trainer trainer = new Trainer() ;
-
+        Trainer trainer = new Trainer();
         var xx = await httpClient.PostAsJsonAsync<TrainerNew>("https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/Log", tt);
-        // t = await xx.Content.ReadFromJsonAsync<Trainer>();
+        //t = await xx.Content.ReadFromJsonAsync<Trainer>();
         if (tt != null)
         {
-          trainer = await xx.Content.ReadFromJsonAsync<Trainer>();
-
-            var jsonOSL = new StringContent(System.Text.Json.JsonSerializer.Serialize(trainer), Encoding.UTF8, "application/json");
-
+            trainer = await xx.Content.ReadFromJsonAsync<Trainer>();
+            string jsonOSL = JsonSerializer.Serialize(trainer);
             try
             {
-                await SecureStorage.Default.SetAsync("Trainer", jsonOSL);
+                await SecureStorage.Default.SetAsync("trn", jsonOSL);
             }
             catch (Exception storageEx)
             {
                 await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
                 return;
             }
-
-            navigateMg.NavigateTo("/", replace: true);
+             navigateMg.NavigateTo("/", replace: true);
             return;
         }
     }
-    
 }
