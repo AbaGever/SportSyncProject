@@ -38,9 +38,9 @@
 }
 
 @code {
-     Trainer trainer { get; set; }
-
-
+    Trainer trainer { get; set; }
+    List<Workout> wd;
+    DateTime selected = DateTime.Today;
     protected override async Task OnInitializedAsync()
     {
         string jsonString = await SecureStorage.Default.GetAsync("trn");
@@ -51,6 +51,14 @@
         else
         {
             trainer = JsonSerializer.Deserialize<Trainer>(jsonString);
+            try
+            {
+                wd = await httpClient.GetFromJsonAsync<List<Workout>>(  "https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/GetDailyW?",);
+            }
+            catch (Exception ex)
+            {
+                ResultStr = ex.Message;
+            }
         }
 
         if (trainer.id <= 0)

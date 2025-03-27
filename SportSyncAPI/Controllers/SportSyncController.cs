@@ -10,8 +10,16 @@ namespace SportSyncAPI.Controllers
     [Route("api/[controller]/[action]")]
     public class LoginController : ControllerBase
     {
-        
 
+
+        [HttpGet]
+        [ActionName("GetDailyW")]
+        public async Task<List<Workout>> GetDW(int trainerid,DateTime t)
+        {
+            WorkoutDB wdb = new WorkoutDB();
+            List<Workout> workouts = await wdb.GetWorkoutsDailyAsync(trainerid, t);
+            return workouts;
+        }
 
 
         [HttpGet]
