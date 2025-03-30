@@ -218,8 +218,7 @@ namespace DBL2
 
             string sql = @$"SELECT * FROM sportsync_db.workouts 
                     WHERE trainerid = @trainerid 
-                    AND ((date >= @today) 
-                    OR (IsReccuring = 'true' AND date <= @today))
+                    AND (IsReccuring = 'true' AND date <= @today)               
                     ORDER BY date, hour;";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>
@@ -229,7 +228,7 @@ namespace DBL2
              };
 
             List<Workout> workouts = (List<Workout>)await SelectAllAsync(sql, parameters);
-
+            List<Workout> ws = new List<Workout>();
             foreach (var workout in workouts)
             {
                 if (workout.IsReccuring == "true" && workout.duration > 0)
@@ -245,13 +244,13 @@ namespace DBL2
                         if (WorkoutDOW == todayDOW)
                         {
                             workout.date = today.ToString("yyyy-MM-dd");
-
+                            ws.Add(workout);
                         }
                     }
                 }
             }
 
-            return workouts.OrderBy(w => w.date).ThenBy(w => w.hour).ToList();
+            return ws.OrderBy(w => w.date).ThenBy(w => w.hour).ToList();
         }
     }
 }

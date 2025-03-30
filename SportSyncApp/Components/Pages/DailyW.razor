@@ -4,43 +4,116 @@
 @using System.Text.Json
 @using System.Text;
 @inject NavigationManager navigateMgr
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <style>
-
     body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #3a506b;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
     }
 
-    .wrapper {
-    text-align:center;
-    font-size : 30px;
-    max-width: 800px;
+    .container {
+    max-width: 400px;
     margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-</style>
-@if(trainer !=null)
-{
-    <body>
-        <div class="wrapper">
-            <h1>rnorngrg</h1>
+    .training-count {
+    font-size: 72px;
+    color: #4CAF50;
+    font-weight: bold;
+    margin: 20px 0;
+    }
 
-        </div>
-    </body>
-}
+    .motivational-text {
+    font-size: 18px;
+    font-style: italic;
+    margin-bottom: 30px;
+    }
+
+    .workout-list {
+    list-style: none;
+    padding: 0;
+    }
+
+    .workout-item {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+    }
+
+    .workout-item:hover {
+    transform: scale(1.05);
+    background-color: rgba(255, 255, 255, 0.2);
+    }
+    .view-workouts {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    }
+
+    .view-workouts:hover {
+    background-color: #45a049;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <h1>Number of Trainings Today:</h1>
+        <div class="training-count">@wd.Count</div>
+        <p class="motivational-text">Stay strong and push forward! 💪</p>
+
+
+
+        @if (wd.Count > 0)
+        {
+            <ul class="workout-list">
+                @foreach (var workout in wd)
+                {
+                    <li class="workout-item">
+                        <strong>@GetFormattedHour(workout.hour)</strong> - @(workout.duration / 60) min
+
+                        @if(workout.Isgroup == "true")
+                        {
+                        <p>Group</p>
+
+                        }
+                        @if (workout.IsReccuring == "true")
+                        {
+                        <p>Reccuring</p>
+
+                        }
+                    </li>
+                   
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No workouts scheduled for today.</p>
+        }
+    </div>
+</body>
+
 
 @code {
-    Trainer trainer { get; set; }
-    List<Workout> wd;
-    DateTime selected = DateTime.Today;
+        Trainer trainer { get; set; }
+        List<Workout> wd = new List<Workout>();
+        HttpClient httpClient = new HttpClient();
+        string ResultStr = "";
+        DateTime selected = DateTime.Today;
     protected override async Task OnInitializedAsync()
     {
         string jsonString = await SecureStorage.Default.GetAsync("trn");
@@ -52,8 +125,10 @@
         {
             trainer = JsonSerializer.Deserialize<Trainer>(jsonString);
             try
+
             {
-                wd = await httpClient.GetFromJsonAsync<List<Workout>>(  "https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/GetDailyW?",);
+
+                wd = await httpClient.GetFromJsonAsync<List<Workout>>("https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/GetDailyW?trainerid=" + trainer.id+"&"+"t="+selected);
             }
             catch (Exception ex)
             {
@@ -66,5 +141,12 @@
             navigateMgr.NavigateTo("/login", replace: true);
         }
        
+    }
+    private string GetFormattedHour(int hour)
+    {
+        int h = hour / 100;
+        int m = hour % 100;
+        string a = h.ToString("D2") + ":" + m.ToString("D2");
+        return a;
     }
 }
