@@ -163,46 +163,46 @@ namespace DBL2
             return workouts;
         }
 
-        public async Task<List<Workout>> GetWorkoutsDailyAsync(int trainerid, DateTime today)
-        {
+        //public async Task<List<Workout>> GetWorkoutsDailyAsync(int trainerid, DateTime today)
+        //{
             
 
-            string td = today.ToString("yyyy-MM-dd");
+        //    string td = today.ToString("yyyy-MM-dd");
 
-            string sql = @$"SELECT * FROM sportsync_db.workouts 
-                    WHERE trainerid = @trainerid 
-                    AND (date = @today) 
-                    ORDER BY date, hour;";
+        //    string sql = @$"SELECT * FROM sportsync_db.workouts 
+        //            WHERE trainerid = @trainerid 
+        //            AND (date = @today) 
+        //            ORDER BY date, hour;";
 
-            Dictionary<string, object> parameters = new Dictionary<string, object>
-            {
-        { "@trainerid", trainerid },
-        { "@startDate", today },
-        { "@endDate", endDate }
-             };
+        //    Dictionary<string, object> parameters = new Dictionary<string, object>
+        //    {
+        //{ "@trainerid", trainerid },
+        //{ "@startDate", today },
+        //{ "@endDate", endDate }
+        //     };
 
-            List<Workout> workouts = (List<Workout>)await SelectAllAsync(sql, parameters);
+        //    List<Workout> workouts = (List<Workout>)await SelectAllAsync(sql, parameters);
 
-            foreach (var workout in workouts)
-            {
-                if (workout.IsReccuring == "true" && workout.duration > 0)
-                {
-                    DateTime workoutDate = DateTime.Parse(workout.date);
+        //    foreach (var workout in workouts)
+        //    {
+        //        if (workout.IsReccuring == "true" && workout.duration > 0)
+        //        {
+        //            DateTime workoutDate = DateTime.Parse(workout.date);
 
-                    // אם תאריך האימון קטן מה- startDate, נמצא את התאריך הבא שמתאים לאותו יום בשבוע אחרי startDate
-                    if (workoutDate < startOfWeek)
-                    {
-                        int daysToNextOccurrence = ((int)workoutDate.DayOfWeek - (int)startOfWeek.DayOfWeek + 7) % 7;
-                        if (daysToNextOccurrence == 0)
-                            daysToNextOccurrence = 7; // אם זה אותו היום, נעביר לשבוע הבא
+        //            // אם תאריך האימון קטן מה- startDate, נמצא את התאריך הבא שמתאים לאותו יום בשבוע אחרי startDate
+        //            if (workoutDate < startOfWeek)
+        //            {
+        //                int daysToNextOccurrence = ((int)workoutDate.DayOfWeek - (int)startOfWeek.DayOfWeek + 7) % 7;
+        //                if (daysToNextOccurrence == 0)
+        //                    daysToNextOccurrence = 7; // אם זה אותו היום, נעביר לשבוע הבא
 
-                        workout.date = startOfWeek.AddDays(daysToNextOccurrence).ToString("yyyy-MM-dd");
-                    }
-                }
-            }
+        //                workout.date = startOfWeek.AddDays(daysToNextOccurrence).ToString("yyyy-MM-dd");
+        //            }
+        //        }
+        //    }
 
-            return workouts.OrderBy(w => w.date).ThenBy(w => w.hour).ToList();
-        }
+        //    return workouts.OrderBy(w => w.date).ThenBy(w => w.hour).ToList();
+        //}
 
 
 
