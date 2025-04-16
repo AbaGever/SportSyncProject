@@ -111,7 +111,7 @@
                                         <strong>Muscle Group:</strong> @drill.muscle <br />
                                         <strong>Sets:</strong> @drill.sets <br />
                                         <strong>Reps:</strong> @drill.reps <br />
-                                        <strong>Duration:</strong> @drill.duration minutes <br />
+                                        <strong>Duration:</strong> @(drill.duration/60) minutes <br />
                                     </p>
                                     @if (!string.IsNullOrEmpty(drill.description))
                                     {
@@ -262,7 +262,8 @@
     }
 
     html, body {
-        height:100vh;
+        height: auto;
+        min-height: 100vh;
         width: 100%;
         place-items: center;
         background: -webkit-linear-gradient(bottom, white, #3a506b);

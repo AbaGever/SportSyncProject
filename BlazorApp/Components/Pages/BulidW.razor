@@ -268,7 +268,7 @@
 <script src="homepage/js/jquery-3.4.1.min.js"></script>
 <script src="homepage/js/bootstrap.js"></script>
 @code {
-    
+
     string error = "";
     string Now = DateTime.Now.ToString("yyyy-mm-dd");
     private DateTime selectedHour = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 0, 0, 0);
@@ -400,21 +400,17 @@
     {
         WorkoutDB workoutDB = new WorkoutDB();
         DrillsListDB drillsListDB = new DrillsListDB();
-
+        DrillDB drillDB = new DrillDB();
         int totalDuration = 0;
 
         // Calculate total duration of the selected drills
         foreach (var selectedDrillName in selectedDrills)
         {
-            foreach (var drill in list)
-            {
-                if (drill.name == selectedDrillName)
-                {
-                    totalDuration += drill.duration;
-                    break;
+            Drill drill = await drillDB.SelectByPkAsync(selectedDrillName);
+            totalDuration += drill.duration;
                 }
-            }
-        }
+            
+        
 
         // Convert the selected DateTime to an integer
         int hourAsInt = ConvertDateTimeToInt(selectedHour);

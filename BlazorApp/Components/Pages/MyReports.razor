@@ -315,8 +315,7 @@
                             </div>
                         </div>
                         <div>
-                            <div style="font-weight: bold;"><button @onclick="() => OpenReport(workout.id)">Open Report</button></div>
-
+                            <a href="/ShowW/@(workout.id)/@(DateTime.Parse(workout.date).ToString("yyyy-MM-dd"))" class="button-73">Open Workout</a>
                         </div>
                         <div>
                             <div style="font-weight: bold;"> @GetFormattedHour(workout.hour)</div>
@@ -407,16 +406,7 @@
 
         }
     }
-    private async Task OpenReport(int wid)
-    {
-        openReport = true;
-        Drillsnames = await drillsListDB.SelectAllInWorkoutAsync(wid);
-        foreach (var dl in Drillsnames)
-        {
-            Drill drill = await drillDB.SelectByPkAsync(dl.Drillname);
-            Drills.Add(drill);
-        }
-    }
+    
     private async Task DeleteCurrent(Workout w)
     {
         WorkoutDB workoutDB = new WorkoutDB();

@@ -163,23 +163,23 @@ namespace DBL2
             return workouts;
         }
 
-        //public async Task<List<Workout>> GetWorkoutsDailyAsync(int trainerid, DateTime today)
-        //{
+        public async Task<List<Workout>> GetWorkoutsDailyAsync(int trainerid, DateTime today)
+        {
             
 
-        //    string td = today.ToString("yyyy-MM-dd");
+            string td = today.ToString("yyyy-MM-dd");
 
-        //    string sql = @$"SELECT * FROM sportsync_db.workouts 
-        //            WHERE trainerid = @trainerid 
-        //            AND (date = @today) 
-        //            ORDER BY date, hour;";
+            string sql = @$"SELECT * FROM sportsync_db.workouts 
+                    WHERE trainerid = @trainerid 
+                    AND (date = @today) 
+                    ORDER BY date, hour;";
 
-        //    Dictionary<string, object> parameters = new Dictionary<string, object>
-        //    {
-        //{ "@trainerid", trainerid },
-        //{ "@startDate", today },
-        //{ "@endDate", endDate }
-        //     };
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+        { "@trainerid", trainerid },
+        { "@startDate", today },
+        { "@endDate", endDate }
+             };
 
         //    List<Workout> workouts = (List<Workout>)await SelectAllAsync(sql, parameters);
 
@@ -204,54 +204,46 @@ namespace DBL2
         //    return workouts.OrderBy(w => w.date).ThenBy(w => w.hour).ToList();
         //}
 
-
-
-
-
-
-        public async Task<List<Workout>> GetWorkoutsByWeekAsync(int trainerid, DateTime startOfWeek)
+        public async Task<List<Workout>> GetWorkoutsDailyAsync(int trainerid, DateTime today)
         {
-            DateTime endOfWeek = startOfWeek.AddDays(6);
 
-            string startDate = startOfWeek.ToString("yyyy-MM-dd");
-            string endDate = endOfWeek.ToString("yyyy-MM-dd");
 
             string sql = @$"SELECT * FROM sportsync_db.workouts 
                     WHERE trainerid = @trainerid 
-                    AND ((date >= @startDate AND date <= @endDate ) 
-                    OR (IsReccuring = 'true' AND date <= @startDate))
+                    AND (IsReccuring = 'true' AND date <= @today)               
                     ORDER BY date, hour;";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {
         { "@trainerid", trainerid },
-        { "@startDate", startDate },
-        { "@endDate", endDate }
+        { "@today", today },
              };
 
             List<Workout> workouts = (List<Workout>)await SelectAllAsync(sql, parameters);
-
+            List<Workout> ws = new List<Workout>();
             foreach (var workout in workouts)
             {
-                if (workout.IsReccuring == "true" &&workout.duration>0)
+                if (workout.IsReccuring == "true" && workout.duration > 0)
                 {
                     DateTime workoutDate = DateTime.Parse(workout.date);
 
                     // אם תאריך האימון קטן מה- startDate, נמצא את התאריך הבא שמתאים לאותו יום בשבוע אחרי startDate
-                    if (workoutDate < startOfWeek)
+                    if (workoutDate < today)
                     {
-                        int daysToNextOccurrence = ((int)workoutDate.DayOfWeek - (int)startOfWeek.DayOfWeek + 7) % 7;
-                        if (daysToNextOccurrence == 0)
-                            daysToNextOccurrence = 7; // אם זה אותו היום, נעביר לשבוע הבא
+                        DayOfWeek WorkoutDOW = workoutDate.DayOfWeek;
+                        DayOfWeek todayDOW = today.DayOfWeek;
 
-                        workout.date = startOfWeek.AddDays(daysToNextOccurrence).ToString("yyyy-MM-dd");
+                        if (WorkoutDOW == todayDOW)
+                        {
+                            workout.date = today.ToString("yyyy-MM-dd");
+                            ws.Add(workout);
+                        }
                     }
                 }
             }
 
-            return workouts.OrderBy(w => w.date).ThenBy(w => w.hour).ToList();
+            return ws.OrderBy(w => w.date).ThenBy(w => w.hour).ToList();
         }
-        
     }
 }
 
