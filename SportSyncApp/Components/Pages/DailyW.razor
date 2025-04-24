@@ -69,51 +69,53 @@
     }
 </style>
 
-<body>
-    <div class="container">
-        <h1>Number of Trainings Today:</h1>
-        <div class="training-count">@wd.Count</div>
-        <p class="motivational-text">Stay strong and push forward! 💪</p>
+    <body>
+
+        <div class="container">
+            <h1>Number of Trainings Today:</h1>
+            <div class="training-count">@wd.Count</div>
+            <p class="motivational-text">Stay strong and push forward! 💪</p>
 
 
 
-        @if (wd.Count > 0)
-        {
-            <ul class="workout-list">
-                @foreach (var workout in wd)
-                {
-                    <li class="workout-item">
-                        <strong>@GetFormattedHour(workout.hour)</strong> - @(workout.duration / 60) min
+            @if (wd.Count > 0)
+            {
+                    <ul class="workout-list">
+                    @foreach (var workout in wd)
+                    {
+                                <li class="workout-item">
+                                    <strong>@GetFormattedHour(workout.hour)</strong> - @(workout.duration / 60) min
 
-                        @if(workout.Isgroup == "true")
-                        {
-                        <p>Group</p>
+                            @if (workout.Isgroup == "true")
+                            {
+                                        <p>Group</p>
 
-                        }
-                        @if (workout.IsReccuring == "true")
-                        {
-                        <p>Reccuring</p>
+                            }
+                            @if (workout.IsReccuring == "true")
+                            {
+                                        <p>Reccuring</p>
 
-                        }
-                    </li>
-                   
-                }
-            </ul>
-        }
-        else
-        {
-            <p>No workouts scheduled for today.</p>
-        }
-    </div>
-</body>
+                            }
+                                </li>
+
+                    }
+                    </ul>
+            }
+            else
+            {
+                    <p>No workouts scheduled for today.</p>
+            }
+        </div>
+    </body>
+
 
 
 @code {
-        Trainer trainer { get; set; }
-        List<Workout> wd = new List<Workout>();
-        HttpClient httpClient = new HttpClient();
-        string ResultStr = "";
-        DateTime selected = DateTime.Today;
+    Trainer trainer { get; set; }
+    List<Workout> wd = new List<Workout>();
+    HttpClient httpClient = new HttpClient();
+    string ResultStr = "";
+    DateTime selected = DateTime.Today;
     protected override async Task OnInitializedAsync()
     {
         string jsonString = await SecureStorage.Default.GetAsync("trn");
@@ -128,7 +130,7 @@
 
             {
 
-                wd = await httpClient.GetFromJsonAsync<List<Workout>>("https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/GetDailyW?trainerid=" + trainer.id+"&"+"t="+selected);
+                wd = await httpClient.GetFromJsonAsync<List<Workout>>("https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/GetDailyW?trainerid=" + trainer.id + "&" + "t=" + selected);
             }
             catch (Exception ex)
             {
@@ -138,9 +140,9 @@
 
         if (trainer.id <= 0)
         {
-            navigateMgr.NavigateTo("/login", replace: true);
+            navigateMgr.NavigateTo("/Lg", replace: true);
         }
-       
+
     }
     private string GetFormattedHour(int hour)
     {

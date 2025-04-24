@@ -59,6 +59,9 @@
                             <a class="nav-link" href="/p">Your Profile</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="/mr">Weekly Reports</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="/searchG">Search Groups</a>
                         </li>
 
@@ -99,7 +102,7 @@
         {
             <div class="container">
                 <center><h3 style="color:white">Drills for This Workout</h3> </center>
-                
+
                 <div class="row">
                     @foreach (var drill in Drills)
                     {
@@ -128,9 +131,13 @@
         {
             <p>No drills available for this workout.</p>
         }
-        <center>
-            <button @onclick="() => Delete()" class="button-24">Delete Workout</button>
+        @if (workout.Isgroup == "false")
+        {
+            <center>
+                <button @onclick="() => Delete()" class="button-24">Delete Workout</button>
         </center>
+
+        }
     }
 }
 
