@@ -1,0 +1,103 @@
+﻿@page "/Rg"
+@using Microsoft.Maui.Storage
+@using Models2
+@using DBL2
+@using System.Text.Json
+@using System.Text;
+@inject NavigationManager navigateMg
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<style>
+
+    body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .wrapper {
+    text-align: center;
+    font-size: 30px;
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+</style>
+
+<body>
+    <div class="wrapper">
+        <h1>SportSync Log-In</h1>
+
+        <div class="card-body">
+            <div class="form-group mt-2">
+                <label>firstName</label>
+                <input type="text" class="form-control" @bind-value="@cus.firstName" />
+            </div>
+            <div class="form-group mt-2">
+                <label>lastName</label>
+                <input type="password" class="form-control" @bind-value="@cus.lastName" />
+            </div>
+            <div class="form-group mt-2">
+                <label>Email</label>
+                <input type="text" class="form-control" @bind-value="@cus.emailaddress" />
+            </div>
+            <div class="form-group mt-2">
+                <label>PhoneNumber</label>
+                <input type="password" class="form-control" @bind-value="@cus.phonenumber" />
+            </div>
+            <div class="form-group mt-2">
+                <label>password</label>
+                <input type="text" class="form-control" @bind-value="@cus.password" />
+            </div>
+
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-primary" @onclick="RegisterAndLogin">Register</button>
+        </div>
+    </div>
+</body>
+
+@code {
+    Trainer cus = new Trainer();
+    private async Task RegisterAndLogin()
+    {
+        HttpClient httpClient = new HttpClient();
+
+        var xx = await httpClient.PostAsJsonAsync<Trainer>("https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/Register",cus);
+        try
+        {
+            TrainerNew tt = new TrainerNew();
+            tt.email = cus.emailaddress;
+            tt.pass = cus.password; Trainer trainer = new Trainer();
+            var yy = await httpClient.PostAsJsonAsync<TrainerNew>("https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/Log", tt);
+            //t = await xx.Content.ReadFromJsonAsync<Trainer>();
+            if (tt != null)
+            {
+                trainer = await yy.Content.ReadFromJsonAsync<Trainer>();
+                string jsonOSL = JsonSerializer.Serialize(trainer);
+                try
+                {
+                    await SecureStorage.Default.SetAsync("trn", jsonOSL);
+                }
+                catch (Exception storageEx)
+                {
+                    await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
+                    return;
+                }
+                navigateMg.NavigateTo("/", replace: true);
+                return;
+            }
+        }
+        catch (Exception storageEx)
+        {
+            await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
+            return;
+        }
+    }
+}
