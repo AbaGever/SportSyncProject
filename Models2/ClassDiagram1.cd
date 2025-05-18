@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Models2.Coach">
+    <Position X="5.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAABAAAAAAAAAAAAAAEAAAIACAAAACgAAAgA=</HashCode>
+      <FileName>Coach.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models2.Drill">
+    <Position X="3.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAIIAAAEAAAAAAEAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Drill.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models2.drillslist">
+    <Position X="5.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>DrillsList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models2.Group">
+    <Position X="7.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAEAIAAAAAAAIAAAAA=</HashCode>
+      <FileName>Group.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models2.time">
+    <Position X="7.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAJAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>time.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models2.Trainer">
+    <Position X="3.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAQAAAABAAAAAAAAAAAAAAEAAAAgCAAAACgAAAgA=</HashCode>
+      <FileName>Trainer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models2.TrainerNew">
+    <Position X="2" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAkAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TrainerNew.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models2.Workout">
+    <Position X="2" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAEAAAGAQAIAgA=</HashCode>
+      <FileName>Workout.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

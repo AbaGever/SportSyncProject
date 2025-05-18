@@ -37,23 +37,23 @@
         <div class="card-body">
             <div class="form-group mt-2">
                 <label>firstName</label>
-                <input type="text" class="form-control" @bind-value="@cus.firstName" />
+                <input type="text" class="form-control" @bind-value="first" />
             </div>
             <div class="form-group mt-2">
                 <label>lastName</label>
-                <input type="password" class="form-control" @bind-value="@cus.lastName" />
+                <input type="text" class="form-control" @bind-value="last" />
             </div>
             <div class="form-group mt-2">
                 <label>Email</label>
-                <input type="text" class="form-control" @bind-value="@cus.emailaddress" />
+                <input type="text" class="form-control" @bind-value="email" />
             </div>
             <div class="form-group mt-2">
                 <label>PhoneNumber</label>
-                <input type="password" class="form-control" @bind-value="@cus.phonenumber" />
+                <input type="text" class="form-control" @bind-value="phone" />
             </div>
             <div class="form-group mt-2">
                 <label>password</label>
-                <input type="text" class="form-control" @bind-value="@cus.password" />
+                <input type="password" class="form-control" @bind-value="pass" />
             </div>
 
         </div>
@@ -65,17 +65,31 @@
 
 @code {
     Trainer cus = new Trainer();
+    string email;
+    string first;
+    string last;
+    string pass;
+    string phone;
     private async Task RegisterAndLogin()
     {
+        cus.emailaddress = email;
+        cus.firstName = first;
+        cus.lastName = last;
+        cus.password = pass;
+        cus.phonenumber = phone;
+        cus.groupname = "ewewew";
+        cus.isadmin = "false";
+        cus.id = 0;
+        cus.datejoined = "ekrher";
+        
         HttpClient httpClient = new HttpClient();
-
-        var xx = await httpClient.PostAsJsonAsync<Trainer>("https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/Register",cus);
+        var xx = await httpClient.PostAsJsonAsync<Trainer>(dataConstLink.Api.regurl, cus);
         try
         {
             TrainerNew tt = new TrainerNew();
             tt.email = cus.emailaddress;
             tt.pass = cus.password; Trainer trainer = new Trainer();
-            var yy = await httpClient.PostAsJsonAsync<TrainerNew>("https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/Log", tt);
+            var yy = await httpClient.PostAsJsonAsync<TrainerNew>(dataConstLink.Api.loginurl, tt);
             //t = await xx.Content.ReadFromJsonAsync<Trainer>();
             if (tt != null)
             {

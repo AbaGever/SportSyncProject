@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+
 using DBL2;
 using Models2;
+using System;
+using System.Globalization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,26 +15,21 @@ namespace SportSyncAPI.Controllers
     {
 
 
-        [HttpGet]
+        [HttpGet("{trainerid:int},{d:int},{m:int},{y:int}")]
         [ActionName("GetDailyW")]
-        public async Task<List<Workout>> GetDW(int trainerid,DateTime t)
+        public async Task<List<Workout>> GetDW(int trainerid, int d,int m,int y)
         {
+            DateTime tm = new DateTime(y, m, d);
+            string td = tm.ToString("yyyy-MM-dd");
+            DateTime t = DateTime.ParseExact(td, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
             WorkoutDB wdb = new WorkoutDB();
             List<Workout> workouts = await wdb.GetWorkoutsDailyAsync(trainerid, t);
             return workouts;
         }
 
 
-        [HttpGet]
-        [ActionName("GetAllCustomer")]
-        public async Task<List<Trainer>> Get()
-        {
-            TrainerDB tdb = new TrainerDB();
-            List<Trainer> TrainerList;
-            TrainerList = await tdb.GetAllAsync();
-            return TrainerList;
-        }
-
+   
         // POST api/<ToDoListController>
         [HttpPost]
         [ActionName("Register")]
@@ -45,9 +43,9 @@ namespace SportSyncAPI.Controllers
             {
                 return item.id;
             }
-           else
+            else
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status200OK);
             }
 
         }
@@ -66,30 +64,28 @@ namespace SportSyncAPI.Controllers
             }
 
             return Ok(User);
-            
+
         } // POST api/<ToDoListController>
 
 
+       // POST api/<ToDoListController>
 
-
-
-
-
-
-        [HttpPost]
-        [ActionName("Login1")]
-        public async Task<ActionResult<Coach>> Post3([FromBody] Coach item)
+        [HttpPut]
+        [ActionName("Ch")]
+        public async Task<ActionResult<Trainer>>Change([FromBody] Trainer t)
         {
-            if (item is null) return BadRequest();
-            CoachDB UserDB = new CoachDB();
-            Coach User = await UserDB.LoginAsync(item.emailaddress, item.password); if (User == null)
-            {
-                return BadRequest("User not found");
-            }
-            else
-            {
-                return Ok(User);
-            }
+            TrainerDB UserDB = new TrainerDB();
+            int n = await UserDB.UpdateAsyncWithoutGroup(t);
+            if (n <= 0) {
+                return BadRequest("Couldnt Update User");
+                    }
+            return StatusCode(StatusCodes.Status200OK); ;
+
         }
+
+
+
+
+
     }
 }

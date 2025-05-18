@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DBL2.DB">
+    <Position X="11" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAQAAAAAAAAAAAAQgAA=</HashCode>
+      <FileName>DB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBL2.DrillDB">
+    <Position X="1.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIEAAAAQAAAAAAAQAAAAAAAAABAAAAgAAAEEAAoAAIA=</HashCode>
+      <FileName>DrillDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBL2.DrillsListDB">
+    <Position X="12.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EIAAAAAAAAIACAAQAAAAAAQAAAAAAAAAAAEEAAAAAAA=</HashCode>
+      <FileName>DrillsListDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBL2.GroupDB">
+    <Position X="8.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIEAAAAQAAAAAAAQAAAAAAAABAAAAAhAAAEEAAAAAIA=</HashCode>
+      <FileName>GroupDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBL2.TrainerDB">
+    <Position X="1.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AoEAAAAQAAAAAACQAAAAAAAAAAAAAAgAAQEEEAAAQIA=</HashCode>
+      <FileName>TrainerDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBL2.WorkoutDB">
+    <Position X="4.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIEAAAAQkAAAAAAQAAAAQAAAAAAAAEgAAAEUAAAABIA=</HashCode>
+      <FileName>WorkoutDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBL2.BaseDB&lt;T&gt;">
+    <Position X="6.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAABARGQEAAAAwAAAAAAAAQAAAAEgCAAEEAAAAAIA=</HashCode>
+      <FileName>BaseDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBL2.CoachDB">
+    <Position X="10.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AoEAAAAQAAAAAAAQAAAAAAAAAAAAAAgAAAEEAAAAAIA=</HashCode>
+      <FileName>CoachDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

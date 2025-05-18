@@ -3,6 +3,12 @@
 @using DBL2
 @using System.Text.Json
 @using System.Text;
+@using System.Net.Http;
+@using System.Net.Http.Headers;
+@using System.Net;
+@using Microsoft.Maui.Storage
+
+
 @inject NavigationManager navigateMgr
 <head>
     <meta charset="UTF-8">
@@ -29,28 +35,48 @@
 </style>
 @if(trainer !=null)
 {
-<body>
-    <div class="wrapper">
-        <h1>Profile</h1>
-        <h2>@trainer.firstName @trainer.lastName
+    <body>
+        <div class="wrapper">
+            <h1>Profile</h1>
+            <h2>@trainer.firstName @trainer.lastName
                 <br />
-            Group : @trainer.groupname
+                Group : @trainer.groupname
                 <br />
-            Email : @trainer.emailaddress
+                Email : @trainer.emailaddress
                 <br />
-            Password :@trainer.password
+                Password :@trainer.password
                 <br />
-            DateJoined : @trainer.datejoined
+                DateJoined : @trainer.datejoined
 
-        </h2>
-
-    </div>
-</body>
+            </h2>
+            <div class="form-group mt-2">
+                <label>Password</label>
+                <input type="password" class="form-control" @bind-value="NewP" />
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-primary" @onclick="ChangeP">Change Password</button>
+            </div>
+            
+        </div>
+    </body>
 }
+
 @code {
     Trainer trainer { get; set; }
+    string NewP;
+    private async Task ChangeP()
+    {
+        trainer.password = NewP;
+        HttpClient httpClient = new HttpClient();
+        var response = await httpClient.PutAsJsonAsync<Trainer>(dataConstLink.Api.ChangeURL, trainer);
+        if (response.IsSuccessStatusCode)
+        {
+           
+            await Application.Current.MainPage.DisplayAlert("Info", "Password Changed", "Ok");
+        }
+    }
 
-
+   
     protected override async Task OnInitializedAsync()
     {
         string jsonString = await SecureStorage.Default.GetAsync("trn");
@@ -64,7 +90,7 @@
 
         }
 
-        if (trainer.id <= 0)
+        if (trainer.id <= 0||trainer ==null)
         {
             navigateMgr.NavigateTo("/login", replace: true);
         }

@@ -3,6 +3,7 @@
 @using DBL2
 @using System.Text.Json
 @using System.Text;
+@using System.Globalization;
 @inject NavigationManager navigateMgr
 
 <head>
@@ -129,8 +130,10 @@
             try
 
             {
+                string s = selected.ToString("yyyy-MM-dd");
+                DateTime today = DateTime.ParseExact(s,"yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-                wd = await httpClient.GetFromJsonAsync<List<Workout>>("https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/GetDailyW?trainerid=" + trainer.id + "&" + "t=" + selected);
+                wd = await httpClient.GetFromJsonAsync<List<Workout>>($"{dataConstLink.Api.geturl}{trainer.id},{today.Day},{today.Month},{today.Year}");
             }
             catch (Exception ex)
             {

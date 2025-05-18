@@ -1,6 +1,7 @@
 ﻿using Models2;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,9 +77,6 @@ namespace DBL2
             }
             else { return false; }
         }
-
-
-
 
         public async Task<int> UpdateAsync(Workout w)
         {
@@ -206,21 +204,22 @@ namespace DBL2
             return workouts.OrderBy(w => w.date).ThenBy(w => w.hour).ToList();
         }
 
-        public async Task<List<Workout>> GetWorkoutsDailyAsync(int trainerid, DateTime today)
+        public async Task<List<Workout>> GetWorkoutsDailyAsync(int trainerid, DateTime today1)
         {
+            string td = today1.ToString("yyyy-MM-dd");
 
 
             string sql = @$"SELECT * FROM sportsync_db.workouts 
                     WHERE trainerid = @trainerid 
-                    AND (IsReccuring = 'true' AND date <= @today)               
+                    AND (IsReccuring = 'true' AND date <= @td)              
                     ORDER BY date, hour;";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {
         { "@trainerid", trainerid },
-        { "@today", today },
+        { "@td", td },
              };
-
+            DateTime today = DateTime.ParseExact(td, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             List<Workout> workouts = (List<Workout>)await SelectAllAsync(sql, parameters);
             List<Workout> ws = new List<Workout>();
             foreach (var workout in workouts)

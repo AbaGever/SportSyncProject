@@ -1,0 +1,206 @@
+﻿@page "/reset-password"
+@using Models2
+@using DBL2
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage MySession
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@inject IJSRuntime js
+
+<HeadContent>
+    <!-- Basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Site Metas -->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SportSync</title>
+    <link rel="icon" href="/download.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+
+    <!-- slider stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="homepage/css/bootstrap.css">
+
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&amp;display=swap" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="homepage/css/style.css" rel="stylesheet">
+    <!-- responsive style -->
+    <link href="homepage/css/responsive.css" rel="stylesheet">
+</HeadContent>
+<div class="hero_area">
+    <!-- header section strats -->
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+            <a class="navbar-brand" href="/">
+                <span>
+                    SportSync
+                </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                        </li>
+
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/r">Sign Up</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">Log In</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/searchG">Search Groups</a>
+                        </li>
+
+
+                    </ul>
+                    <div class="user_option">
+                        <div class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                            <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <section class=" slider_section position-relative" style="background-color:#3a506b">
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="height:93.2vh">
+                <h2>
+                    <div class="detail-box" style="color:white">
+                        <div style="margin:100px">
+
+
+                            @if (!codeSent)
+                            {
+
+                                <label>כתובת אימייל:</label>
+                                <input @bind="email" />
+                                <button @onclick="SendResetCode">שלח קוד</button>
+                                <p>@message</p>
+                            }
+                            else if (!codeConfirmed)
+                            {
+                                <label>הזן את הקוד שנשלח למייל:</label>
+                                <input @bind="codeInput" />
+                                <button @onclick="ConfirmCode">אשר קוד</button>
+                                <p>@message</p>
+                            }
+                            else
+                            {
+                                <label>סיסמה חדשה:</label>
+                                <input type="password" @bind="newPassword" />
+                                <label>אשר סיסמה:</label>
+                                <input type="password" @bind="confirmPassword" />
+                                <button @onclick="ResetPassword">אפס סיסמה</button>
+                                <p>@message</p>
+                            }
+
+                        </div>
+                    </div>
+                </h2>
+            </div>
+        </section>
+        <!-- end slider section -->
+    </div>
+</div>
+
+@code {
+
+    private string email;
+    private string codeInput;
+    private string newPassword;
+    private string confirmPassword;
+    private string resetCode;
+    private string message;
+    private bool codeSent = false;
+    private bool codeConfirmed = false;
+
+    private async Task SendResetCode()
+    {
+        if (string.IsNullOrEmpty(email))
+        {
+            message = "Enter You Email";
+            return;
+        }
+
+        resetCode = new Random().Next(100000, 999999).ToString();
+
+        try
+        {
+            var emailService = new EmailService();
+            await emailService.SendEmailAsync(
+                email,
+                "Password Reset Request",
+                $"Your code : {resetCode}",
+                "razperli100@gmail.com"
+            );
+
+            codeSent = true;
+            message = "Code Sent";
+        }
+        catch (Exception ex)
+        {
+            message = $"Error in Sending: {ex.Message}";
+        }
+    }
+
+    private void ConfirmCode()
+    {
+        if (codeInput == resetCode)
+        {
+            codeConfirmed = true;
+            message = "Code Validated";
+        }
+        else
+        {
+            message = "The Code is Wrong";
+        }
+    }
+
+    private async void ResetPassword()
+    {
+        TrainerDB tdb = new TrainerDB();
+        Trainer trainer = await tdb.EmailCheck(email);
+        if (trainer == null)
+        {
+            message = "Email is wrong";
+            return;
+        }
+        if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
+        {
+            message = "Please Fill Every Input";
+            return;
+        }
+
+        if (newPassword != confirmPassword)
+        {
+            message = "Passwords are not matching ";
+            return;
+        }
+        trainer.password = newPassword;
+        int n = await tdb.UpdateAsyncWithoutGroup(trainer);
+        if (n > 0)
+        {
+            message = "Password changed succesfuly";
+            await Task.Delay(3000);
+            StateHasChanged();
+            navigationManager.NavigateTo("/");
+            return;
+
+        }
+    }
+}

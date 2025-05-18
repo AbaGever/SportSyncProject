@@ -326,7 +326,21 @@
         daysToAdd = daysToAdd == 0 ? 7 : daysToAdd; // מבטיח שהיום הרצוי הוא בשבוע הבא אם היום זהה
         return startDate.AddDays(daysToAdd);
     }
-
+    private void OnChange(ChangeEventArgs args)
+    {
+        selectedmuscle = args.Value.ToString();
+    }
+    void AddDrillToWorkout(string drillName)
+    {
+        if (!selectedDrills.Contains(drillName))
+        {
+            selectedDrills.Add(drillName);
+        }
+    }
+    void RemoveDrill(string drillName)
+    {
+        selectedDrills.Remove(drillName);
+    }
 
 
 
@@ -351,10 +365,7 @@
         }
 
     }
-    private void OnChange(ChangeEventArgs args)
-    {
-        selectedmuscle = args.Value.ToString();
-    }
+   
 
     async Task Search()
     {
@@ -362,19 +373,7 @@
         list = await drillDB.SelectByMuscleOrNameAsync(nameofdrill, selectedmuscle);
     }
 
-    void AddDrillToWorkout(string drillName)
-    {
-        if (!selectedDrills.Contains(drillName))
-        {
-            selectedDrills.Add(drillName);
-        }
-    }
-
-    void RemoveDrill(string drillName)
-    {
-        selectedDrills.Remove(drillName);
-    }
-
+  
 
     async Task CheckReccuring()
     {

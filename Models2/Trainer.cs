@@ -14,22 +14,12 @@ namespace Models2
         public string emailaddress { get; set; }
         public string phonenumber { get; set; }
         public string password { get; set; }
-        public string groupname { get; set; } /*{ get { return groupname; } set { groupname = null; } }*/
-        public string isadmin { get; set; } /*{ get { return isadmin; } set { isadmin = "false"; } } */
+        public string groupname { get; set; } 
+        public string isadmin { get; set; } 
         public string datejoined 
         {
             get; set;
-            //get {
-            //    return datejoined;
-            //}
-
-            //set 
-            //{
-            //    time t = new time();
-
-            //    datejoined = t.ToString();
-
-            //}
+        
         }
 
         public Trainer()

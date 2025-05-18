@@ -139,7 +139,7 @@ namespace DBL2
                 return null;
         }
 
-
+        
         public async Task<List<(string, string)>> GetNameAndEmail4NonAdminsAsync()
         {
             List<(string, string)> returnList = new List<(string, string)>();
@@ -167,6 +167,17 @@ namespace DBL2
                 return null;
         }
 
+        public async Task<Trainer> EmailCheck(string email)
+        {
+            string sql = @"SELECT * FROM sportsync_db.trainers where emailaddress=@emailaddress";
+            Dictionary<string, object> p = new Dictionary<string, object>();
+            p.Add("emailaddress", email);
+            List<Trainer> list = (List<Trainer>)await SelectAllAsync(sql, p);
+            if (list.Count == 1)
+                return list[0];
+            else
+                return null;
+        }
         public async Task<List<Trainer>> SelectAllInGroup(string groupname)
         {
             string sql = @"SELECT * FROM sportsync_db.trainers where groupname = @groupname;";
