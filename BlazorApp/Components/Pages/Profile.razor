@@ -49,12 +49,19 @@
                             <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                         </li>
 
+                        @if(coach == null && c !=null)
+                        {
+
                         <li class="nav-item">
                             <a class="nav-link" href="/mr">Weekly Reports</a>
                         </li>
+                        }
+                        else
+                        {
                         <li class="nav-item">
-                            <a class="nav-link" href="/searchG">Search Groups</a>
+                            <a class="nav-link" href="/p">Your Profile</a>
                         </li>
+                        }
 
                     </ul>
                     <div class="user_option">
@@ -203,7 +210,6 @@
     }
 
     html, body {
-        height:100vh;
         width: 100%;
         place-items: center;
         background: -webkit-linear-gradient(bottom, #E0DCC8, #3a506b);

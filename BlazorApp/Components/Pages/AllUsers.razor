@@ -146,6 +146,34 @@ else
 
 
 </body>
+
+
+
+
+@code {
+    List<Trainer> ps;
+    protected override async Task OnInitializedAsync()
+    {
+        TrainerDB pdb = new TrainerDB();
+        ps = (List<Trainer>)await pdb.GetAllAsync();
+    }
+    Trainer c = null;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var name = await MySession.GetAsync<Trainer>("Trainer");
+            if (name.Success && name.Value.isadmin == "true")
+            {
+                c = name.Value;
+                StateHasChanged();
+            }
+            else
+                navigationManager.NavigateTo("/");
+        }
+    }
+
+}
 <style>
 
     table, th, td {
@@ -361,31 +389,4 @@ else
     }
 
 </style>
-
-
-
-@code {
-    List<Trainer> ps;
-    protected override async Task OnInitializedAsync()
-    {
-        TrainerDB pdb = new TrainerDB();
-        ps = (List<Trainer>)await pdb.GetAllAsync();
-    }
-    Trainer c = null;
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            var name = await MySession.GetAsync<Trainer>("Trainer");
-            if (name.Success && name.Value.isadmin == "true")
-            {
-                c = name.Value;
-                StateHasChanged();
-            }
-            else
-                navigationManager.NavigateTo("/");
-        }
-    }
-
-}
 

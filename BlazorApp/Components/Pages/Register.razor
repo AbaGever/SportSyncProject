@@ -101,7 +101,7 @@
                 <input type="email" placeholder="Email" @bind-value="@coach.emailaddress" />
                 <input type="text" placeholder="Phone Number" @bind-value="@coach.phonenumber" />
                 <input type="password" placeholder="Password" @bind-value="@coach.password" />
-                <input type="text" placeholder="Phone Number" @bind-value="@coach.sport" />
+                <input type="text" placeholder="Sport" @bind-value="@coach.sport" />
                 <input type="number" placeholder="Password" @bind-value="@coach.exp" />
                 <button class="button-73" @onclick="RegCoach">Register</button>
             </div>
@@ -113,6 +113,7 @@
                 <input type="text" placeholder="Phone Number" @bind-value="@cus.phonenumber" />
                 <input type="password" placeholder="Password" @bind-value="@cus.password" />
                 <button class="button-73" @onclick="RegTrainer">Register</button>
+                
 
             </div>
             <div class="overlay-container">
@@ -120,12 +121,12 @@
                     <div class="overlay-panel overlay-left">
                         <h1>Welcome</h1>
                         <p>Are You a Trainer?</p>
-                        <button class="ghost" @onclick="TogglePanel">Log In here</button>
+                        <button class="ghost" @onclick="TogglePanel">Register here</button>
                     </div>
                     <div class="overlay-panel overlay-right">
                         <h1>Hi!</h1>
                         <p>Are You a Coach?</p>
-                        <button class="ghost" @onclick="TogglePanel">Log In Here</button>
+                        <button class="ghost" @onclick="TogglePanel">Register Here</button>
                     </div>
                 </div>
             </div>

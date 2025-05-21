@@ -67,13 +67,17 @@
                                         <a class="nav-link" href="/login">Log In</a>
                                     </li>
                                     }
-                                    else
+                                    else if(coach == null)
                                     {
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/p">Your Profile</a>
-                                    </li>
+                                    
                                     <li class="nav-item">
                                         <a class="nav-link" href="/mr">Weekly Reports</a>
+                                    </li>
+                                    }
+                                    @if(coach!=null ||UserS !=null) 
+                                    {
+                                        <li class="nav-item">
+                                        <a class="nav-link" href="/p">Your Profile</a>
                                     </li>
                                     }
                                 

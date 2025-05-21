@@ -47,7 +47,6 @@ namespace SportSyncAPI.Controllers
             {
                 return StatusCode(StatusCodes.Status200OK);
             }
-
         }
 
         // POST api/<ToDoListController>

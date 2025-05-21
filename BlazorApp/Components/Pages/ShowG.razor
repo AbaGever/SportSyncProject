@@ -55,12 +55,19 @@
                                 <a class="nav-link" href="/login">Log In</a>
                             </li>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link" href="/p">Your Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/mr">Weekly Reports</a>
-                        </li>
+                        else if (coach == null && c != null)
+                        {
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="/mr">Weekly Reports</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="/p">Your Profile</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link" href="/searchG">Search Groups</a>
                         </li>
@@ -173,7 +180,7 @@
                             <h2>Add practice</h2>
                             <input @bind="selectedDate" type="date" class="form-control mb-3" min="@Now" max="@maxDate" />
                             <input type="time" class="form-control mb-3" @bind-value="selectedHour" required />
-                            <input @bind="duration" class="form-control mb-3"  placeholder="Enter Duration of Practice in Mins" />
+                            <input @bind="duration" class="form-control mb-3" placeholder="Enter Duration of Practice in Mins" />
                             <button class="button-73 w-100" @onclick="CheckReccuring">Create Workout</button>
 
 
@@ -194,7 +201,7 @@
                 </center>
             }
 
-            else if (coach == null && c != null && c1 !=null)
+            else if (coach == null && c != null && c1 != null)
             {
                 @* If user is not a coach, show only the table without the delete button *@
                 <section>
@@ -210,7 +217,7 @@
 
 
                             <!-- Table for Users in the Group (Visible for regular user as well) -->
-                            @if (c.groupname == group.name)
+                            @if (a == group.name)
                             {
                                 @if (usersInGroup != null && usersInGroup.Count > 0)
                                 {
@@ -242,7 +249,7 @@
                                 </center>
 
                             }
-                            else if (c.groupname == "" && c.groupname == null)
+                            @if (a == "" || a == null)
                             {
                                 <center>
                                     <button @onclick="() => JoinGroup(c.id)" class="button-73">Join Group</button>
@@ -267,31 +274,35 @@
                                 </h2>
                             </div>
 
-
-                            <!-- Table for Users in the Group (Visible for regular user as well) -->
-                            @if (usersInGroup != null && usersInGroup.Count > 0)
+                            @if (c != null)
                             {
-                                <center>
-                                    <h2>Players in Group</h2>
 
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var user in usersInGroup)
-                                            {
+
+                                <!-- Table for Users in the Group (Visible for regular user as well) -->
+                                @if (usersInGroup != null && usersInGroup.Count > 0)
+                                {
+                                    <center>
+                                        <h2>Players in Group</h2>
+
+                                        <table class="table">
+                                            <thead>
                                                 <tr>
-                                                    <td>@user.firstName</td>
-                                                    <td>@user.lastName</td>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
                                                 </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </center>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var user in usersInGroup)
+                                                {
+                                                    <tr>
+                                                        <td>@user.firstName</td>
+                                                        <td>@user.lastName</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </center>
+                                }
                             }
                         </div>
                     </div>
@@ -314,9 +325,9 @@
 
     html, body {
     width: 100%;
-    height:auto;
-        min-height: 100vh;
-        place-items: center;
+    height: auto;
+    min-height: 100vh;
+    place-items: center;
     background: -webkit-linear-gradient(bottom, #E0DCC8, #3a506b);
     }
 
@@ -618,6 +629,7 @@
     GroupDB groupDB = new GroupDB();
     CoachDB coachDB = new CoachDB();
     Coach c1 = null;
+    string a;
     string Now = DateTime.Now.ToString("yyyy-mm-dd");
     DateTime selectedHour = DateTime.Today;
     string selectedhour = "";
@@ -720,6 +732,7 @@
             if (user1.Success)
             {
                 c = user1.Value;
+                a = c.groupname;
                 await LoadUsersInGroup();
                 StateHasChanged();
             }

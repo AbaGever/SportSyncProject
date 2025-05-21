@@ -97,18 +97,18 @@
                     }
                     else if (!codeConfirmed)
                     {
-                        <label>הזן את הקוד שנשלח למייל:</label>
+                        <label>Enter Code</label>
                         <input @bind="codeInput" />
-                        <button @onclick="ConfirmCode">אשר קוד</button>
+                        <button @onclick="ConfirmCode">Confirm Code</button>
                         <p>@message</p>
                     }
                     else
                     {
-                        <label>סיסמה חדשה:</label>
+                        <label>New Password</label>
                         <input type="password" @bind="newPassword" />
-                        <label>אשר סיסמה:</label>
+                        <label>Confirm Password</label>
                         <input type="password" @bind="confirmPassword" />
-                        <button @onclick="ResetPassword">אפס סיסמה</button>
+                        <button @onclick="ResetPassword">Reset Password</button>
                         <p>@message</p>
                     }
 

@@ -405,7 +405,6 @@
     {
         TrainerDB UserDB = new TrainerDB();
         Trainer User = await UserDB.LoginAsync(UserEmail, UserPassword);
-
         if (User != null)
         {
             if (MySession != null)

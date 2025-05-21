@@ -64,13 +64,17 @@
                                     <a class="nav-link" href="/login">Log In</a>
                                 </li>
                             }
+                            else if (coach == null && c != null)
+                            {
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/mr">Weekly Reports</a>
+                                </li>
+                            }
                             else
                             {
                                 <li class="nav-item">
                                     <a class="nav-link" href="/p">Your Profile</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/mr">Weekly Reports</a>
                                 </li>
                             }
 
@@ -486,7 +490,6 @@
             if (name1.Success)
             {
                 coach = name1.Value;
-
                 StateHasChanged();
             }
 
