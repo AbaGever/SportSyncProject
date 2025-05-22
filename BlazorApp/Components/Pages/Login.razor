@@ -38,12 +38,12 @@
                             <li class="nav-item active">
                                 <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                             </li>
-                            
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/r">Sign Up</a>
-                                </li>
-                            
-                          
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="/r">Sign Up</a>
+                            </li>
+
+
 
                             <li class="nav-item">
                                 <a class="nav-link" href="/searchG">Search Groups</a>
@@ -59,54 +59,54 @@
             </nav>
         </div>
     </header>
-<div class="container">
+    <div class="container">
         <section style="flex:0;" class=" slider_section position-relative">
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        
-                            <div class="col-lg-10 col-md-11 mx-auto">
-                                <div class="detail-box">
-                                    <div>
-                                        <h1>Login</h1>
-                                    </div>
+
+                        <div class="col-lg-10 col-md-11 mx-auto">
+                            <div class="detail-box">
+                                <div>
+                                    <h1>Login</h1>
                                 </div>
                             </div>
-                       
+                        </div>
+
                     </div>
                 </div>
             </div>
         </section>
-    <div class="panel @panelClass">
-        <div class="form-container sign-up-container">
-            <h1>Log In</h1>
+        <div class="panel @panelClass">
+            <div class="form-container sign-up-container">
+                <h1>Log In</h1>
                 <input type="email" placeholder="Email" @bind-value="CoachEmail" />
                 <input type="password" placeholder="Password" @bind-value="CoachPassword" />
                 <button class="button-73" @onclick="LogInToCoach">Log In</button>
-        </div>
-        <div class="form-container sign-in-container">
-            <h1>Log In</h1>
+            </div>
+            <div class="form-container sign-in-container">
+                <h1>Log In</h1>
                 <input type="email" placeholder="Email" @bind-value="UserEmail" />
                 <input type="password" placeholder="Password" @bind-value="UserPassword" />
                 <button class="button-73" @onclick="LogInToTrainer">Log In</button>
                 <button style="margin:5px;color:black"> <a style="color:black" href="/reset-password">Forgot password</a></button>
-        </div>
-        <div class="overlay-container">
-            <div class="overlay">
-                <div class="overlay-panel overlay-left">
-                    <h1>Welcome Back!</h1>
-                    <p>Are You a Trainer?</p>
-                    <button class="ghost" @onclick="TogglePanel">Log In here</button>
-                </div>
-                <div class="overlay-panel overlay-right">
-                    <h1>Hello, Friend!</h1>
+            </div>
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <h1>Welcome Back!</h1>
+                        <p>Are You a Trainer?</p>
+                        <button class="ghost" @onclick="TogglePanel">Log In here</button>
+                    </div>
+                    <div class="overlay-panel overlay-right">
+                        <h1>Hello, Friend!</h1>
                         <p>Are You a Coach?</p>
-                    <button class="ghost" @onclick="TogglePanel">Log In Here</button>
+                        <button class="ghost" @onclick="TogglePanel">Log In Here</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </center>
 <style>
     .button-73 {
@@ -151,17 +151,20 @@
             padding: .75rem 2rem;
         }
     }
+
     @@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
         font-family: 'Poppins', sans-serif;
     }
-    body
-    {
+
+    body {
         background: -webkit-linear-gradient(bottom, #E0DCC8, #3a506b);
     }
+
     .container {
         display: flex;
         justify-content: center;
@@ -215,6 +218,7 @@
         opacity: 0;
         transition: all 0.6s ease-in-out;
     }
+
     .overlay-container {
         position: absolute;
         top: 0;
@@ -341,24 +345,24 @@
 
 <script>
     function initializePanel() {
-        console.log("Panel initialized");
+    console.log("Panel initialized");
     }
 
-       function animatePanel(isLogin) {
-        const panel = document.querySelector('.panel');
-        if (isLogin) {
-            if (!panel.classList.contains('login-panel')) {
-                panel.classList.add('login-panel');
-            }
-        } else {
-            if (panel.classList.contains('login-panel')) {
-                panel.classList.remove('login-panel');
-            }
-        }
+    function animatePanel(isLogin) {
+    const panel = document.querySelector('.panel');
+    if (isLogin) {
+    if (!panel.classList.contains('login-panel')) {
+    panel.classList.add('login-panel');
+    }
+    } else {
+    if (panel.classList.contains('login-panel')) {
+    panel.classList.remove('login-panel');
+    }
+    }
     }
 
     function showMessage(message) {
-        alert(message);
+    alert(message);
     }
 </script>
 @code {
@@ -407,13 +411,24 @@
         Trainer User = await UserDB.LoginAsync(UserEmail, UserPassword);
         if (User != null)
         {
-            if (MySession != null)
+            if (User.emailaddress.Contains("@gmail"))
             {
-                await MySession.SetAsync("Trainer", User);
-            }
-            if (navigationManager != null)
-            {
-                navigationManager.NavigateTo("/");
+                if (MySession != null)
+                {
+
+                    await MySession.SetAsync("Trainer", User);
+
+                }
+                if (navigationManager != null)
+                {
+
+                    navigationManager.NavigateTo("/");
+
+                }
+                else
+                {
+                    await js.InvokeVoidAsync("alert", $"Email Is Wrong");
+                }
             }
         }
         else
@@ -434,13 +449,25 @@
 
         if (Coach != null)
         {
-            if (MySession != null)
+            if (Coach.emailaddress.Contains("@gmail"))
             {
-                await MySession.SetAsync("Coach", Coach);
+                if (MySession != null)
+                {
+
+                    await MySession.SetAsync("Coach", Coach);
+
+                }
+                if (navigationManager != null)
+                {
+
+                    navigationManager.NavigateTo("/");
+
+
+                }
             }
-            if (navigationManager != null)
+            else
             {
-                navigationManager.NavigateTo("/");
+                await js.InvokeVoidAsync("alert", $"Email Is Wrong");
             }
         }
         else

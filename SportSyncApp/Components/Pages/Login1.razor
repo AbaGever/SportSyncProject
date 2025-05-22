@@ -67,19 +67,28 @@
         //t = await xx.Content.ReadFromJsonAsync<Trainer>();
         if (tt != null)
         {
-            trainer = await xx.Content.ReadFromJsonAsync<Trainer>();
-            string jsonOSL = JsonSerializer.Serialize(trainer);
-            try
+            if (tt.email.Contains("@gmail"))
             {
-                await SecureStorage.Default.SetAsync("trn", jsonOSL);
+                trainer = await xx.Content.ReadFromJsonAsync<Trainer>();
+                string jsonOSL = JsonSerializer.Serialize(trainer);
+                try
+                {
+                    await SecureStorage.Default.SetAsync("trn", jsonOSL);
+                }
+                catch (Exception storageEx)
+                {
+                    await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
+                    return;
+                }
+                navigateMg.NavigateTo("/", replace: true);
+                return;
             }
-            catch (Exception storageEx)
+            else 
             {
+                Exception storageEx = new Exception();
                 await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
                 return;
             }
-             navigateMg.NavigateTo("/", replace: true);
-            return;
         }
     }
 }

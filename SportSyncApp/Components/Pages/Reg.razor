@@ -81,31 +81,42 @@
         cus.isadmin = "false";
         cus.id = 0;
         cus.datejoined = "ekrher";
-        
+
         HttpClient httpClient = new HttpClient();
         var xx = await httpClient.PostAsJsonAsync<Trainer>(dataConstLink.Api.regurl, cus);
         try
         {
-            TrainerNew tt = new TrainerNew();
-            tt.email = cus.emailaddress;
-            tt.pass = cus.password; Trainer trainer = new Trainer();
-            var yy = await httpClient.PostAsJsonAsync<TrainerNew>(dataConstLink.Api.loginurl, tt);
-            //t = await xx.Content.ReadFromJsonAsync<Trainer>();
-            if (tt != null)
+
+            if (cus.emailaddress.Contains("@gmail"))
             {
-                trainer = await yy.Content.ReadFromJsonAsync<Trainer>();
-                string jsonOSL = JsonSerializer.Serialize(trainer);
-                try
+                TrainerNew tt = new TrainerNew();
+                tt.email = cus.emailaddress;
+                tt.pass = cus.password; Trainer trainer = new Trainer();
+                var yy = await httpClient.PostAsJsonAsync<TrainerNew>(dataConstLink.Api.loginurl, tt);
+                //t = await xx.Content.ReadFromJsonAsync<Trainer>();
+                if (tt != null)
                 {
-                    await SecureStorage.Default.SetAsync("trn", jsonOSL);
-                }
-                catch (Exception storageEx)
-                {
-                    await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
+                    trainer = await yy.Content.ReadFromJsonAsync<Trainer>();
+                    string jsonOSL = JsonSerializer.Serialize(trainer);
+                    try
+                    {
+                        await SecureStorage.Default.SetAsync("trn", jsonOSL);
+                    }
+                    catch (Exception storageEx)
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
+                        return;
+                    }
+                    navigateMg.NavigateTo("/", replace: true);
                     return;
                 }
-                navigateMg.NavigateTo("/", replace: true);
+            }
+            else
+            {
+                Exception storageEx = new Exception();
+                await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
                 return;
+                
             }
         }
         catch (Exception storageEx)
