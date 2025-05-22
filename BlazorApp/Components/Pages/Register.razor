@@ -426,13 +426,25 @@
     Coach coach = new Coach();
     CoachDB dbc = new CoachDB();
     bool b;
+
     async Task RegTrainer()
     {
         if (cus.emailaddress.Contains("@gmail"))
         {
-            b = await db.insertuser(cus);
-            navigationManager.NavigateTo("/");
+            string a = cus.phonenumber;
+            int p;
+            bool bp = int.TryParse(a,out p);
+            if(bp)
+            {
+                b = await db.insertuser(cus);
+                navigationManager.NavigateTo("/");
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", $"PhoneNumber Is Wrong");
+            }
         }
+
         else
         {
             await JS.InvokeVoidAsync("alert", $"Email Is Wrong");
@@ -442,8 +454,18 @@
     {
         if (coach.emailaddress.Contains("@gmail"))
         {
-            b = await dbc.insertcoach(coach);
-            navigationManager.NavigateTo("/");
+            string a = coach.phonenumber;
+            int p;
+            bool bp = int.TryParse(a, out p);
+            if (bp)
+            {
+                b = await dbc.insertcoach(coach);
+                navigationManager.NavigateTo("/");
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", $"PhoneNumber Is Wrong");
+            }
         }
         else
         {

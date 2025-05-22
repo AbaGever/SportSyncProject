@@ -49,18 +49,18 @@
                             <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                         </li>
 
-                        @if(coach == null && c !=null)
+                        @if (coach == null && c != null)
                         {
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="/mr">Weekly Reports</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/mr">Weekly Reports</a>
+                            </li>
                         }
                         else
                         {
-                        <li class="nav-item">
-                            <a class="nav-link" href="/p">Your Profile</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/p">Your Profile</a>
+                            </li>
                         }
 
                     </ul>
@@ -74,13 +74,13 @@
         </nav>
     </div>
     <section class=" slider_section position-relative">
-                        <div class="col-lg-10 col-md-11 mx-auto">
-                            <div class="detail-box">
-                                <div>
-                                    <h1 style="color:white">Profile</h1>
-                                </div>
-                            </div>
-                        </div>
+        <div class="col-lg-10 col-md-11 mx-auto">
+            <div class="detail-box">
+                <div>
+                    <h1 style="color:white">Profile</h1>
+                </div>
+            </div>
+        </div>
     </section>
     <div class="wrapper">
         <center>
@@ -90,20 +90,8 @@
                     <h1>@c.firstName   @c.lastName</h1>
 
                     <h2> Email: @c.emailaddress </h2>
-                    @if (!showPass)
-                    {
-                        <h2>  Password: @password </h2>
-                        string tmp1 = "Show  Password ";
-                        @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" @onclick=" ShowPass" />
-                        <br>
-                    }
-                    else
-                    {
-                        <h2>  Password: @c.password </h2>
-                        string tmp1 = "Show Password ";
-                        @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" checked="checked" @onclick="ShowPass" />
-                        <br>
-                    }
+
+
                     @if (c.groupname != "" && c.groupname != null)
                     {
                         <h2> Group Name :<a href="ShowG/@c.groupname">@c.groupname</a></h2>
@@ -504,17 +492,13 @@
 @code {
     private string Name = "";
     private string Email = "";
-    private string Password = "";
-    private string password = "*******";
+
     bool showPass = false;
 
     Trainer c = null;
     Coach coach = null;
     TrainerDB userDB = new TrainerDB();
-    void ShowPass()
-    {
-        showPass = !showPass;
-    }
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -558,28 +542,17 @@
 
         c.firstName = Name;
         c.emailaddress = Email;
-        if (Password != "")
+
+        int n = await userDB.UpdateAsyncWithoutGroup(c);
+        if (n > 0)
         {
-            c.password = Password;
-            int n = await userDB.UpdateAsyncWithoutGroup(c);
-            if (n > 0)
+            await js.InvokeVoidAsync("alert", $"Updated Successfully!");
+            await MySession.SetAsync("Trainer", c);
+            var name = await MySession.GetAsync<Trainer>("Trainer");
+            if (name.Success)
             {
-                await js.InvokeVoidAsync("alert", $"Updated Successfully!");
-                await MySession.SetAsync("Trainer", c);
-                var name = await MySession.GetAsync<Trainer>("Trainer");
-                if (name.Success)
-                {
-                    c = name.Value;
-                    StateHasChanged();
-                }
-
-            }
-            else
-            {
-                await js.InvokeVoidAsync("alert", $"Update failed!");
-
-
-
+                c = name.Value;
+                StateHasChanged();
             }
 
         }
@@ -587,12 +560,12 @@
         {
             await js.InvokeVoidAsync("alert", $"Update failed!");
 
+
+
         }
 
-
-
-
     }
+}
     async Task doEditCoach()
     {
         CoachDB CoachDB = new CoachDB();
@@ -620,23 +593,24 @@
         {
             await js.InvokeVoidAsync("alert", $"Updated Successfully!");
             await MySession.SetAsync("Coach", coach);
-            var name = await MySession.GetAsync<Coach>("Coach");
-            if (name.Success)
-            {
-                coach = name.Value;
-                StateHasChanged();
-            }
-        }
-        else
-        {
-            await js.InvokeVoidAsync("alert", $"Update failed!");
-        }
+            var name = await MySession.GetAsync<Coach>
+    ("Coach");
+    if (name.Success)
+    {
+    coach = name.Value;
+    StateHasChanged();
+    }
+    }
+    else
+    {
+    await js.InvokeVoidAsync("alert", $"Update failed!");
+    }
     }
     async Task Logout()
     {
-        await MySession.SetAsync("Trainer", null);
-        await MySession.SetAsync("Coach", null);
-        navigationManager.NavigateTo("");
+    await MySession.SetAsync("Trainer", null);
+    await MySession.SetAsync("Coach", null);
+    navigationManager.NavigateTo("");
     }
 
-}
+    }
