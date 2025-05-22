@@ -428,7 +428,7 @@
     bool b;
     async Task RegTrainer()
     {
-        if (coach.emailaddress.Contains("@gmail"))
+        if (cus.emailaddress.Contains("@gmail"))
         {
             b = await db.insertuser(cus);
             navigationManager.NavigateTo("/");

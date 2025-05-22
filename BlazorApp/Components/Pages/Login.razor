@@ -425,10 +425,11 @@
                     navigationManager.NavigateTo("/");
 
                 }
-                else
-                {
-                    await js.InvokeVoidAsync("alert", $"Email Is Wrong");
-                }
+                
+            }
+            else
+            {
+                await js.InvokeVoidAsync("alert", $"Email Is Wrong");
             }
         }
         else

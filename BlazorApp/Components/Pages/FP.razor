@@ -247,7 +247,14 @@
 
     private async Task SendResetCode()
     {
-        if (string.IsNullOrEmpty(email))
+        TrainerDB tdb = new TrainerDB();
+        Trainer trainer = await tdb.EmailCheck(email);
+        if (trainer == null)
+        {
+            message = "Email Doesnot Exist ";
+            return;
+        }
+        if (string.IsNullOrEmpty(email) && email.Contains("@gmail"))
         {
             message = "Enter You Email";
             return;

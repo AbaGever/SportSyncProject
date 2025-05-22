@@ -62,7 +62,6 @@ namespace DBL2
         {
             Dictionary<string, object> data = new Dictionary<string, object>()
             {
-
             {"trainerid",w.trainerid},
             {"date",w.date},
             {"duration",w.duration},

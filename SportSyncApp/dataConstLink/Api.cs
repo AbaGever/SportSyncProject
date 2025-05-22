@@ -8,7 +8,8 @@ namespace SportSyncApp.dataConstLink
 {
     internal class Api
     {
-        private const string linkurl = "https://lnvm4w7m-7112.euw.devtunnels.ms/api/Login/";
+        private const string linkurl = "https://gmgmv7hv-7112.uks1.devtunnels.ms/api/Login/";
+
         public const string loginurl = linkurl + "Log";
         public const string regurl = linkurl + "Register";
         public const string deleteurl = linkurl + "Del";
