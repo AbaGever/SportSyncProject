@@ -498,7 +498,17 @@
             }
             else
             {
-                AllWeekWorkouts.Add(workout);
+                int count = 0;
+                foreach (Workout wd in DeletedWorkouts)
+                {
+                    if (wd.duration == workout.id * -1 && DateTime.Parse(wd.date) == DateTime.Parse(workout.date))
+                    {
+                        count++;
+
+                    }
+                }
+                if (count == 0 && workout.duration > 0)
+                    AllWeekWorkouts.Add(workout);
             }
         }
 
