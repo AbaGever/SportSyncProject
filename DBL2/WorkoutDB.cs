@@ -210,7 +210,7 @@ namespace DBL2
 
             string sql = @$"SELECT * FROM sportsync_db.workouts 
                     WHERE trainerid = @trainerid 
-                    AND (IsReccuring = 'true' AND date <= @td)              
+                    AND (IsReccuring = 'true' AND date <= @td) OR(IsReccuring = 'false' AND date = @td)             
                     ORDER BY date, hour;";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>
@@ -221,6 +221,14 @@ namespace DBL2
             DateTime today = DateTime.ParseExact(td, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             List<Workout> workouts = (List<Workout>)await SelectAllAsync(sql, parameters);
             List<Workout> ws = new List<Workout>();
+            List<Workout> DeletedWorkouts = new List<Workout>();
+            foreach (var workout in workouts)
+            {
+                if (workout.duration < 0)
+                {
+                    DeletedWorkouts.Add(workout);
+                }
+            }
             foreach (var workout in workouts)
             {
                 if (workout.IsReccuring == "true" && workout.duration > 0)
@@ -235,10 +243,39 @@ namespace DBL2
 
                         if (WorkoutDOW == todayDOW)
                         {
-                            workout.date = today.ToString("yyyy-MM-dd");
-                            ws.Add(workout);
+                            int count = 0;
+                            foreach (Workout wd in DeletedWorkouts)
+                            {
+                                if (wd.duration == workout.id * -1 && DateTime.Parse(wd.date) == DateTime.Parse(workout.date))
+                                {
+                                    count++;
+
+                                }
+                            }
+                            if (count == 0 && workout.duration > 0)
+                            {
+                                workout.date = today.ToString("yyyy-MM-dd");
+                                ws.Add(workout);
+                            }
                         }
                     }
+                }
+                else if (workout.IsReccuring == "false" && workout.duration > 0)
+                {
+                    int count = 0;
+                    foreach (Workout wd in DeletedWorkouts)
+                    {
+                        if (wd.duration == workout.id * -1 && DateTime.Parse(wd.date) == DateTime.Parse(workout.date))
+                        {
+                            count++;
+
+                        }
+                    }
+                    if (count == 0 && workout.duration > 0)
+                    {
+                        ws.Add(workout);
+                    }
+                        
                 }
             }
 
