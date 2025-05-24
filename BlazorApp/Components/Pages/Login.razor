@@ -7,17 +7,7 @@
 @inject ProtectedSessionStorage MySession
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 
-<HeadContent>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SportSync</title>
-    <link rel="icon" href="/download.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-    <link rel="stylesheet" type="text/css" href="homepage/css/bootstrap.css">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&amp;display=swap" rel="stylesheet">
-    <link href="homepage/css/style.css" rel="stylesheet">
-    <link href="homepage/css/responsive.css" rel="stylesheet">
-</HeadContent>
+
 
 <center>
     <header class="header_section">
@@ -83,6 +73,7 @@
                 <input type="email" placeholder="Email" @bind-value="CoachEmail" />
                 <input type="password" placeholder="Password" @bind-value="CoachPassword" />
                 <button class="button-73" @onclick="LogInToCoach">Log In</button>
+                <button style="margin:5px;color:black"> <a style="color:black" href="/reset-password">Forgot password</a></button>
             </div>
             <div class="form-container sign-in-container">
                 <h1>Log In</h1>

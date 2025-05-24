@@ -7,34 +7,7 @@
 @using DBL2
 @using Microsoft.JSInterop
 @inject IJSRuntime JS
-<HeadContent>
-    <!-- Basic -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Mobile Metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Site Metas -->
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <title>SportSync</title>
-    <link rel="icon" href="/download.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
-
-    <!-- slider stylesheet -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-
-    <!-- bootstrap core css -->
-    <link rel="stylesheet" type="text/css" href="homepage/css/bootstrap.css">
-
-    <!-- fonts style -->
-    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&amp;display=swap" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="homepage/css/style.css" rel="stylesheet">
-    <!-- responsive style -->
-    <link href="homepage/css/responsive.css" rel="stylesheet">
-</HeadContent>
 <center>
     <header class="header_section">
         <div class="container-fluid">
@@ -101,7 +74,13 @@
                 <input type="email" placeholder="Email" @bind-value="@coach.emailaddress" />
                 <input type="text" placeholder="Phone Number" @bind-value="@coach.phonenumber" />
                 <input type="password" placeholder="Password" @bind-value="@coach.password" />
-                <input type="text" placeholder="Sport" @bind-value="@coach.sport" />
+                <select class="form-control mb-3" @onchange="OnChange">
+                    <option value="default">Select Your Sport</option>
+                    @foreach (string m in Sports)
+                    {
+                        <option value="@m">@m</option>
+                    }
+                </select>
                 <input type="number" placeholder="Password" @bind-value="@coach.exp" />
                 <button class="button-73" @onclick="RegCoach">Register</button>
             </div>
@@ -393,6 +372,39 @@
     }
 </script>
 @code {
+    List<string> Sports = new List<string>
+{
+    "Soccer",
+    "Basketball",
+    "Tennis",
+    "Swimming",
+    "Running",
+    "Cycling",
+    "Boxing",
+    "Martial Arts",
+    "Volleyball",
+    "Baseball",
+    "Gymnastics",
+    "Rowing",
+    "Wrestling",
+    "CrossFit",
+    "Climbing",
+    "Surfing",
+    "American Football",
+    "Table Tennis",
+    "Badminton",
+    "Handball",
+    "Rugby",
+    "Skiing",
+    "Snowboarding",
+    "Skateboarding",
+    "Golf",
+    "Cricket",
+    "Fencing",
+    "Karate",
+    "Judo",
+    "Triathlon"
+};
     private string UserEmail = "";
     private string CoachEmail = "";
     private string CoachPassword = "";
@@ -425,6 +437,7 @@
     TrainerDB db = new TrainerDB();
     Coach coach = new Coach();
     CoachDB dbc = new CoachDB();
+    string sport;
     bool b;
 
     async Task RegTrainer()
@@ -454,6 +467,7 @@
     {
         if (coach.emailaddress.Contains("@gmail"))
         {
+            coach.sport = sport;
             string a = coach.phonenumber;
             int p;
             bool bp = int.TryParse(a, out p);
@@ -471,5 +485,9 @@
         {
             await JS.InvokeVoidAsync("alert", $"Email Is Wrong");
         }
+    }
+    private void OnChange(ChangeEventArgs args)
+    {
+        sport = args.Value.ToString();
     }
 }

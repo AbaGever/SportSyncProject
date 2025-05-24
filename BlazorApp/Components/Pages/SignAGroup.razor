@@ -8,34 +8,7 @@
 @using Microsoft.JSInterop
 @inject IJSRuntime JS
 
-<HeadContent>
-    <!-- Basic -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Mobile Metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Site Metas -->
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <title>SportSync</title>
-    <link rel="icon" href="/download.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
-
-    <!-- slider stylesheet -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-
-    <!-- bootstrap core css -->
-    <link rel="stylesheet" type="text/css" href="homepage/css/bootstrap.css">
-
-    <!-- fonts style -->
-    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&amp;display=swap" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="homepage/css/style.css" rel="stylesheet">
-    <!-- responsive style -->
-    <link href="homepage/css/responsive.css" rel="stylesheet">
-</HeadContent>
 <div class="ALLLL">
     <header class="header_section">
         <div class="container-fluid">
@@ -442,6 +415,7 @@
     }
 </style>
 @code {
+  
     string strname = "Enter Group`s Name";
     string strmx = "Enter Maximum Capacity";
     string currentname;
@@ -491,7 +465,6 @@
         int n = await coachDB.UpdateAsync(coach);
         if (n > 0)
         {
-            await JS.InvokeVoidAsync("alert", $"Updated Successfully!");
             await MySession.SetAsync("Coach", coach);
             var name = await MySession.GetAsync<Coach>("Coach");
             if (name.Success)

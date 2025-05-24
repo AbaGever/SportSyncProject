@@ -112,10 +112,20 @@ namespace DBL2
             else
                 return null;
         }
-        
 
-        
 
+
+        public async Task<Coach> EmailCheck(string email)
+        {
+            string sql = @"SELECT * FROM sportsync_db.coaches where emailaddress=@emailaddress";
+            Dictionary<string, object> p = new Dictionary<string, object>();
+            p.Add("emailaddress", email);
+            List<Coach> list = (List<Coach>)await SelectAllAsync(sql, p);
+            if (list.Count == 1)
+                return list[0];
+            else
+                return null;
+        }
         public async Task<Coach> LoginAsync(string email, string password)
         {
             string sql = @"SELECT * FROM sportsync_db.coaches where emailaddress=@emailaddress AND password=@password;";
@@ -127,6 +137,23 @@ namespace DBL2
                 return list[0];
             else
                 return null;
+        }
+
+        public async Task<int> UpdateAsyncWithoutGroup(Coach coach)
+        {
+            Dictionary<string, object> filterValues = new Dictionary<string, object>();
+            Dictionary<string, object> fillValues = new Dictionary<string, object>()
+            {
+                { "firstname", coach.firstName },
+                { "lastname", coach.lastName },
+                { "emailaddress" , coach.emailaddress },
+                { "phonenumber", coach.phonenumber },
+                { "password", coach.password },
+                { "sport", coach.sport},
+                { "exp", coach.exp}
+            };
+            filterValues.Add("id", coach.id.ToString());
+            return await base.UpdateAsync(fillValues, filterValues);
         }
     }
 }

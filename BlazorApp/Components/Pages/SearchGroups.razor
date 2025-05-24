@@ -5,35 +5,7 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage MySession
 
-@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
-<HeadContent>
-    <!-- Basic -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Mobile Metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Site Metas -->
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <title>SportSync</title>
-    <link rel="icon" href="/download.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
-
-    <!-- slider stylesheet -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-
-    <!-- bootstrap core css -->
-    <link rel="stylesheet" type="text/css" href="homepage/css/bootstrap.css">
-
-    <!-- fonts style -->
-    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&amp;display=swap" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="homepage/css/style.css" rel="stylesheet">
-    <!-- responsive style -->
-    <link href="homepage/css/responsive.css" rel="stylesheet">
-</HeadContent>
 <div class="ALLLL">
     <header class="header_section">
         <div class="container-fluid">
@@ -118,7 +90,13 @@
                 </div>
             </div>
         </section>
-        <input name="Sport" @bind-value="sport" placeholder="Search Group By Sport">
+        <select class="form-control mb-3" @onchange="OnChange">
+            <option value="default">Select Your Sport</option>
+            @foreach (string m in Sports)
+            {
+                <option value="@m">@m</option>
+            }
+        </select>
         <button class="button-73" @onclick="Search">Search Groups</button>
 
         @if (list == null)
@@ -470,12 +448,47 @@
 </style>
 
 @code {
-
+    List<string> Sports = new List<string>
+{
+    "Soccer",
+    "Basketball",
+    "Tennis",
+    "Swimming",
+    "Running",
+    "Cycling",
+    "Boxing",
+    "Martial Arts",
+    "Volleyball",
+    "Baseball",
+    "Gymnastics",
+    "Rowing",
+    "Wrestling",
+    "CrossFit",
+    "Climbing",
+    "Surfing",
+    "American Football",
+    "Table Tennis",
+    "Badminton",
+    "Handball",
+    "Rugby",
+    "Skiing",
+    "Snowboarding",
+    "Skateboarding",
+    "Golf",
+    "Cricket",
+    "Fencing",
+    "Karate",
+    "Judo",
+    "Triathlon"
+};
     Coach coach = null;
     Trainer c = null;
     List<Group> list;
-    string sport = "";
-
+    string sport ;
+    private void OnChange(ChangeEventArgs args)
+    {
+        sport = args.Value.ToString();
+    }
     async Task Search()
     {
         GroupDB groupDB = new GroupDB();

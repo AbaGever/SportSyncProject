@@ -6,27 +6,8 @@
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject IJSRuntime js
 
-<HeadContent>
-    <!-- Basic -->
 
 
-
-    <link rel="icon" href="/download.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
-
-    <!-- slider stylesheet -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-
-    <!-- bootstrap core css -->
-    <link rel="stylesheet" type="text/css" href="homepage/css/bootstrap.css">
-
-    <!-- fonts style -->
-    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&amp;display=swap" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="homepage/css/style.css" rel="stylesheet">
-    <!-- responsive style -->
-    <link href="homepage/css/responsive.css" rel="stylesheet">
-</HeadContent>
 @if (group != null)
 {
     <div class="container-fluid">
@@ -217,7 +198,7 @@
 
 
                             <!-- Table for Users in the Group (Visible for regular user as well) -->
-                            @if (a == group.name)
+                            @if (c.groupname == group.name)
                             {
                                 @if (usersInGroup != null && usersInGroup.Count > 0)
                                 {
@@ -249,7 +230,7 @@
                                 </center>
 
                             }
-                            @if (a == "" || a == null)
+                            @if (c.groupname == "" || c.groupname == null)
                             {
                                 <center>
                                     <button @onclick="() => JoinGroup(c.id)" class="button-73">Join Group</button>
@@ -684,7 +665,7 @@
         selectedDate = DateTime.Today;
         selectedHour = new DateTime();
         duration = "";
-        Task.Yield();
+        
         StateHasChanged();
     }
     static DateTime GetNextDay(DateTime startDate, DayOfWeek targetDay)
@@ -727,18 +708,23 @@
 
                 StateHasChanged();
             }
-
-            var user1 = await MySession.GetAsync<Trainer>("Trainer");
-            if (user1.Success)
-            {
-                c = user1.Value;
-                a = c.groupname;
-                await LoadUsersInGroup();
-                StateHasChanged();
-            }
-
-
         }
+        if (firstRender)
+        {
+            
+                var user1 = await MySession.GetAsync<Trainer>("Trainer");
+                if (user1.Success)
+                {
+                    c = user1.Value;
+                    
+                    await LoadUsersInGroup();
+                    StateHasChanged();
+                }
+            
+        }
+
+
+        
     }
 
 
@@ -821,10 +807,11 @@
             var name = await MySession.GetAsync<Trainer>("Trainer");
             if (name.Success)
             {
-                user = name.Value;
+                c = name.Value;
                 StateHasChanged();
             }
-            await LoadUsersInGroup();
+            await LoadUsersInGroup(); 
+            StateHasChanged();
         }
 
 

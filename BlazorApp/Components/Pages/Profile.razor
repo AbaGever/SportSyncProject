@@ -6,27 +6,7 @@
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject IJSRuntime js
 <PageTitle>SportSync</PageTitle>
-<HeadContent>
-    <!-- Basic -->
 
-
-
-    <link rel="icon" href="/download.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
-
-    <!-- slider stylesheet -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-
-    <!-- bootstrap core css -->
-    <link rel="stylesheet" type="text/css" href="homepage/css/bootstrap.css">
-
-    <!-- fonts style -->
-    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&amp;display=swap" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="homepage/css/style.css" rel="stylesheet">
-    <!-- responsive style -->
-    <link href="homepage/css/responsive.css" rel="stylesheet">
-</HeadContent>
 
 @if (c != null || coach != null)
 {
@@ -115,11 +95,6 @@
                     <label for="inputName">Name</label>
                     <input @bind-value="Name" type="text" class="form-control m-1" placeholder="Name">
 
-                    <label for="inputEmail">Email address</label>
-                    <input @bind-value="Email" type="text" class="form-control m-1" placeholder="Email">
-
-                    <label>Password</label>
-                    <input @bind-value="Password" type="text" class="form-control m-1" placeholder="Password">
 
                     <button class="button-73" role="button" @onclick="doEditUser">Update</button>
 
@@ -133,20 +108,7 @@
                     <h2>
                         Email: @coach.emailaddress
                     </h2>
-                    @if (!showPass)
-                    {
-                        <h2>  Password: @password </h2>
-                        string tmp1 = "Show Password ";
-                        @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" @onclick=" ShowPass" />
-                        <br>
-                    }
-                    else
-                    {
-                        <h2>  Password: @coach.password </h2>
-                        string tmp1 = "Show new Password ";
-                        @tmp1 <input type="checkbox" name="mycheckbox1" id="upd_user_check1" checked="checked" @onclick="ShowPass" />
-                        <br>
-                    }
+
                     <h2>
                         Sport: @coach.sport<br />Experience: @coach.exp Years
                     </h2>
@@ -165,11 +127,9 @@
                     <label for="inputName">Name</label>
                     <input @bind-value="Name" type="text" class="form-control m-1" placeholder="Name">
 
-                    <label for="inputEmail">Email address</label>
-                    <input @bind-value="Email" type="text" class="form-control m-1" placeholder="Email">
 
-                    <label>Password</label>
-                    <input @bind-value="Password" type="text" class="form-control m-1" placeholder="Password">
+
+
 
                     <button class="button-73" role="button" @onclick="doEditCoach">Update</button>
 
@@ -182,316 +142,316 @@
 
 
     </div>
-}
 
 
 
-<style>
 
-    @@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+    <style>
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Poppins', sans-serif;
-    }
+        @@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
-    html, body {
-        width: 100%;
-        place-items: center;
-        background: -webkit-linear-gradient(bottom, #E0DCC8, #3a506b);
-    }
-
-
-
-        <!-- HTML ! -->
-        /* CSS */
-        .button-24 {
-            background: #FF4742;
-            border: 1px solid #FF4742;
-            border-radius: 6px;
-            box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
-            color: #FFFFFF;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html, body {
+            height: 100vh;
+            width: 100%;
+            place-items: center;
+            background: -webkit-linear-gradient(bottom, #E0DCC8, #3a506b);
+        }
+
+
+
+            <!-- HTML ! -->
+            /* CSS */
+            .button-24 {
+                background: #FF4742;
+                border: 1px solid #FF4742;
+                border-radius: 6px;
+                box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+                box-sizing: border-box;
+                color: #FFFFFF;
+                cursor: pointer;
+                display: inline-block;
+                font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+                font-size: 16px;
+                font-weight: 800;
+                line-height: 16px;
+                min-height: 40px;
+                outline: 0;
+                padding: 12px 14px;
+                text-align: center;
+                text-rendering: geometricprecision;
+                text-transform: none;
+                user-select: none;
+                -webkit-user-select: none;
+                touch-action: manipulation;
+                vertical-align: middle;
+            }
+
+        .button-24:hover,
+        .button-24:active {
+            background-color: initial;
+            background-position: 0 0;
+            color: #FF4742;
+        }
+
+        .button-24:active {
+            opacity: .5;
+        }
+
+        .button-73 {
+            appearance: none;
+            background-color: #FFFFFF;
+            border-radius: 40em;
+            border-style: none;
+            box-shadow: #ADCFFF 0 -12px 6px inset;
+            box-sizing: border-box;
+            color: #000000;
             cursor: pointer;
             display: inline-block;
-            font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
-            font-size: 16px;
-            font-weight: 800;
-            line-height: 16px;
-            min-height: 40px;
-            outline: 0;
-            padding: 12px 14px;
+            font-family: -apple-system,sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -.24px;
+            margin: 0;
+            outline: none;
+            padding: 1rem 1.3rem;
+            quotes: auto;
             text-align: center;
-            text-rendering: geometricprecision;
-            text-transform: none;
+            text-decoration: none;
+            transition: all .15s;
             user-select: none;
             -webkit-user-select: none;
             touch-action: manipulation;
-            vertical-align: middle;
         }
 
-    .button-24:hover,
-    .button-24:active {
-        background-color: initial;
-        background-position: 0 0;
-        color: #FF4742;
-    }
+            .button-73:hover {
+                background-color: #FFC229;
+                box-shadow: #FF6314 0 -6px 8px inset;
+                transform: scale(1.125);
+            }
 
-    .button-24:active {
-        opacity: .5;
-    }
+            .button-73:active {
+                transform: scale(1.025);
+            }
 
-    .button-73 {
-        appearance: none;
-        background-color: #FFFFFF;
-        border-radius: 40em;
-        border-style: none;
-        box-shadow: #ADCFFF 0 -12px 6px inset;
-        box-sizing: border-box;
-        color: #000000;
-        cursor: pointer;
-        display: inline-block;
-        font-family: -apple-system,sans-serif;
-        font-size: 1.2rem;
-        font-weight: 700;
-        letter-spacing: -.24px;
-        margin: 0;
-        outline: none;
-        padding: 1rem 1.3rem;
-        quotes: auto;
-        text-align: center;
-        text-decoration: none;
-        transition: all .15s;
-        user-select: none;
-        -webkit-user-select: none;
-        touch-action: manipulation;
-    }
-
-        .button-73:hover {
-            background-color: #FFC229;
-            box-shadow: #FF6314 0 -6px 8px inset;
-            transform: scale(1.125);
+        @@media (min-width: 768px) {
+            .button-73 {
+                font-size: 1.5rem;
+                padding: .75rem 2rem;
+            }
         }
 
-        .button-73:active {
-            transform: scale(1.025);
+        ::selection {
+            background: Grey;
+            color: #fff;
         }
 
-    @@media (min-width: 768px) {
-        .button-73 {
-            font-size: 1.5rem;
-            padding: .75rem 2rem;
+        .wrapper {
+            overflow: hidden;
+            margin: auto;
+            max-width: 1000px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
         }
-    }
 
-    ::selection {
-        background: Grey;
-        color: #fff;
-    }
+            .wrapper .title-text {
+                display: flex;
+                width: 200%;
+            }
 
-    .wrapper {
-        overflow: hidden;
-        margin: auto;
-        max-width: 1000px;
-        background: #fff;
-        padding: 30px;
-        border-radius: 5px;
-        box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
-    }
+            .wrapper .title {
+                width: 50%;
+                font-size: 35px;
+                font-weight: 600;
+                text-align: center;
+                transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+            }
 
-        .wrapper .title-text {
+            .wrapper .slide-controls {
+                position: relative;
+                display: flex;
+                height: 50px;
+                width: 100%;
+                overflow: hidden;
+                margin: 30px 0 10px 0;
+                justify-content: space-between;
+                border: 1px solid lightgrey;
+                border-radius: 5px;
+            }
+
+        .slide-controls .slide {
+            height: 100%;
+            width: 100%;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 500;
+            text-align: center;
+            line-height: 48px;
+            cursor: pointer;
+            z-index: 1;
+            transition: all 0.6s ease;
+        }
+
+        .slide-controls label.Coach {
+            color: #000;
+        }
+
+        .slide-controls .slider-tab {
+            position: absolute;
+            height: 100%;
+            width: 50%;
+            left: 0;
+            z-index: 0;
+            border-radius: 5px;
+            background: -webkit-linear-gradient(left, white,Grey,Grey,white);
+            transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        #Coach:checked ~ .slider-tab {
+            left: 50%;
+        }
+
+        #Coach:checked ~ label.Coach {
+            color: #fff;
+            cursor: default;
+            user-select: none;
+        }
+
+        #Coach:checked ~ label.Trainer {
+            color: #000;
+        }
+
+        #Trainer:checked ~ label.Coach {
+            color: #000;
+        }
+
+        #Trainer:checked ~ label.Trainer {
+            cursor: default;
+            user-select: none;
+        }
+
+        .wrapper .form-container {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .form-container .form-inner {
             display: flex;
             width: 200%;
         }
 
-        .wrapper .title {
-            width: 50%;
-            font-size: 35px;
-            font-weight: 600;
-            text-align: center;
-            transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
-        }
-
-        .wrapper .slide-controls {
-            position: relative;
-            display: flex;
-            height: 50px;
-            width: 100%;
-            overflow: hidden;
-            margin: 30px 0 10px 0;
-            justify-content: space-between;
-            border: 1px solid lightgrey;
-            border-radius: 5px;
-        }
-
-    .slide-controls .slide {
-        height: 100%;
-        width: 100%;
-        color: #fff;
-        font-size: 18px;
-        font-weight: 500;
-        text-align: center;
-        line-height: 48px;
-        cursor: pointer;
-        z-index: 1;
-        transition: all 0.6s ease;
-    }
-
-    .slide-controls label.Coach {
-        color: #000;
-    }
-
-    .slide-controls .slider-tab {
-        position: absolute;
-        height: 100%;
-        width: 50%;
-        left: 0;
-        z-index: 0;
-        border-radius: 5px;
-        background: -webkit-linear-gradient(left, white,Grey,Grey,white);
-        transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
-    }
-
-    input[type="radio"] {
-        display: none;
-    }
-
-    #Coach:checked ~ .slider-tab {
-        left: 50%;
-    }
-
-    #Coach:checked ~ label.Coach {
-        color: #fff;
-        cursor: default;
-        user-select: none;
-    }
-
-    #Coach:checked ~ label.Trainer {
-        color: #000;
-    }
-
-    #Trainer:checked ~ label.Coach {
-        color: #000;
-    }
-
-    #Trainer:checked ~ label.Trainer {
-        cursor: default;
-        user-select: none;
-    }
-
-    .wrapper .form-container {
-        width: 100%;
-        overflow: hidden;
-    }
-
-    .form-container .form-inner {
-        display: flex;
-        width: 200%;
-    }
-
-        .form-container .form-inner form {
-            width: 50%;
-            transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
-        }
-
-    .form-inner form .field {
-        height: 50px;
-        width: 100%;
-        margin-top: 20px;
-    }
-
-        .form-inner form .field input {
-            height: 100%;
-            width: 100%;
-            outline: none;
-            padding-left: 15px;
-            border-radius: 5px;
-            border: 1px solid lightgrey;
-            border-bottom-width: 2px;
-            font-size: 17px;
-            transition: all 0.3s ease;
-        }
-
-            .form-inner form .field input:focus {
-                border-color: #3a506b;
-                /* box-shadow: inset 0 0 3px #fb6aae; */
+            .form-container .form-inner form {
+                width: 50%;
+                transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
             }
 
-            .form-inner form .field input::placeholder {
-                color: #999;
+        .form-inner form .field {
+            height: 50px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+            .form-inner form .field input {
+                height: 100%;
+                width: 100%;
+                outline: none;
+                padding-left: 15px;
+                border-radius: 5px;
+                border: 1px solid lightgrey;
+                border-bottom-width: 2px;
+                font-size: 17px;
                 transition: all 0.3s ease;
             }
 
-    form .field input:focus::placeholder {
-        color: #b3b3b3;
-    }
+                .form-inner form .field input:focus {
+                    border-color: #3a506b;
+                    /* box-shadow: inset 0 0 3px #fb6aae; */
+                }
 
-    .form-inner form .pass-link {
-        margin-top: 5px;
-    }
+                .form-inner form .field input::placeholder {
+                    color: #999;
+                    transition: all 0.3s ease;
+                }
 
-    .form-inner form .Coach-link {
-        text-align: center;
-        margin-top: 30px;
-    }
-
-        .form-inner form .pass-link a,
-        .form-inner form .Coach-link a {
-            color: #fa4299;
-            text-decoration: none;
+        form .field input:focus::placeholder {
+            color: #b3b3b3;
         }
 
-            .form-inner form .pass-link a:hover,
-            .form-inner form .Coach-link a:hover {
-                text-decoration: underline;
+        .form-inner form .pass-link {
+            margin-top: 5px;
+        }
+
+        .form-inner form .Coach-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+            .form-inner form .pass-link a,
+            .form-inner form .Coach-link a {
+                color: #fa4299;
+                text-decoration: none;
             }
 
-    form .btn {
-        height: 50px;
-        width: 100%;
-        border-radius: 5px;
-        position: relative;
-        overflow: hidden;
-    }
+                .form-inner form .pass-link a:hover,
+                .form-inner form .Coach-link a:hover {
+                    text-decoration: underline;
+                }
 
-        form .btn .btn-layer {
-            height: 100%;
-            width: 300%;
-            position: absolute;
-            left: -100%;
-            background: -webkit-linear-gradient(right,#E0DCC8,#3a506b,#E0DCC8,#3a506b);
-            border-radius: 5px;
-            transition: all 0.4s ease;
-            ;
-        }
-
-        form .btn:hover .btn-layer {
-            left: 0;
-        }
-
-        form .btn input[type="submit"] {
-            height: 100%;
+        form .btn {
+            height: 50px;
             width: 100%;
-            z-index: 1;
-            position: relative;
-            background: none;
-            border: none;
-            color: #fff;
-            padding-left: 0;
             border-radius: 5px;
-            font-size: 20px;
-            font-weight: 500;
-            cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
-</style>
+
+            form .btn .btn-layer {
+                height: 100%;
+                width: 300%;
+                position: absolute;
+                left: -100%;
+                background: -webkit-linear-gradient(right,#E0DCC8,#3a506b,#E0DCC8,#3a506b);
+                border-radius: 5px;
+                transition: all 0.4s ease;
+                ;
+            }
+
+            form .btn:hover .btn-layer {
+                left: 0;
+            }
+
+            form .btn input[type="submit"] {
+                height: 100%;
+                width: 100%;
+                z-index: 1;
+                position: relative;
+                background: none;
+                border: none;
+                color: #fff;
+                padding-left: 0;
+                border-radius: 5px;
+                font-size: 20px;
+                font-weight: 500;
+                cursor: pointer;
+            }
+    </style>
 
 
 
-@code {
+    @code {
     private string Name = "";
-    private string Email = "";
 
     bool showPass = false;
 
@@ -530,87 +490,75 @@
     async Task doEditUser()
     {
 
-        if (Name == "")
+        if (!string.IsNullOrEmpty(Name))
         {
-            Name = c.firstName;
-        }
-        if (Email == "")
-        {
-            Email = c.emailaddress;
-        }
-
-
-        c.firstName = Name;
-        c.emailaddress = Email;
-
-        int n = await userDB.UpdateAsyncWithoutGroup(c);
-        if (n > 0)
-        {
-            await js.InvokeVoidAsync("alert", $"Updated Successfully!");
-            await MySession.SetAsync("Trainer", c);
-            var name = await MySession.GetAsync<Trainer>("Trainer");
-            if (name.Success)
+            c.firstName = Name;
+            int n = await userDB.UpdateAsyncWithoutGroup(c);
+            if (n > 0)
             {
-                c = name.Value;
-                StateHasChanged();
-            }
+                await js.InvokeVoidAsync("alert", $"Updated Successfully!");
+                await MySession.SetAsync("Trainer", c);
+                var name = await MySession.GetAsync<Trainer>("Trainer");
+                if (name.Success)
+                {
+                    c = name.Value;
+                    StateHasChanged();
+                }
 
+            }
         }
         else
         {
             await js.InvokeVoidAsync("alert", $"Update failed!");
-
-
-
+            return;
         }
 
+
+
+
+
+
+
+
     }
-}
     async Task doEditCoach()
     {
+
         CoachDB CoachDB = new CoachDB();
 
-        if (Name == "")
+        if (!string.IsNullOrEmpty(Name))
         {
-            Name = coach.firstName;
-        }
-        if (Email == "")
-        {
-            Email = coach.emailaddress;
-        }
-        if (password == "")
-        {
-            password = coach.password;
+            coach.firstName = Name;
+            int n = await CoachDB.UpdateAsyncWithoutGroup(coach);
+            if (n > 0)
+            {
+                await js.InvokeVoidAsync("alert", $"Updated Successfully!");
+                await MySession.SetAsync("Coach", coach);
+                var name = await MySession.GetAsync<Coach>("Coach");
+                if (name.Success)
+                {
+                    coach = name.Value;
+                    StateHasChanged();
+                }
+            }
         }
 
-        coach.firstName = Name;
-        coach.emailaddress = Email;
-        coach.password = Password;
 
-
-        int n = await CoachDB.UpdateAsync(coach);
-        if (n > 0)
+        else
         {
-            await js.InvokeVoidAsync("alert", $"Updated Successfully!");
-            await MySession.SetAsync("Coach", coach);
-            var name = await MySession.GetAsync<Coach>
-    ("Coach");
-    if (name.Success)
-    {
-    coach = name.Value;
-    StateHasChanged();
-    }
-    }
-    else
-    {
-    await js.InvokeVoidAsync("alert", $"Update failed!");
-    }
+            await js.InvokeVoidAsync("alert", $"Update failed!");
+            return;
+        }
+
+
+
     }
     async Task Logout()
     {
-    await MySession.SetAsync("Trainer", null);
-    await MySession.SetAsync("Coach", null);
-    navigationManager.NavigateTo("");
+        await MySession.SetAsync("Trainer", null);
+        await MySession.SetAsync("Coach", null);
+        navigationManager.NavigateTo("");
     }
+    }
+}
 
-    }

@@ -10,35 +10,37 @@
 
 
 @inject NavigationManager navigateMgr
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<style>
-
-    body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .wrapper {
-    text-align:center;
-    font-size : 30px;
-    max-width: 800px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-</style>
-@if(trainer !=null)
+@if (trainer != null)
 {
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    </head>
+    <style>
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .wrapper {
+            text-align: center;
+            font-size: 30px;
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
+
     <body>
         <div class="wrapper">
             <h1>Profile</h1>
-            <h2>@trainer.firstName @trainer.lastName
+            <h2>
+                @trainer.firstName @trainer.lastName
                 <br />
                 Group : @trainer.groupname
                 <br />
@@ -56,13 +58,17 @@
             <div class="card-footer">
                 <button class="btn btn-primary" @onclick="ChangeP">Change Password</button>
             </div>
-            
+            <div class="card-footer">
+                <button class="btn btn-primary" @onclick="Logout">Logout</button>
+            </div>
         </div>
     </body>
 }
 
+
+
 @code {
-    Trainer trainer { get; set; }
+    public Trainer trainer { get; set; }
     string NewP;
     private async Task ChangeP()
     {
@@ -71,12 +77,16 @@
         var response = await httpClient.PutAsJsonAsync<Trainer>(dataConstLink.Api.ChangeURL, trainer);
         if (response.IsSuccessStatusCode)
         {
-           
+
             await Application.Current.MainPage.DisplayAlert("Info", "Password Changed", "Ok");
         }
     }
+    private async Task Logout()
+    {
+        SecureStorage.RemoveAll();
+        navigateMgr.NavigateTo("/", replace: true);
+    }
 
-   
     protected override async Task OnInitializedAsync()
     {
         string jsonString = await SecureStorage.Default.GetAsync("trn");
@@ -90,10 +100,10 @@
 
         }
 
-        if (trainer.id <= 0||trainer ==null)
+        if (trainer.id <= 0 || trainer == null)
         {
-            navigateMgr.NavigateTo("/login", replace: true);
+            navigateMgr.NavigateTo("/Lg", replace: true);
         }
-
+        
     }
 }

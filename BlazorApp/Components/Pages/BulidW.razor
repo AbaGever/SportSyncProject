@@ -6,18 +6,6 @@
 @inject ProtectedSessionStorage MySession
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 
-<HeadContent>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SportSync</title>
-    <link rel="icon" href="/download.png">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-    <link rel="stylesheet" type="text/css" href="homepage/css/bootstrap.css">
-    <link href="homepage/css/style.css" rel="stylesheet">
-    <link href="homepage/css/responsive.css" rel="stylesheet">
-</HeadContent>
 
 <div class="main-container">
     <!-- Navbar -->
@@ -454,7 +442,7 @@
                 error = "Inserted Workout";
                 await Task.Delay(1000);
 
-                await Task.Yield(); // Re-render the UI
+                 
 
             }
         }
@@ -480,7 +468,6 @@
                     error = "Inserted Workout";
                     await Task.Delay(1000);
 
-                    await Task.Yield(); // Re-render the UI
 
                 }
             }

@@ -7,34 +7,6 @@
 @inject IJSRuntime js
 @using System.Globalization
 
-<HeadContent>
-    <!-- Basic -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Mobile Metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Site Metas -->
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>SportSync</title>
-    <link rel="icon" href="/download.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
-
-    <!-- slider stylesheet -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-
-    <!-- bootstrap core css -->
-    <link rel="stylesheet" type="text/css" href="homepage/css/bootstrap.css">
-
-    <!-- fonts style -->
-    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&amp;display=swap" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="homepage/css/style.css" rel="stylesheet">
-    <!-- responsive style -->
-    <link href="homepage/css/responsive.css" rel="stylesheet">
-</HeadContent>
 <style>
 
 
@@ -42,8 +14,8 @@
     height: 100vh;
     width: 100%;
     place-items: center;
-        background: linear-gradient(to bottom, #3a506b, #E0DCC8);
-        background-attachment: fixed;
+    background: linear-gradient(to bottom, #3a506b, #E0DCC8);
+    background-attachment: fixed;
     }
 
     .calendar-grid {
@@ -414,17 +386,22 @@
 
     private async Task DeleteCurrent(Workout w)
     {
-        WorkoutDB workoutDB = new WorkoutDB();
-        Workout w1 = new Workout();
-        w1.trainerid = w.trainerid;
-        w1.date = DateTime.Parse(w.date).ToString("yyyy-MM-dd");
-        w1.duration = w.id * -1;
-        w1.Isgroup = w.Isgroup;
-        w1.hour = w.hour;
-        w1.IsReccuring = w.IsReccuring;
-        workoutDB.InsertWorkout(w1);
-        await LoadWeekWorkouts();
-        await Task.Yield();
+        
+            WorkoutDB workoutDB = new WorkoutDB();
+            Workout w1 = new Workout();
+            w1.trainerid = w.trainerid;
+            w1.date = DateTime.Parse(w.date).ToString("yyyy-MM-dd");
+            w1.duration = w.id * -1;
+            w1.Isgroup = w.Isgroup;
+            w1.hour = w.hour;
+            w1.IsReccuring = w.IsReccuring;
+            workoutDB.InsertWorkout(w1); //מכניס למסד העתק של האימון עם התאריך הנוכחי
+            await LoadWeekWorkouts(); //טוען מחדש את רשימת האימונים
+            await SelectDate(DateTime.Parse(w1.date));// טוען מחדש את היום אם נמחק אימון מחזורי
+            await SelectDate(DateTime.Parse(w.date));// טוען מחדש את היום אם נמחק אימון רגיל
+            StateHasChanged();
+        
+       
 
     }
 
@@ -471,7 +448,7 @@
 
 
             // אם האימון מחזורי, נוסיף אותו גם לימים המתאימים
-            if (workout.IsReccuring == "true")
+            if (workout.IsReccuring == "true" )
             {
                 if (DateTime.TryParse(workout.date, out DateTime workoutDate))
                 {
@@ -503,7 +480,23 @@
                 }
             }
             else
-            AllWeekWorkouts.Add(workout);
+            {
+                int count = 0;
+                foreach (Workout wd in DeletedWorkouts)
+                {
+                    if (wd.duration == workout.id * -1 && DateTime.Parse(wd.date) == DateTime.Parse(workout.date))
+                    {
+                        count++;
+
+                    }
+                }
+                if (count == 0&&workout.duration>0)
+                    AllWeekWorkouts.Add(workout);
+            }
+
+           
+            
+            
 
         }
 

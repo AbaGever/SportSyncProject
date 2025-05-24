@@ -64,7 +64,6 @@
         HttpClient httpClient = new HttpClient();
         Trainer trainer = new Trainer();
         var xx = await httpClient.PostAsJsonAsync<TrainerNew>(dataConstLink.Api.loginurl, tt);
-        //t = await xx.Content.ReadFromJsonAsync<Trainer>();
         if (tt != null)
         {
             if (tt.email.Contains("@gmail"))

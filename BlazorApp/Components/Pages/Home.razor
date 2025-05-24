@@ -7,34 +7,7 @@
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 
 
-<HeadContent>
-    <!-- Basic -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Mobile Metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Site Metas -->
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <title>SportSync</title>
-    <link rel="icon" href="/download.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
-
-    <!-- slider stylesheet -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-
-    <!-- bootstrap core css -->
-    <link rel="stylesheet" type="text/css" href="homepage/css/bootstrap.css">
-
-    <!-- fonts style -->
-    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&amp;display=swap" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="homepage/css/style.css" rel="stylesheet">
-    <!-- responsive style -->
-    <link href="homepage/css/responsive.css" rel="stylesheet">
-</HeadContent>
 
 
 <div>
@@ -106,6 +79,18 @@
                             <div class="col-lg-10 col-md-11 mx-auto">
                                 <div class="detail-box" style="color:white">
                                     <div >
+                                        @if(UserS!=null||coach!=null)
+                                        {
+                                            if(UserS !=null)
+                                            {
+                                                <h1>Welcome @(UserS.firstName)</h1>
+                                            }
+                                            if (coach != null)
+                                            {
+                                                <h1>Welcome @(coach.firstName)</h1>
+                                            }
+                                            
+                                        }
                                         <h3>
                                             Fitness
                                         </h3>
@@ -160,7 +145,7 @@
                             In today's world, fitness and sports have become an integral part of many people's lives, whether they are amateur athletes looking to maintain physical fitness or professional athletes striving for excellence in their sport. With the increasing awareness of the importance of fitness, effectively managing workout routines has become a more challenging task, requiring precise planning, performance tracking, and personalized adaptation for each athlete. There are several key reasons for the need for the site.
                         </p>
                         <div class="btn-box">
-                            <a href="">
+                            <a href="https://www.youtube.com/shorts/q_6pq5ntEQ4">
                                 READ MORE
                             </a>
                         </div>
@@ -225,15 +210,8 @@
         </div>
     </section>
 
-    <!-- end trainer section -->
-    <!-- contact section -->
-    <!-- end info_section -->
-    <!-- footer section -->
-    
-    <!-- footer section -->
 
-    <script src="homepage/js/jquery-3.4.1.min.js"></script>
-    <script src="homepage/js/bootstrap.js"></script>
+    
 
 
 
@@ -249,6 +227,14 @@
     {
         if (firstRender)
         {
+            try
+            {
+                await js.InvokeVoidAsync("initializeGradSchool");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("JS Init Error: " + ex.Message);
+            }
             var user1 = await MySession.GetAsync<Trainer>("Trainer");
             if (user1.Success)
             {
