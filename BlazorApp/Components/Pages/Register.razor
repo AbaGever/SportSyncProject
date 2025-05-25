@@ -81,7 +81,7 @@
                         <option value="@m">@m</option>
                     }
                 </select>
-                <input type="number" placeholder="Password" @bind-value="@coach.exp" />
+                <input type="number" placeholder="Experiece" @bind-value="@coach.exp" />
                 <button class="button-73" @onclick="RegCoach">Register</button>
             </div>
             <div class="form-container sign-in-container">
@@ -446,8 +446,9 @@
         {
             string a = cus.phonenumber;
             int p;
+            int l = int.Parse(a);
             bool bp = int.TryParse(a,out p);
-            if(bp)
+            if(bp&&l>0)
             {
                 b = await db.insertuser(cus);
                 navigationManager.NavigateTo("/");
@@ -471,7 +472,7 @@
             string a = coach.phonenumber;
             int p;
             bool bp = int.TryParse(a, out p);
-            if (bp)
+            if (bp &&coach.exp>=0&&coach.exp<100)
             {
                 b = await dbc.insertcoach(coach);
                 navigationManager.NavigateTo("/");
