@@ -6,22 +6,21 @@ using System.Threading.Tasks;
 
 namespace Models2
 {
-    public class TrainerNew
+    public class TrainerNew // הגדרת מחלקה חדשה בשם TrainerNew
     {
-        public TrainerNew()
+        public TrainerNew() // בנאי ריק – יוצר אובייקט בלי להכניס ערכים
         {
 
         }
 
-        public TrainerNew(string email, string pass)
+        public TrainerNew(string email, string pass) // בנאי עם שני פרמטרים: אימייל וסיסמה
         {
-            this.email = email;
-            this.pass = pass;
+            this.email = email; // מגדיר את שדה האימייל של האובייקט
+            this.pass = pass; // מגדיר את שדה הסיסמה של האובייקט
         }
 
-        public string email { get; set; }
+        public string email { get; set; } // שדה לאחסון כתובת האימייל
 
-        public string pass { get; set; }
-
+        public string pass { get; set; } // שדה לאחסון הסיסמה
     }
 }

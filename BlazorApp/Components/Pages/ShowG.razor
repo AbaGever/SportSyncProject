@@ -599,81 +599,171 @@
 
 
 @code {
+
     [Parameter]
+    // מסמן שהפרופרטי groupname מתקבל כפרמטר מבחוץ (לרוב מהקומפוננטה אב)
+
     public string groupname { get; set; }
+    // מחרוזת לאחסון שם הקבוצה שהועבר לפרמטר
+
     Coach coach = null;
+    // משתנה מסוג Coach, מאתחל ל-null, לאחסון מאמן נוכחי
+
     Trainer c = null;
+    // משתנה מסוג Trainer, מאתחל ל-null, לאחסון מתאמן נוכחי
+
     Group group;
+    // משתנה מסוג Group לאחסון פרטי הקבוצה הנבחרת
+
     private string Name = "";
+    // משתנה מחרוזת לאחסון שם, מאתחל למחרוזת ריקה
+
     private int max;
+    // משתנה מספרי לאחסון הקיבולת המקסימלית של הקבוצה
+
     List<Trainer> usersInGroup = new List<Trainer>();
+    // רשימת מתאמנים שמשויכים לקבוצה, מאתחל כרשימה ריקה
+
     GroupDB groupDB = new GroupDB();
+    // מופע של מחלקת גישה לנתוני קבוצות במסד הנתונים
+
     CoachDB coachDB = new CoachDB();
+    // מופע של מחלקת גישה לנתוני מאמנים במסד הנתונים
+
     Coach c1 = null;
+    // משתנה מסוג Coach, מאתחל ל-null, לאחסון מאמן נוסף/עזר
+
     string a;
+    // משתנה מחרוזת, לא מאותחל (כללי למטרות שונות)
+
     string Now = DateTime.Now.ToString("yyyy-mm-dd");
+    // מחרוזת המכילה את התאריך הנוכחי בפורמט שנה-חודש-יום (אולי טעות ב-mm זה דקות, אבל זה הסבר השורה)
+
     DateTime selectedHour = DateTime.Today;
+    // משתנה תאריך לשעת התחלה נבחרת, מאותחל להיום (ללא שעה מדויקת)
+
     string selectedhour = "";
+    // מחרוזת לשמירת שעה נבחרת כטקסט
+
     List<Drill> list;
+    // רשימת תרגילים מסוג Drill, לא מאותחל עדיין
 
     private DateTime selectedDate = DateTime.Today;
+    // משתנה תאריך לשמירת תאריך נבחר, מאותחל להיום
+
     private string maxDate;
+    // משתנה מחרוזת לאחסון תאריך מקסימלי (למשל להגבלת תאריכים)
+
     string error = "";
+    // משתנה מחרוזת לאחסון הודעות שגיאה, מאותחל ריק
+
     string duration = "";
+    // משתנה מחרוזת לאחסון משך זמן האימון, מאותחל ריק
+
     TrainerDB TrainerDB = new TrainerDB();
+    // מופע של מחלקת גישה לנתוני מתאמנים במסד הנתונים
+
     string IsReccuring1 = "false";
+    // מחרוזת לשמירת סטטוס האם האימון חוזר, מאותחל ל-"false"
+
     List<string> DaysOfWeek = new List<string>
     {
-    "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"
+        "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"
     };
+    // רשימת מחרוזות המכילה את שמות ימות השבוע באנגלית
+
     private List<string> SelectedOptions = new List<string>();
+    // רשימה לשמירת ימות השבוע שנבחרו (למשל לאימונים חוזרים), מאותחל כריק
 
     private void OnOptionChanged(ChangeEventArgs e, string option)
     {
         bool isChecked = (bool)e.Value;
+        // קבלת הערך הבוליאני אם האפשרות נבחרה או לא מתוך אירוע שינוי
+
         if (isChecked)
         {
-            // Add option to the selected list if checked
+            // הוספת האפשרות לרשימה SelectedOptions אם נבחרה
             SelectedOptions.Add(option);
         }
         else
         {
-            // Remove option from the selected list if unchecked
+            // הסרת האפשרות מהרשימה אם לא נבחרה
             SelectedOptions.Remove(option);
         }
     }
+
     async Task CheckReccuring()
     {
         if (SelectedOptions.Count > 0 || SelectedOptions != null)
         {
+            // אם נבחרו אפשרויות לימות שבוע
+
             IsReccuring1 = "true";
+            // קובע שהאימון חוזר
 
             foreach (var d in SelectedOptions)
             {
+                // עבור כל יום שנבחר ברשימה
+
                 DayOfWeek dayOfWeek = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), d, true);
+                // ממיר מחרוזת של יום לשם ENUM DayOfWeek
 
                 DateTime rd = GetNextDay(DateTime.Today, dayOfWeek);
+                // מחשב את התאריך הבא ליום השבוע שנבחר, החל מהיום
+
                 await CreateWorkout(rd, IsReccuring1);
-
-
+                // יוצר אימון לתאריך המחושב עם סטטוס חוזר
             }
         }
 
-        await CreateWorkout(selectedDate, "false");
+        int a = 0;
+        // משתנה לספירת התאמות של יום נבחר ברשימה
+
+        foreach (var d in SelectedOptions)
+        {
+            if (d == selectedDate.DayOfWeek.ToString())
+            {
+                a++;
+            }
+        }
+        // סופר אם יום התאריך שנבחר נמצא ברשימת הימים שנבחרו
+
+        if (a == 0)
+        {
+            // אם יום התאריך הנבחר לא נמצא ברשימה
+
+            await CreateWorkout(selectedDate, "false");
+            // יוצר אימון בתאריך הנבחר ללא סטטוס חוזר
+        }
 
         SelectedOptions.Clear();
+        // מנקה את רשימת האפשרויות שנבחרו
+
         selectedDate = DateTime.Today;
+        // מאפס את התאריך הנבחר להיום
+
         selectedHour = new DateTime();
+        // מאפס את השעה הנבחרת לערך ברירת מחדל
+
         duration = "";
-        
+        // מאפס את משך האימון למחרוזת ריקה
+
         StateHasChanged();
+        // מרענן את הממשק (UI)
     }
+
     static DateTime GetNextDay(DateTime startDate, DayOfWeek targetDay)
     {
-        // מחשב כמה ימים להוסיף כדי להגיע ליום הרצוי
+        // מחשב את התאריך הבא של יום השבוע הרצוי
+
         int daysToAdd = ((int)targetDay - (int)startDate.DayOfWeek + 7) % 7;
-        daysToAdd = daysToAdd == 0 ? 7 : daysToAdd; // מבטיח שהיום הרצוי הוא בשבוע הבא אם היום זהה
+        // מחשב כמה ימים להוסיף כדי להגיע ליום הרצוי, מחושב מודולו 7
+
+        daysToAdd = daysToAdd == 0 ? 7 : daysToAdd;
+        // אם היום הרצוי זהה ליום ההתחלה מוסיפים 7 ימים (ליום הבא בשבוע)
+
         return startDate.AddDays(daysToAdd);
+        // מחזיר את התאריך של היום הרצוי הבא
     }
 
     protected override async Task OnParametersSetAsync()
@@ -681,222 +771,326 @@
         if (groupname == null)
         {
             group = null;
+            // אם פרמטר הקבוצה ריק, מאפס את המשתנה לקבוצה
         }
         else
         {
-
             group = await groupDB.SelectByPkAsync(groupname);
+            // טוען את פרטי הקבוצה לפי שם הקבוצה מהמסד
+
             StateHasChanged();
+            // מרענן את הממשק
+
             max = group.maxcapacity;
+            // מאחסן את הקיבולת המקסימלית של הקבוצה
+
             c1 = await coachDB.SelectByPkAsync(group.coachid);
-
-
+            // טוען את פרטי המאמן של הקבוצה לפי מזהה המאמן
         }
     }
-
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-
         if (firstRender)
         {
             var name1 = await MySession.GetAsync<Coach>("Coach");
+            // מנסה לקבל את המאמן מה-session
+
             if (name1.Success)
             {
                 coach = name1.Value;
+                // מאחסן את המאמן אם נמצא
+
                 await LoadUsersInGroup();
+                // טוען את המתאמנים בקבוצה
 
                 StateHasChanged();
+                // מרענן את הממשק
             }
         }
+
         if (firstRender)
         {
-            
-                var user1 = await MySession.GetAsync<Trainer>("Trainer");
-                if (user1.Success)
-                {
-                    c = user1.Value;
-                    
-                    await LoadUsersInGroup();
-                    StateHasChanged();
-                }
-            
+            var user1 = await MySession.GetAsync<Trainer>("Trainer");
+            // מנסה לקבל את המתאמן מה-session
+
+            if (user1.Success)
+            {
+                c = user1.Value;
+                // מאחסן את המתאמן אם נמצא
+
+                await LoadUsersInGroup();
+                // טוען את רשימת המשתמשים בקבוצה
+
+                StateHasChanged();
+                // מרענן את הממשק
+            }
         }
-
-
-        
     }
-
 
     async Task doEditgroup()
     {
         GroupDB GDB = new GroupDB();
+        // יוצר מופע חדש של מחלקת גישה לקבוצות
 
-        group.maxcapacity = max;
-
-        int n = await GDB.UpdateAsync(group);
-
-        if (n > 0)
+        if (usersInGroup.Count <= max)
         {
-            await js.InvokeVoidAsync("alert", $"Updated Successfully!");
+            // בודק אם מספר המתאמנים לא חורג מהמקסימום
 
+            group.maxcapacity = max;
+            // מעדכן את הקיבולת המקסימלית של הקבוצה
+
+            int n = await GDB.UpdateAsync(group);
+            // מנסה לעדכן את פרטי הקבוצה במסד הנתונים
+
+            if (n > 0)
+            {
+                await js.InvokeVoidAsync("alert", $"Updated Successfully!");
+                // מציג הודעת הצלחה למשתמש
+            }
+            else
+            {
+                await js.InvokeVoidAsync("alert", $"Update failed!");
+                // מציג הודעת כשלון לעדכון
+            }
         }
         else
         {
-            await js.InvokeVoidAsync("alert", $"Update failed!");
+            await js.InvokeVoidAsync("alert", $"You have too many trainers in group to reduce maximum capacity");
+            // מציג הודעה שמשתמשים בקבוצה חורגים מהקיבולת החדשה
         }
     }
 
-
-
     public async Task LoadUsersInGroup()
     {
-
         TrainerDB userDB = new TrainerDB();
+        // יוצר מופע חדש לגישה למתאמנים
+
         List<Trainer> usersInGroup = await userDB.SelectAllInGroup(groupname);
+        // טוען את כל המתאמנים שמשויכים לקבוצה הנוכחית
 
         this.usersInGroup = usersInGroup;
+        // מעדכן את רשימת המתאמנים המקומית
 
         StateHasChanged();
+        // מרענן את הממשק
     }
 
     async Task RemoveUserFromGroup(int id)
     {
         TrainerDB userDB = new TrainerDB();
+        // יוצר מופע חדש לגישה למתאמנים
+
         Trainer user = await userDB.SelectByPkAsync(id);
+        // טוען את המתאמן לפי מזהה
 
         if (user != null)
         {
             user.groupname = null;
+            // מאפס את שייכות הקבוצה למתאמן
+
             await userDB.UpdateAsync(user);
+            // מעדכן את המתאמן במסד הנתונים
+
             await LoadUsersInGroup();
+            // טוען מחדש את רשימת המתאמנים בקבוצה
         }
     }
 
     async Task RemoveUserFromGroup2(int id)
     {
         TrainerDB userDB = new TrainerDB();
+        // יוצר מופע חדש לגישה למתאמנים
+
         Trainer user = await userDB.SelectByPkAsync(id);
+        // טוען את המתאמן לפי מזהה
 
         if (user != null)
         {
             user.groupname = null;
+            // מאפס את שייכות הקבוצה למתאמן
+
             await userDB.UpdateAsync(user);
+            // מעדכן את המתאמן במסד הנתונים
+
             await MySession.SetAsync("Trainer", user);
+            // מעדכן את המתאמן ב-session
+
             var name = await MySession.GetAsync<Trainer>("Trainer");
             if (name.Success)
             {
                 user = name.Value;
                 StateHasChanged();
+                // מרענן את הממשק לאחר עדכון המשתמש ב-session
             }
             await LoadUsersInGroup();
+            // טוען מחדש את רשימת המתאמנים בקבוצה
         }
-        navigationManager.NavigateTo("");
 
+        navigationManager.NavigateTo("");
+        // מנווט מחדש לדף הראשי (או דף ריק)
     }
+
     async Task JoinGroup(int id)
     {
         TrainerDB userDB = new TrainerDB();
+        // יוצר מופע חדש לגישה למתאמנים
+
         Trainer user = await userDB.SelectByPkAsync(id);
+        // טוען את המתאמן לפי מזהה
 
-        if (user != null)
+        if (user != null && usersInGroup.Count < group.maxcapacity)
         {
+            // בודק אם המתאמן קיים ואם יש מקום בקבוצה
+
             user.groupname = groupname;
+            // מייחס את המתאמן לקבוצה
+
             await userDB.UpdateAsync(user);
-            await MySession.SetAsync("Trainer", user);
-            var name = await MySession.GetAsync<Trainer>("Trainer");
-            if (name.Success)
-            {
-                c = name.Value;
-                StateHasChanged();
-            }
-            await LoadUsersInGroup(); 
-            StateHasChanged();
+            // מעדכן את המתאמן במסד הנתונים
+
+            await LoadUsersInGroup();
+            // טוען מחדש את רשימת המתאמנים בקבוצה
         }
-
-
+        else
+        {
+            await js.InvokeVoidAsync("alert", $"The group is full!");
+            // מציג הודעת שגיאה כשהקבוצה מלאה
+        }
     }
+
+
+
     async Task Delete(string gname)
     {
         TrainerDB trainerDB = new TrainerDB();
+        // יצירת מופע של מחלקת TrainerDB לניהול מאגר המאמנים
+
         List<Trainer> TS = await trainerDB.SelectAllInGroup(gname);
+        // שאילתת כל המאמנים המשתייכים לקבוצה בשם gname
 
         GroupDB groupDB = new GroupDB();
+        // יצירת מופע של מחלקת GroupDB לניהול מאגר הקבוצות
+
         Group group = await groupDB.SelectByPkAsync(gname);
+        // שליפת פרטי הקבוצה לפי המפתח gname
+
         if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {group.name}?"))
+        // הצגת חלון אישור למשתמש לפני מחיקת הקבוצה
+
         {
             foreach (Trainer trainer in TS)
             {
                 trainer.groupname = null;
+                // ביטול השיוך של המאמן לקבוצה
+
                 int n = await trainerDB.UpdateAsync(trainer);
+                // עדכון המאמן במאגר הנתונים לאחר שינוי השיוך
             }
+
             coach.groupname = null;
+            // ביטול השיוך של המאמן הראשי לקבוצה
 
             int a = await coachDB.UpdateAsync(coach);
+            // עדכון המאמן הראשי במאגר הנתונים
+
             if (a > 0)
             {
                 await MySession.SetAsync("Coach", coach);
+                // שמירת מידע מעודכן של המאמן הראשי במשתמש המושב (session)
+
                 var name = await MySession.GetAsync<Coach>("Coach");
+                // שליפת מידע המאמן המעודכן מתוך המושב
+
                 if (name.Success)
                 {
                     coach = name.Value;
+                    // עדכון משתנה המאמן הראשי עם הערך המעודכן
+
                     StateHasChanged();
+                    // רענון הממשק להגדרת השינויים
                 }
             }
+
             await groupDB.DeleteAsync(group);
+            // מחיקת הקבוצה ממאגר הנתונים
+
             await OnInitializedAsync();
+            // אתחול מחדש של רכיב או דף כדי לרענן נתונים
+
             navigationManager.NavigateTo("/");
+            // ניווט לדף הבית לאחר המחיקה
         }
     }
+
     async Task CreateWorkout(DateTime date, string isReccuring2)
     {
         WorkoutDB workoutDB = new WorkoutDB();
+        // יצירת מופע לניהול מאגר אימונים
+
         DrillsListDB drillsListDB = new DrillsListDB();
+        // יצירת מופע לניהול רשימת תרגילים (לא מנוצל בפועל בקוד זה)
 
         int totalDuration = (int.Parse(duration)) * 60;
+        // המרת משך האימון משניות לדקות (או להפך) - המרה של מחרוזת למספר שלם
 
-        // Calculate total duration of the selected drills
-
-
-        // Convert the selected DateTime to an integer
         int hourAsInt = ConvertDateTimeToInt(selectedHour);
+        // המרת זמן נבחר (DateTime) למספר שלם בפורמט שעה ודקות (HHmm)
+
         if (hourAsInt == -1)
         {
             Console.WriteLine("Invalid DateTime input. Workout creation aborted.");
+            // הדפסת שגיאה אם זמן לא תקין
+
             return;
+            // יציאה מהפונקציה במקרה של שגיאה בזמן
         }
+
         List<Trainer> LT = await TrainerDB.SelectAllInGroup(groupname);
-        // Create a new workout instance
+        // שליפת כל המאמנים בקבוצה בשם groupname
+
         foreach (var t in LT)
         {
             Workout newWorkout = new Workout
                 {
                     trainerid = t.id,
-                    date = date.ToString("yyyy-MM-dd"),
-                    duration = totalDuration,
-                    Isgroup = "true",
-                    hour = hourAsInt, // Convert the integer to string for storage
-                    IsReccuring = isReccuring2
+                    // זיהוי המאמן המשויך לאימון
 
+                    date = date.ToString("yyyy-MM-dd"),
+                    // המרת תאריך האימון לפורמט מחרוזת "שנה-חודש-יום"
+
+                    duration = totalDuration,
+                    // הגדרת משך האימון בשניות
+
+                    Isgroup = "true",
+                    // סימון שהאימון הוא קבוצתי (מחרוזת "true")
+
+                    hour = hourAsInt,
+                    // הגדרת שעה כמספר שלם בפורמט HHmm
+
+                    IsReccuring = isReccuring2
+                    // הגדרת האם האימון הוא מחזורי בהתאם לפרמטר שהתקבל
                 };
 
-            // Insert the workout using InsertGetWorkout and retrieve the workout object with the new ID
-
             Workout createdWorkout = await workoutDB.InsertGetWorkout(newWorkout);
+            // הוספת האימון למסד הנתונים וקבלת האובייקט שנוצר כולל ה-ID
 
             if (createdWorkout != null)
             {
                 int workoutId = createdWorkout.id;
-
-
+                // אחסון ה-ID של האימון שנוצר (לא מנוצל בהמשך הקוד)
             }
         }
     }
+
     private int ConvertDateTimeToInt(DateTime dateTime)
     {
-        // Combine the hour and minute into an integer
         int combined = dateTime.Hour * 100 + dateTime.Minute;
+        // המרת זמן לייצוג מספרי בפורמט HHmm (למשל 13:45 יהפוך ל-1345)
+
         return combined;
+        // החזרת המספר המיוצג
     }
+
 
 }

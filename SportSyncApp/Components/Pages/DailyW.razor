@@ -112,46 +112,81 @@
 
 
 @code {
+    // אזור קוד ב-Blazor Component להצגת האימונים של המאמן בתאריך הנוכחי
+
     Trainer trainer { get; set; }
+    // משתנה המחזיק את פרטי המאמן המחובר
+
     List<Workout> wd = new List<Workout>();
+    // רשימה של אימונים שמאוחסנים לאחר שליפה מהשרת
+
     HttpClient httpClient = new HttpClient();
+    // אובייקט לשליחת בקשות HTTP לשרת
+
     string ResultStr = "";
+    // מחרוזת לאחסון שגיאות במידת הצורך
+
     DateTime selected = DateTime.Today;
+    // תאריך נבחר, אתחול כברירת מחדל ליום הנוכחי
+
     protected override async Task OnInitializedAsync()
+    // פעולה אסינכרונית שמתבצעת כאשר הקומפוננטה נטענת
+
     {
         string jsonString = await SecureStorage.Default.GetAsync("trn");
+        // ניסיון לשלוף את פרטי המשתמש מהאחסון המאובטח
+
         if (jsonString == null)
+        // אם לא נמצאו נתונים – יצירת אובייקט מאמן חדש
+
         {
             trainer = new Trainer();
         }
         else
         {
             trainer = JsonSerializer.Deserialize<Trainer>(jsonString);
-            try
+            // המרת המידע מהאחסון לאובייקט מאמן
 
+            try
             {
                 string s = selected.ToString("yyyy-MM-dd");
-                DateTime today = DateTime.ParseExact(s,"yyyy-MM-dd", CultureInfo.InvariantCulture);
+                // המרת התאריך לפורמט סטנדרטי (למניעת פורמטים משתנים)
 
-                wd = await httpClient.GetFromJsonAsync<List<Workout>>($"{dataConstLink.Api.geturl}{trainer.id},{today.Day},{today.Month},{today.Year}");
+                DateTime today = DateTime.ParseExact(s, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                // יצירת אובייקט תאריך מתואם לפי פורמט קבוע
+
+                wd = await httpClient.GetFromJsonAsync<List<Workout>>(
+                    $"{dataConstLink.Api.geturl}{trainer.id},{today.Day},{today.Month},{today.Year}");
+                // שליפת רשימת אימונים ליום הנוכחי מהשרת עבור המאמן
             }
             catch (Exception ex)
             {
                 ResultStr = ex.Message;
+                // אחסון הודעת שגיאה אם הבקשה נכשלה
             }
         }
 
         if (trainer.id <= 0)
+        // אם מזהה המשתמש לא תקין – הפניה לעמוד התחברות
+
         {
             navigateMgr.NavigateTo("/Lg", replace: true);
         }
-
     }
+
     private string GetFormattedHour(int hour)
+    // פונקציה שמקבלת שעה בפורמט מספרי (למשל 830) ומחזירה מחרוזת בפורמט "08:30"
+
     {
         int h = hour / 100;
+        // חילוץ שעות מהמספר
+
         int m = hour % 100;
+        // חילוץ דקות מהמספר
+
         string a = h.ToString("D2") + ":" + m.ToString("D2");
+        // החזרת תוצאה עם אפסים מובילים, מופרדת בנקודתיים
+
         return a;
     }
 }

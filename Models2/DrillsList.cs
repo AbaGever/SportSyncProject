@@ -8,19 +8,20 @@ using System.Xml.Linq;
 
 namespace Models2
 {
-    public class drillslist
+    public class drillslist // הגדרת מחלקה בשם drillslist – מייצגת קישור בין תרגיל לאימון
     {
-        public int Workoutid { get; set; }
-        public string Drillname { get; set; }
+        public int Workoutid { get; set; } // מזהה של האימון שאליו שייך התרגיל
+        public string Drillname { get; set; } // שם התרגיל ששייך לאימון
 
-        public drillslist()
+        public drillslist() // בנאי ריק – יוצר אובייקט בלי להכניס ערכים
         {
 
         }
-        public drillslist(int wi,string di)
+
+        public drillslist(int wi, string di) // בנאי עם פרמטרים – יוצר אובייקט עם ערכים
         {
-            Workoutid = wi;
-            Drillname = di;
+            Workoutid = wi; // שומר את מזהה האימון
+            Drillname = di; // שומר את שם התרגיל
         }
     }
 }

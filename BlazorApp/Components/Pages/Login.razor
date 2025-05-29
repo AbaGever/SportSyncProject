@@ -357,120 +357,118 @@
     }
 </script>
 @code {
-    private string UserEmail = "";
-    private string CoachEmail = "";
-    private string CoachPassword = "";
-    private string UserPassword = "";
-    private bool isFirstRender = true;
-    private bool isLogin = false;
-    private string panelClass
+    // פתיחת בלוק קוד של Blazor
+
+    private string UserEmail = ""; // משתנה לשמירת כתובת המייל של המתאמן
+    private string CoachEmail = ""; // משתנה לשמירת כתובת המייל של המאמן
+    private string CoachPassword = ""; // משתנה לשמירת סיסמת המאמן
+    private string UserPassword = ""; // משתנה לשמירת סיסמת המתאמן
+
+    private bool isFirstRender = true; // משתנה לבדיקת האם זה הרינדור הראשון של הקומפוננטה
+    private bool isLogin = false; // משתנה לבדיקת מצב הלוגין (האם מוצג טופס התחברות)
+
+    private string panelClass // פרופרטי שמחזיר מחלקת CSS לפי מצב הלוגין
     {
         get
         {
-            if (isLogin)
+            if (isLogin) // אם המשתמש בלוגין
             {
-                return "login-panel";
+                return "login-panel"; // מחזיר מחלקת CSS ללוגין
             }
-            return "";
+            return ""; // אחרת לא מחזיר כלום
         }
     }
 
-    private void TogglePanel()
+    private void TogglePanel() // פעולה להחלפת מצב תצוגת הלוגין
     {
-        isLogin = !isLogin;
-        if (js != null)
+        isLogin = !isLogin; // משנה את מצב הלוגין לערך ההפוך
+        if (js != null) // אם js קיים
         {
-            js.InvokeVoidAsync("animatePanel", isLogin);
+            js.InvokeVoidAsync("animatePanel", isLogin); // קורא לפונקציית JS שמבצעת אנימציה לפאנל
         }
-        StateHasChanged();
+        StateHasChanged(); // מעדכן את ה-UI
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender) // פעולה שמתבצעת אחרי שהקומפוננטה מרונדרת
     {
-        if (firstRender)
+        if (firstRender) // אם זה הרינדור הראשון
+        {
+            if (js != null) // אם js קיים
+            {
+                await js.InvokeVoidAsync("initializePanel"); // קורא לפונקציית JS לאתחול הפאנל
+            }
+        }
+    }
+
+    public async Task LogInToTrainer() // פעולה לביצוע התחברות כמתאמן
+    {
+        TrainerDB UserDB = new TrainerDB(); // יצירת מופע של DB למתאמנים
+        Trainer User = await UserDB.LoginAsync(UserEmail, UserPassword); // ניסיון להתחבר עם המייל והסיסמה
+
+        if (User != null) // אם החיבור הצליח
+        {
+            if (User.emailaddress.Contains("@gmail")) // אם האימייל תקין
+            {
+                if (MySession != null) // אם session קיים
+                {
+                    await MySession.SetAsync("Trainer", User); // שמירת המשתמש ב-session
+                }
+
+                if (navigationManager != null) // אם נוויגציה קיימת
+                {
+                    navigationManager.NavigateTo("/"); // ניווט לעמוד הבית
+                }
+            }
+            else // אם האימייל לא תקין
+            {
+                await js.InvokeVoidAsync("alert", $"Email Is Wrong"); // הצגת התראה על אימייל שגוי
+            }
+        }
+        else // אם לא נמצא משתמש תואם
         {
             if (js != null)
             {
-                await js.InvokeVoidAsync("initializePanel");
+                await js.InvokeVoidAsync("alert", "The email or password you entered does not match!"); // התראה על פרטים שגויים
             }
+            UserEmail = ""; // איפוס שדה מייל
+            UserPassword = ""; // איפוס שדה סיסמה
         }
     }
 
-    public async Task LogInToTrainer()
+    public async Task LogInToCoach() // פעולה לביצוע התחברות כמאמן
     {
-        TrainerDB UserDB = new TrainerDB();
-        Trainer User = await UserDB.LoginAsync(UserEmail, UserPassword);
-        if (User != null)
+        CoachDB CoachDB = new CoachDB(); // יצירת מופע של DB למאמנים
+        Coach Coach = await CoachDB.LoginAsync(CoachEmail, CoachPassword); // ניסיון התחברות עם המייל והסיסמה
+
+        if (Coach != null) // אם נמצא מאמן תואם
         {
-            if (User.emailaddress.Contains("@gmail"))
+            if (Coach.emailaddress.Contains("@gmail")) // אם האימייל תקין
             {
-                if (MySession != null)
+                if (MySession != null) // אם session קיים
                 {
-
-                    await MySession.SetAsync("Trainer", User);
-
+                    await MySession.SetAsync("Coach", Coach); // שמירת המאמן ב-session
                 }
-                if (navigationManager != null)
+
+                if (navigationManager != null) // אם נוויגציה קיימת
                 {
-
-                    navigationManager.NavigateTo("/");
-
+                    navigationManager.NavigateTo("/"); // ניווט לעמוד הבית
                 }
-                
             }
-            else
+            else // אם האימייל לא תקין
             {
-                await js.InvokeVoidAsync("alert", $"Email Is Wrong");
+                await js.InvokeVoidAsync("alert", $"Email Is Wrong"); // הצגת התראה על אימייל שגוי
             }
         }
-        else
+        else // אם לא נמצא מאמן תואם
         {
             if (js != null)
             {
-                await js.InvokeVoidAsync("alert", "The email or password you entered does not match!");
+                await js.InvokeVoidAsync("alert", "The email or password you entered does not match!"); // התראה על פרטים שגויים
             }
-            UserEmail = "";
-            UserPassword = "";
-        }
-    }
-
-    public async Task LogInToCoach()
-    {
-        CoachDB CoachDB = new CoachDB();
-        Coach Coach = await CoachDB.LoginAsync(CoachEmail, CoachPassword);
-
-        if (Coach != null)
-        {
-            if (Coach.emailaddress.Contains("@gmail"))
-            {
-                if (MySession != null)
-                {
-
-                    await MySession.SetAsync("Coach", Coach);
-
-                }
-                if (navigationManager != null)
-                {
-
-                    navigationManager.NavigateTo("/");
-
-
-                }
-            }
-            else
-            {
-                await js.InvokeVoidAsync("alert", $"Email Is Wrong");
-            }
-        }
-        else
-        {
-            if (js != null)
-            {
-                await js.InvokeVoidAsync("alert", "The email or password you entered does not match!");
-            }
-            CoachEmail = "";
-            CoachPassword = "";
+            CoachEmail = ""; // איפוס שדה מייל
+            CoachPassword = ""; // איפוס שדה סיסמה
         }
     }
 }
+
 

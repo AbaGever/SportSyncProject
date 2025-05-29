@@ -64,65 +64,123 @@
 </body>
 
 @code {
+    // אזור קוד ב-Blazor Component לצורך התחברות ורישום משתמש
+
     Trainer cus = new Trainer();
+    // יצירת מופע חדש של אובייקט מסוג Trainer
+
     string email;
     string first;
     string last;
     string pass;
     string phone;
+    // הגדרת משתנים לקליטת ערכים מטופס: אימייל, שם פרטי, שם משפחה, סיסמה וטלפון
+
     private async Task RegisterAndLogin()
+    // פעולה אסינכרונית שמבצעת רישום ואז התחברות אם האימייל תקין
+
     {
         cus.emailaddress = email;
+        // מגדיר את כתובת האימייל של המאמן מהקלט של המשתמש
+
         cus.firstName = first;
+        // מגדיר את השם הפרטי של המאמן מהקלט של המשתמש
+
         cus.lastName = last;
+        // מגדיר את שם המשפחה של המאמן מהקלט של המשתמש
+
         cus.password = pass;
+        // מגדיר את הסיסמה של המאמן מהקלט של המשתמש
+
         cus.phonenumber = phone;
+        // מגדיר את מספר הטלפון של המאמן מהקלט של המשתמש
+
         cus.groupname = "ewewew";
+        // מגדיר שם קבוצה סטטי כלשהו (ייתכן לשם בדיקה בלבד)
+
         cus.isadmin = "false";
+        // מציין שהמאמן אינו אדמין
+
         cus.id = 0;
+        // מגדיר את ה-id לאפס (בהנחה שמסד הנתונים מייצר id חדש)
+
         cus.datejoined = "ekrher";
+        // שדה תאריך הצטרפות מוקצה בערך שרירותי ולא תקין
 
         HttpClient httpClient = new HttpClient();
+        // יצירת מופע חדש של HttpClient לשליחת בקשות HTTP
+
         var xx = await httpClient.PostAsJsonAsync<Trainer>(dataConstLink.Api.regurl, cus);
+        // שולח בקשת POST עם אובייקט המאמן לכתובת API לרישום
+
         try
         {
-
             if (cus.emailaddress.Contains("@gmail"))
+            // בדיקה אם כתובת האימייל מכילה "@gmail" (סוג של תנאי סינון)
+
             {
                 TrainerNew tt = new TrainerNew();
+                // יצירת מופע חדש של אובייקט כניסה
+
                 tt.email = cus.emailaddress;
-                tt.pass = cus.password; Trainer trainer = new Trainer();
+                // מקצה את האימייל שנרשם לשדה האימייל של התחברות
+
+                tt.pass = cus.password;
+                // מקצה את הסיסמה לשדה סיסמה של התחברות
+
+                Trainer trainer = new Trainer();
+                // יצירת מופע ריק של מאמן לצורך קבלת תוצאה מהשרת
+
                 var yy = await httpClient.PostAsJsonAsync<TrainerNew>(dataConstLink.Api.loginurl, tt);
-                //t = await xx.Content.ReadFromJsonAsync<Trainer>();
+                // שולח בקשת POST לכתובת API של התחברות עם פרטי המשתמש
+
                 if (tt != null)
+                // בדיקה אם האובייקט tt (לא תוצאת הבקשה) אינו null – לא הגיוני לוגית
+
                 {
                     trainer = await yy.Content.ReadFromJsonAsync<Trainer>();
+                    // קריאת תוכן התגובה והמרתו לאובייקט Trainer
+
                     string jsonOSL = JsonSerializer.Serialize(trainer);
+                    // ממיר את אובייקט המאמן למחרוזת JSON
+
                     try
                     {
                         await SecureStorage.Default.SetAsync("trn", jsonOSL);
+                        // שומר את פרטי המשתמש המאוחסנים ב-SecureStorage תחת מפתח "trn"
                     }
                     catch (Exception storageEx)
                     {
                         await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
+                        // מציג הודעת שגיאה אם שמירת הנתונים נכשלה
+
                         return;
                     }
+
                     navigateMg.NavigateTo("/", replace: true);
+                    // מעביר את המשתמש לעמוד הבית לאחר התחברות מוצלחת
+
                     return;
                 }
             }
             else
             {
                 Exception storageEx = new Exception();
+                // יצירת חריגה כללית (ללא תוכן) – לא תקין
+
                 await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
+                // מציג הודעת שגיאה עם טקסט חריגה ריק
+
                 return;
-                
             }
         }
         catch (Exception storageEx)
         {
             await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
+            // טיפול בשגיאה כללית – מציג הודעת שגיאה אם משהו משתבש במהלך התהליך כולו
+
             return;
         }
     }
 }
+

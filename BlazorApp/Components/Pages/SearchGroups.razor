@@ -66,7 +66,7 @@
         </div>
     </header>
 </div>
-<div>
+
     <center>
         <section class=" slider_section position-relative">
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -90,6 +90,7 @@
                 </div>
             </div>
         </section>
+        
         <select class="form-control mb-3" @onchange="OnChange">
             <option value="default">Select Your Sport</option>
             @foreach (string m in Sports)
@@ -133,7 +134,7 @@
         }
 
     </center>
-</div>
+
 <style>
 
     .ALLLL {
@@ -448,72 +449,76 @@
 </style>
 
 @code {
-    List<string> Sports = new List<string>
-{
-    "Soccer",
-    "Basketball",
-    "Tennis",
-    "Swimming",
-    "Running",
-    "Cycling",
-    "Boxing",
-    "Martial Arts",
-    "Volleyball",
-    "Baseball",
-    "Gymnastics",
-    "Rowing",
-    "Wrestling",
-    "CrossFit",
-    "Climbing",
-    "Surfing",
-    "American Football",
-    "Table Tennis",
-    "Badminton",
-    "Handball",
-    "Rugby",
-    "Skiing",
-    "Snowboarding",
-    "Skateboarding",
-    "Golf",
-    "Cricket",
-    "Fencing",
-    "Karate",
-    "Judo",
-    "Triathlon"
-};
-    Coach coach = null;
-    Trainer c = null;
-    List<Group> list;
-    string sport ;
-    private void OnChange(ChangeEventArgs args)
-    {
-        sport = args.Value.ToString();
-    }
-    async Task Search()
-    {
-        GroupDB groupDB = new GroupDB();
-        list = await groupDB.SelectBySportAsync(sport);
-    }
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
+    // פתיחת בלוק קוד של Blazor
 
-        if (firstRender)
+    List<string> Sports = new List<string> // רשימת ענפי ספורט לבחירה
+    {
+        "Soccer", // כדורגל
+        "Basketball", // כדורסל
+        "Tennis", // טניס
+        "Swimming", // שחייה
+        "Running", // ריצה
+        "Cycling", // רכיבה על אופניים
+        "Boxing", // איגרוף
+        "Martial Arts", // אומנויות לחימה
+        "Volleyball", // כדורעף
+        "Baseball", // בייסבול
+        "Gymnastics", // התעמלות
+        "Rowing", // חתירה
+        "Wrestling", // היאבקות
+        "CrossFit", // קרוספיט
+        "Climbing", // טיפוס
+        "Surfing", // גלישה
+        "American Football", // פוטבול אמריקאי
+        "Table Tennis", // טניס שולחן
+        "Badminton", // בדמינטון
+        "Handball", // כדוריד
+        "Rugby", // רוגבי
+        "Skiing", // סקי
+        "Snowboarding", // סנובורד
+        "Skateboarding", // סקייטבורד
+        "Golf", // גולף
+        "Cricket", // קריקט
+        "Fencing", // סיף
+        "Karate", // קראטה
+        "Judo", // ג׳ודו
+        "Triathlon" // טריאתלון
+    };
+
+    Coach coach = null; // משתנה לשמירת אובייקט המאמן המחובר
+    Trainer c = null; // משתנה לשמירת אובייקט המתאמן המחובר
+    List<Group> list; // רשימת קבוצות לפי ענף ספורט
+    string sport; // משתנה לשמירת הענף הספורט שנבחר
+
+    private void OnChange(ChangeEventArgs args) // פעולה שמופעלת כאשר המשתמש משנה בחירה בענף ספורט
+    {
+        sport = args.Value.ToString(); // שמירת הענף הספורט הנבחר למשתנה
+    }
+
+    async Task Search() // פעולה שמבצעת חיפוש קבוצות לפי הענף שנבחר
+    {
+        GroupDB groupDB = new GroupDB(); // יצירת מופע של DB לקבוצות
+        list = await groupDB.SelectBySportAsync(sport); // שליפת קבוצות לפי הענף הספורטיבי
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) // פעולה שרצה לאחר שהקומפוננטה מרונדרת
+    {
+        if (firstRender) // אם זהו הרינדור הראשון
         {
-            var name1 = await MySession.GetAsync<Coach>("Coach");
-            if (name1.Success)
+            var name1 = await MySession.GetAsync<Coach>("Coach"); // ניסיון לשלוף את המאמן מה-session
+            if (name1.Success) // אם נמצא מאמן
             {
-                coach = name1.Value;
-                StateHasChanged();
+                coach = name1.Value; // שמירת המאמן למשתנה
+                StateHasChanged(); // רענון ה-UI
             }
 
-            var user1 = await MySession.GetAsync<Trainer>("Trainer");
-            if (user1.Success)
+            var user1 = await MySession.GetAsync<Trainer>("Trainer"); // ניסיון לשלוף את המתאמן מה-session
+            if (user1.Success) // אם נמצא מתאמן
             {
-                c = user1.Value;
-                StateHasChanged();
+                c = user1.Value; // שמירת המתאמן למשתנה
+                StateHasChanged(); // רענון ה-UI
             }
-
-
         }
     }
 }
+

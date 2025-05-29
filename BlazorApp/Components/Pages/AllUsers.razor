@@ -136,28 +136,46 @@ else
 
 @code {
     List<Trainer> ps;
+    // רשימת מאמנים לאחסון הנתונים
+
     protected override async Task OnInitializedAsync()
     {
         TrainerDB pdb = new TrainerDB();
+        // יצירת מופע לניהול מאגר המאמנים
+
         ps = (List<Trainer>)await pdb.GetAllAsync();
+        // שליפת כל המאמנים ושמירתם ברשימה ps
     }
+
     Trainer c = null;
+    // משתנה לשמירת המאמן הנוכחי
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
+        // בדיקה אם זו הריצה הראשונה של הרינדור לאחר הטעינה
+
         {
             var name = await MySession.GetAsync<Trainer>("Trainer");
+            // שליפת מאמן מתוך מושב המשתמש
+
             if (name.Success && name.Value.isadmin == "true")
+            // בדיקה אם השליפה הצליחה והמאמן הוא מנהל מערכת
+
             {
                 c = name.Value;
+                // אחסון המאמן המשתמש במשתנה c
+
                 StateHasChanged();
+                // רענון הממשק לאחר עדכון המשתנה
             }
             else
                 navigationManager.NavigateTo("/");
+            // ניווט לעמוד הבית אם לא מנהל מערכת
         }
     }
-
 }
+
 <style>
 
     table, th, td {

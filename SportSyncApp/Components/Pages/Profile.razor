@@ -68,42 +68,74 @@
 
 
 @code {
+    // אזור קוד ב-Blazor Component לניהול שינוי סיסמה והתנתקות
+
     public Trainer trainer { get; set; }
+    // מאפיין ציבורי שמייצג את המשתמש המחובר (מאמן)
+
     string NewP;
+    // משתנה לאחסון הסיסמה החדשה שהוזנה על ידי המשתמש
+
     private async Task ChangeP()
+    // פעולה אסינכרונית לשינוי סיסמה של המשתמש
+
     {
         trainer.password = NewP;
-        HttpClient httpClient = new HttpClient();
-        var response = await httpClient.PutAsJsonAsync<Trainer>(dataConstLink.Api.ChangeURL, trainer);
-        if (response.IsSuccessStatusCode)
-        {
+        // עדכון שדה הסיסמה של האובייקט לערך החדש
 
+        HttpClient httpClient = new HttpClient();
+        // יצירת מופע חדש של HttpClient לשליחת בקשת HTTP
+
+        var response = await httpClient.PutAsJsonAsync<Trainer>(dataConstLink.Api.ChangeURL, trainer);
+        // שליחת בקשת PUT עם אובייקט המאמן לצורך עדכון הסיסמה
+
+        if (response.IsSuccessStatusCode)
+        // בדיקה אם הבקשה הצליחה (סטטוס 200)
+
+        {
             await Application.Current.MainPage.DisplayAlert("Info", "Password Changed", "Ok");
+            // הצגת הודעה למשתמש שהסיסמה שונתה בהצלחה
         }
     }
+
     private async Task Logout()
+    // פעולה אסינכרונית שמבצעת התנתקות של המשתמש
+
     {
         SecureStorage.RemoveAll();
+        // מחיקת כל המידע מהאחסון המאובטח של המשתמש
+
         navigateMgr.NavigateTo("/", replace: true);
+        // הפניה לעמוד הבית לאחר ההתנתקות
     }
 
     protected override async Task OnInitializedAsync()
+    // פעולה אסינכרונית שמופעלת כאשר הרכיב נטען לראשונה
+
     {
         string jsonString = await SecureStorage.Default.GetAsync("trn");
+        // ניסיון לשלוף את המידע של המשתמש מהאחסון המאובטח
+
         if (jsonString == null)
+        // אם לא קיים מידע באחסון המאובטח
+
         {
             trainer = new Trainer();
+            // יצירת אובייקט מאמן חדש ריק
         }
         else
         {
             trainer = JsonSerializer.Deserialize<Trainer>(jsonString);
-
+            // המרת המידע המאוחסן לאובייקט מסוג Trainer
         }
 
         if (trainer.id <= 0 || trainer == null)
+        // בדיקה אם המשתמש אינו תקין או לא קיים – מפנה לדף התחברות
+
         {
             navigateMgr.NavigateTo("/Lg", replace: true);
+            // הפניה לדף התחברות במקרה של משתמש לא חוקי
         }
-        
     }
 }
+

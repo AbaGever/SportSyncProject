@@ -138,6 +138,10 @@
             }
             <br />
             <button class="button-24" role="button" @onclick="Logout">Log out of your Account</button>
+            @if (c != null)
+            {
+                <p>You may change you password by logging in through Mobile -MAUI</p>
+            }
         </center>
 
 
@@ -451,114 +455,105 @@
 
 
     @code {
-    private string Name = "";
+    // פתיחת בלוק קוד של Blazor
 
-    bool showPass = false;
+    private string Name = ""; // משתנה לאחסון שם חדש לעדכון
 
-    Trainer c = null;
-    Coach coach = null;
-    TrainerDB userDB = new TrainerDB();
+    bool showPass = false; // משתנה בוליאני שמציין אם להציג את הסיסמה
 
+    Trainer c = null; // משתנה לאחסון אובייקט של מתאמן
+    Coach coach = null; // משתנה לאחסון אובייקט של מאמן
+    TrainerDB userDB = new TrainerDB(); // יצירת מופע של מסד נתונים למתאמנים
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender) // פעולה שרצה אחרי הרינדור של הקומפוננטה
     {
-        if (firstRender)
+        if (firstRender) // אם זה הרינדור הראשון
         {
             // Retrieve Trainer from session
-            var name = await MySession.GetAsync<Trainer>("Trainer");
+            var name = await MySession.GetAsync<Trainer>("Trainer"); // שליפת מתאמן מהסשן
             if (name.Success)
             {
-                c = name.Value;
+                c = name.Value; // שמירת האובייקט למשתנה
             }
 
             // Retrieve Coach from session
-            var name1 = await MySession.GetAsync<Coach>("Coach");
+            var name1 = await MySession.GetAsync<Coach>("Coach"); // שליפת מאמן מהסשן
             if (name1.Success)
             {
-                coach = name1.Value;
+                coach = name1.Value; // שמירת האובייקט למשתנה
             }
 
             // If no user is found, redirect to login page
-            if (c == null && coach == null)
+            if (c == null && coach == null) // אם לא נמצא משתמש מחובר
             {
-                navigationManager.NavigateTo("/login");
+                navigationManager.NavigateTo("/login"); // ניתוב לעמוד התחברות
             }
 
-            StateHasChanged();
+            StateHasChanged(); // רענון ממשק
         }
     }
-    async Task doEditUser()
-    {
 
-        if (!string.IsNullOrEmpty(Name))
+    async Task doEditUser() // פעולה לעדכון שם משתמש (מתאמן)
+    {
+        if (!string.IsNullOrEmpty(Name)) // בדיקה שהשם לא ריק
         {
-            c.firstName = Name;
-            int n = await userDB.UpdateAsyncWithoutGroup(c);
-            if (n > 0)
+            c.firstName = Name; // עדכון שם המשתמש
+            int n = await userDB.UpdateAsyncWithoutGroup(c); // עדכון במסד נתונים ללא שינוי קבוצה
+
+            if (n > 0) // אם העדכון הצליח
             {
-                await js.InvokeVoidAsync("alert", $"Updated Successfully!");
-                await MySession.SetAsync("Trainer", c);
-                var name = await MySession.GetAsync<Trainer>("Trainer");
+                await js.InvokeVoidAsync("alert", $"Updated Successfully!"); // הצגת הודעה
+                await MySession.SetAsync("Trainer", c); // עדכון הסשן עם המשתמש החדש
+                var name = await MySession.GetAsync<Trainer>("Trainer"); // שליפת משתמש מהסשן
                 if (name.Success)
                 {
-                    c = name.Value;
-                    StateHasChanged();
+                    c = name.Value; // עדכון המשתנה
+                    StateHasChanged(); // רענון ממשק
                 }
-
             }
         }
         else
         {
-            await js.InvokeVoidAsync("alert", $"Update failed!");
+            await js.InvokeVoidAsync("alert", $"Update failed!"); // הודעת כישלון
             return;
         }
-
-
-
-
-
-
-
-
     }
-    async Task doEditCoach()
+
+    async Task doEditCoach() // פעולה לעדכון שם משתמש (מאמן)
     {
+        CoachDB CoachDB = new CoachDB(); // יצירת מופע של מסד נתונים למאמנים
 
-        CoachDB CoachDB = new CoachDB();
-
-        if (!string.IsNullOrEmpty(Name))
+        if (!string.IsNullOrEmpty(Name)) // בדיקה שהשם לא ריק
         {
-            coach.firstName = Name;
-            int n = await CoachDB.UpdateAsyncWithoutGroup(coach);
-            if (n > 0)
+            coach.firstName = Name; // עדכון שם המאמן
+            int n = await CoachDB.UpdateAsyncWithoutGroup(coach); // עדכון במסד נתונים ללא שינוי קבוצה
+
+            if (n > 0) // אם העדכון הצליח
             {
-                await js.InvokeVoidAsync("alert", $"Updated Successfully!");
-                await MySession.SetAsync("Coach", coach);
-                var name = await MySession.GetAsync<Coach>("Coach");
+                await js.InvokeVoidAsync("alert", $"Updated Successfully!"); // הצגת הודעה
+                await MySession.SetAsync("Coach", coach); // עדכון הסשן עם המאמן החדש
+                var name = await MySession.GetAsync<Coach>("Coach"); // שליפת המאמן מהסשן
                 if (name.Success)
                 {
-                    coach = name.Value;
-                    StateHasChanged();
+                    coach = name.Value; // עדכון המשתנה
+                    StateHasChanged(); // רענון ממשק
                 }
             }
         }
-
-
         else
         {
-            await js.InvokeVoidAsync("alert", $"Update failed!");
+            await js.InvokeVoidAsync("alert", $"Update failed!"); // הודעת כישלון
             return;
         }
-
-
-
     }
-    async Task Logout()
+
+    async Task Logout() // פעולה שמבצעת יציאה מהמערכת
     {
-        await MySession.SetAsync("Trainer", null);
-        await MySession.SetAsync("Coach", null);
-        navigationManager.NavigateTo("");
+        await MySession.SetAsync("Trainer", null); // מחיקת המתאמן מהסשן
+        await MySession.SetAsync("Coach", null); // מחיקת המאמן מהסשן
+        navigationManager.NavigateTo(""); // ניתוב לעמוד הבית
     }
-    }
+}
+
 }
 

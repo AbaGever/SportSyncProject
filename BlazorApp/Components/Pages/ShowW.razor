@@ -123,87 +123,97 @@
 
 @code {
     [Parameter]
-    public int Wid { get; set; }
+    public int Wid { get; set; } // פרמטר לקבלת מזהה אימון (Workout ID)
+
     [Parameter]
-    public string Wd { get; set; }
-    Workout workout;
-    WorkoutDB workoutDB = new WorkoutDB();
-    DrillsListDB drillsListDB = new DrillsListDB();
-    List<drillslist> Drillsnames;
-    List<Drill> Drills = new List<Drill>();
-    DrillDB drillDB = new DrillDB();
-    string hour1;
-    Trainer c;
+    public string Wd { get; set; } // פרמטר לקבלת מחרוזת (כנראה תאריך או שם יום)
+
+    Workout workout; // משתנה לאחסון האימון הנוכחי
+
+    WorkoutDB workoutDB = new WorkoutDB(); // יצירת מופע למחלקת מסד נתונים לאימונים
+
+    DrillsListDB drillsListDB = new DrillsListDB(); // יצירת מופע למחלקת מסד נתונים לרשימות תרגילים
+
+    List<drillslist> Drillsnames; // רשימה של שמות התרגילים באימון
+
+    List<Drill> Drills = new List<Drill>(); // רשימה של אובייקטים מסוג Drill (תרגילים) באימון
+
+    DrillDB drillDB = new DrillDB(); // יצירת מופע למחלקת מסד נתונים לתרגילים
+
+    string hour1; // מחרוזת לשעה בפורמט מוצג
+
+    Trainer c; // משתנה לשמירת פרטי המאמן המחובר
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-
         if (firstRender)
         {
+            var user1 = await MySession.GetAsync<Trainer>("Trainer"); // שליפת פרטי המאמן מה-session
 
-            var user1 = await MySession.GetAsync<Trainer>("Trainer");
             if (user1.Success)
             {
-                c = user1.Value;
-                StateHasChanged();
+                c = user1.Value; // שמירת פרטי המאמן במשתנה c
+                StateHasChanged(); // עדכון הממשק בעקבות שינוי מצב
             }
+
             if (c != null && c.id != workout.trainerid)
             {
-                navigationManager.NavigateTo("/");
+                navigationManager.NavigateTo("/"); // ניתוב לעמוד הראשי אם המאמן אינו שייך לאימון
             }
+
             if (c == null)
             {
-                navigationManager.NavigateTo("/login");
-
+                navigationManager.NavigateTo("/login"); // ניתוב לעמוד התחברות אם אין מאמן מחובר
             }
-
         }
     }
+
     protected override async Task OnParametersSetAsync()
     {
         if (Wid == null)
         {
-            workout = null;
-            Drillsnames = null;
+            workout = null; // איפוס האימון אם לא התקבל מזהה תקין
+            Drillsnames = null; // איפוס רשימת שמות התרגילים
         }
         else
         {
+            workout = await workoutDB.SelectByPkAsync(Wid); // שליפת פרטי האימון לפי מזהה
 
-            workout = await workoutDB.SelectByPkAsync(Wid);
-            if(workout == null)
+            if (workout == null)
             {
-                navigationManager.NavigateTo("/");
-
+                navigationManager.NavigateTo("/"); // ניתוב לעמוד הראשי אם האימון לא נמצא
             }
-            Drillsnames = await drillsListDB.SelectAllInWorkoutAsync(Wid);
+
+            Drillsnames = await drillsListDB.SelectAllInWorkoutAsync(Wid); // שליפת כל רשימות התרגילים באימון
+
             foreach (var dl in Drillsnames)
             {
-                Drill drill = await drillDB.SelectByPkAsync(dl.Drillname);
-                Drills.Add(drill);
+                Drill drill = await drillDB.SelectByPkAsync(dl.Drillname); // שליפת פרטי התרגיל לפי שם
+                Drills.Add(drill); // הוספת התרגיל לרשימת התרגילים
             }
-            hour1 = workout.hour.ToString("D4").Insert(2, ":");
-            StateHasChanged();
 
-
-
+            hour1 = workout.hour.ToString("D4").Insert(2, ":"); // עיצוב השעה למחרוזת עם פסיק ביניים (HH:mm)
+            StateHasChanged(); // עדכון הממשק בעקבות שינוי מצב
         }
     }
 
     async Task Delete()
     {
-        if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete Workout?"))
+        if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete Workout?")) // בקשת אישור מהמשתמש למחיקת האימון
         {
-            List<drillslist> Ds = await drillsListDB.SelectAllInWorkoutAsync(Wid);
+            List<drillslist> Ds = await drillsListDB.SelectAllInWorkoutAsync(Wid); // שליפת כל רשימות התרגילים באימון למחיקה
+
             foreach (var dl in Ds)
             {
-                await drillsListDB.DeleteDLAsync(dl);
+                await drillsListDB.DeleteDLAsync(dl); // מחיקת רשימת תרגילים אחת-אחת
             }
-            await workoutDB.DeleteAsync(workout);
-            navigationManager.NavigateTo("/");
 
+            await workoutDB.DeleteAsync(workout); // מחיקת האימון עצמו ממסד הנתונים
+            navigationManager.NavigateTo("/"); // ניתוב לעמוד הראשי לאחר המחיקה
         }
     }
 }
+
 <style>
 
 

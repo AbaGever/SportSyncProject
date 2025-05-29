@@ -52,42 +52,82 @@
 
 
 @code {
+    // אזור קוד ב-Blazor Component לצורך התחברות משתמש
+
     private string UserEmail = "";
+    // משתנה לאחסון כתובת האימייל שהוזנה על ידי המשתמש
+
     private string UserPassword = "";
+    // משתנה לאחסון הסיסמה שהוזנה על ידי המשתמש
+
     string ResultStr = "";
+    // משתנה לאחסון תוצאה או הודעת מצב (לא בשימוש בקוד הזה בפועל)
 
     private async Task HandleLogin()
+    // פעולה אסינכרונית שמבצעת התחברות למערכת
+
     {
         TrainerNew tt = new TrainerNew();
+        // יצירת מופע חדש של אובייקט TrainerNew עבור בקשת התחברות
+
         tt.email = UserEmail;
+        // מקצה את כתובת האימייל של המשתמש לשדה האימייל של האובייקט
+
         tt.pass = UserPassword;
+        // מקצה את הסיסמה של המשתמש לשדה הסיסמה של האובייקט
+
         HttpClient httpClient = new HttpClient();
+        // יצירת מופע חדש של HttpClient לשליחת בקשות HTTP
+
         Trainer trainer = new Trainer();
+        // יצירת מופע ריק של אובייקט Trainer לצורך אחסון תגובת התחברות
+
         var xx = await httpClient.PostAsJsonAsync<TrainerNew>(dataConstLink.Api.loginurl, tt);
+        // שליחת בקשת POST לשרת עם פרטי התחברות
+
         if (tt != null)
+        // בדיקה אם האובייקט tt לא null (תמיד נכון בשלב זה – לא בדיקה לוגית נכונה)
+
         {
             if (tt.email.Contains("@gmail"))
+            // בדיקה אם האימייל מכיל "@gmail" – תנאי מלאכותי לסינון משתמשים
+
             {
                 trainer = await xx.Content.ReadFromJsonAsync<Trainer>();
+                // קריאת תגובת השרת והמרתה לאובייקט מסוג Trainer
+
                 string jsonOSL = JsonSerializer.Serialize(trainer);
+                // המרת האובייקט למחרוזת JSON
+
                 try
                 {
                     await SecureStorage.Default.SetAsync("trn", jsonOSL);
+                    // שמירת מחרוזת ה-JSON באחסון מאובטח תחת מפתח "trn"
                 }
                 catch (Exception storageEx)
                 {
                     await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
+                    // הצגת הודעת שגיאה אם פעולת השמירה נכשלה
+
                     return;
                 }
+
                 navigateMg.NavigateTo("/", replace: true);
+                // העברה לעמוד הבית לאחר התחברות מוצלחת
+
                 return;
             }
-            else 
+            else
             {
                 Exception storageEx = new Exception();
+                // יצירת חריגה ריקה באופן מלאכותי (לא תקין)
+
                 await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
+                // הצגת הודעת שגיאה עם הודעה ריקה אם האימייל לא עומד בתנאי
+
                 return;
             }
         }
     }
 }
+

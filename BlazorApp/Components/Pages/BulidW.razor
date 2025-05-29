@@ -256,68 +256,98 @@
 
 
 
-<script src="homepage/js/jquery-3.4.1.min.js"></script>
-<script src="homepage/js/bootstrap.js"></script>
+
 @code {
 
+    // הגדרת משתנה מסוג מחרוזת לאחסון הודעות שגיאה
     string error = "";
+
+    // שמירת התאריך והשעה הנוכחיים במחרוזת בפורמט שנה-חודש-יום
     string Now = DateTime.Now.ToString("yyyy-mm-dd");
+
+    // הגדרת משתנה מסוג DateTime לאחסון שעה נבחרת, כאן התחלת היום בשעה 00:00
     private DateTime selectedHour = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 0, 0, 0);
+
+    // מחרוזת לאחסון שעה נבחרת (כנראה בפורמט טקסטואלי)
     string selectedhour = "";
+
+    // רשימה של עצמים מסוג Drill
     List<Drill> list;
+
+    // מחרוזת לאחסון שם התרגיל הנבחר
     string nameofdrill = "";
+
+    // מחרוזת לאחסון השריר הנבחר
     string selectedmuscle = "";
 
+    // רשימת מחרוזות המכילה את שמות ימי השבוע באנגלית
     List<string> DaysOfWeek = new List<string>
-    {
+{
     "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"
-    };
+};
+
+    // משתנה מסוג DateTime לאחסון התאריך הנבחר, ברירת מחדל היום הנוכחי
     private DateTime selectedDate = DateTime.Today;
+
+    // מחרוזת לאחסון תאריך מקסימלי בפורמט טקסטואלי
     private string maxDate;
+
+    // מחרוזת לאחסון ערך האם האימון חוזר ("false" כברירת מחדל)
     string IsReccuring1 = "false";
+
+    // רשימת מחרוזות המכילה את שמות קבוצות השרירים
     List<string> Muscles = new List<string>
-    {
+{
     "Aerobic","Arms","Back","Chest","Core","Full Body","Legs","Shoulders"
-    };
+};
+
+    // משתנה מסוג Trainer לאחסון פרטי המשתמש הנכנס (מאמן)
     Trainer UserS = null;
 
-    // State to store selected drills for the workout
+    // רשימת מחרוזות לאחסון התרגילים שנבחרו לאימון
     List<string> selectedDrills = new List<string>();
 
-
-    // List of all available options
-
-
-    // List to store selected options
+    // רשימת מחרוזות לאחסון אפשרויות שנבחרו (למשל ימי אימון חוזר)
     private List<string> SelectedOptions = new List<string>();
 
-
-    // Event handler for checkbox changes
+    // פונקציה המטפלת בשינוי ב-checkbox, מעדכנת את רשימת האפשרויות שנבחרו
     private void OnOptionChanged(ChangeEventArgs e, string option)
     {
+        // המרה של הערך שנבחר לbool
         bool isChecked = (bool)e.Value;
+
+        // אם נבחר (מסומן), מוסיף לאפשרויות הנבחרות
         if (isChecked)
         {
-            // Add option to the selected list if checked
             SelectedOptions.Add(option);
         }
+        // אם לא נבחר (מסומן), מסיר מהרשימה
         else
         {
-            // Remove option from the selected list if unchecked
             SelectedOptions.Remove(option);
         }
     }
+
+    // פונקציה סטטית שמחזירה את התאריך של היום הבא מסוג יום בשבוע מסוים
     static DateTime GetNextDay(DateTime startDate, DayOfWeek targetDay)
     {
-        // מחשב כמה ימים להוסיף כדי להגיע ליום הרצוי
+        // חישוב כמה ימים להוסיף כדי להגיע ליום הרצוי בשבוע הבא
         int daysToAdd = ((int)targetDay - (int)startDate.DayOfWeek + 7) % 7;
-        daysToAdd = daysToAdd == 0 ? 7 : daysToAdd; // מבטיח שהיום הרצוי הוא בשבוע הבא אם היום זהה
+
+        // אם היום הרצוי הוא היום עצמו, מחזיר את היום בשבוע הבא (7 ימים קדימה)
+        daysToAdd = daysToAdd == 0 ? 7 : daysToAdd;
+
+        // מחזיר את התאריך לאחר הוספת הימים המחושבים
         return startDate.AddDays(daysToAdd);
     }
+
+    // טיפול בשינוי הערך של בחירת השריר, מעדכן את המשתנה המתאים
     private void OnChange(ChangeEventArgs args)
     {
         selectedmuscle = args.Value.ToString();
     }
+
+    // פונקציה להוספת תרגיל לרשימת התרגילים שנבחרו אם הוא לא קיים כבר
     void AddDrillToWorkout(string drillName)
     {
         if (!selectedDrills.Contains(drillName))
@@ -325,24 +355,29 @@
             selectedDrills.Add(drillName);
         }
     }
+
+    // פונקציה להסרת תרגיל מהרשימה של התרגילים שנבחרו
     void RemoveDrill(string drillName)
     {
         selectedDrills.Remove(drillName);
     }
 
-
-
+    // פונקציה שמופעלת לאחר הרינדור הראשוני של הרכיב
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        // אם זה הרינדור הראשון
         if (firstRender)
         {
+            // טוען את פרטי המאמן מה-session
             var user1 = await MySession.GetAsync<Trainer>("Trainer");
+
+            // אם הטעינה הצליחה, שומר את פרטי המאמן ומבצע רינדור מחדש
             if (user1.Success)
             {
                 UserS = user1.Value;
                 StateHasChanged();
             }
-
+            // אם לא הצליח, ואם המשתמש אינו מוגדר, מפנה לדף הבית
             else
             {
                 if (UserS == null)
@@ -351,104 +386,123 @@
                 }
             }
         }
-
     }
-   
 
+    // פונקציה אסינכרונית לחיפוש תרגילים לפי שם או שריר, מעדכנת את רשימת התרגילים
     async Task Search()
     {
         DrillDB drillDB = new DrillDB();
+
+        // שולפת את רשימת התרגילים בהתבסס על השם והשריר הנבחר
         list = await drillDB.SelectByMuscleOrNameAsync(nameofdrill, selectedmuscle);
     }
 
-  
-
+    // פונקציה לבדיקה והוספה של אימונים חוזרים בהתאם לימים שנבחרו
     async Task CheckReccuring()
     {
+        // אם יש אפשרויות נבחרות ברשימה
         if (SelectedOptions.Count > 0 || SelectedOptions != null)
         {
+            // מסמן שהאימון חוזר
             IsReccuring1 = "true";
 
+            // עבור כל יום שנבחר ברשימה
             foreach (var d in SelectedOptions)
             {
+                // ממיר את השם ל-DayOfWeek
                 DayOfWeek dayOfWeek = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), d, true);
 
+                // מחשב את התאריך הבא של אותו יום בשבוע
                 DateTime rd = GetNextDay(DateTime.Today, dayOfWeek);
-                await CreateWorkout(rd, IsReccuring1);
 
+                // יוצר אימון בתאריך המחושב עם האימון החוזר
+                await CreateWorkout(rd, IsReccuring1);
             }
         }
 
+        // יוצר אימון בתאריך הנבחר ללא חזרה
         await CreateWorkout(selectedDate, "false");
+
+        // מנקה את רשימת התרגילים שנבחרו
         selectedDrills.Clear();
+
+        // מנקה את רשימת התרגילים הכללית
         list.Clear();
+
+        // מנקה את הרשימה של האפשרויות שנבחרו
         SelectedOptions.Clear();
     }
 
-
+    // פונקציה ליצירת אימון חדש בתאריך ושעה נתונים עם סטטוס חזרה
     async Task CreateWorkout(DateTime date, string isReccuring2)
     {
+        // יצירת מופעים של מחלקות לביצוע פעולות DB
         WorkoutDB workoutDB = new WorkoutDB();
         DrillsListDB drillsListDB = new DrillsListDB();
         DrillDB drillDB = new DrillDB();
+
+        // משתנה לאגירת משך כל התרגילים
         int totalDuration = 0;
 
-        // Calculate total duration of the selected drills
+        // מחשב את סך כל משך האימונים לפי התרגילים שנבחרו
         foreach (var selectedDrillName in selectedDrills)
         {
             Drill drill = await drillDB.SelectByPkAsync(selectedDrillName);
             totalDuration += drill.duration;
-                }
-            
-        
+        }
 
-        // Convert the selected DateTime to an integer
+        // המרת השעה הנבחרת למספר שלם (לדוגמה: 13:30 יהפוך ל-1330)
         int hourAsInt = ConvertDateTimeToInt(selectedHour);
+
+        // אם ההמרה נכשלה, מדפיס הודעת שגיאה ומפסיק את יצירת האימון
         if (hourAsInt == -1)
         {
             Console.WriteLine("Invalid DateTime input. Workout creation aborted.");
             return;
         }
 
-        // Create a new workout instance
+        // יצירת אובייקט אימון חדש עם פרטים מתאימים
         Workout newWorkout = new Workout
             {
-
-                trainerid = UserS.id, // Assuming this is the ID of the currently logged-in trainer
-                date = date.ToString("yyyy-MM-dd"),
-                duration = totalDuration,
-                Isgroup = "false",
-                hour = hourAsInt, // Convert the integer to string for storage
-                IsReccuring = isReccuring2
+                trainerid = UserS.id,                  // מזהה המאמן היוצר את האימון
+                date = date.ToString("yyyy-MM-dd"),   // תאריך האימון בפורמט מחרוזת
+                duration = totalDuration,              // משך האימון הכולל
+                Isgroup = "false",                     // סימון האם האימון בקבוצה (כאן: לא)
+                hour = hourAsInt,                      // שעה כמספר שלם
+                IsReccuring = isReccuring2             // האם האימון חוזר
             };
 
-        // Insert the workout using InsertGetWorkout and retrieve the workout object with the new ID
-        if (await workoutDB.IsWorkoutEmpty(UserS.id, date.ToString("yyyy-MM-dd"), hourAsInt))          
+        // בדיקה אם כבר קיים אימון באותו תאריך ושעה עבור המאמן
+        if (await workoutDB.IsWorkoutEmpty(UserS.id, date.ToString("yyyy-MM-dd"), hourAsInt))
         {
+            // הוספת האימון למסד הנתונים וקבלת האימון עם המזהה שלו
             Workout createdWorkout = await workoutDB.InsertGetWorkout(newWorkout);
 
+            // אם האימון נוצר בהצלחה
             if (createdWorkout != null)
             {
                 int workoutId = createdWorkout.id;
 
-                // Associate each selected drill with the new workout
+                // מקשר כל תרגיל שנבחר לאימון החדש במסד הנתונים
                 foreach (var drillName in selectedDrills)
                 {
                     drillslist dl = new drillslist(workoutId, drillName);
                     await drillsListDB.InsertDLAsync(dl);
                 }
 
-                // Clear the selection and notify the user
+                // מעדכן את הודעת השגיאה ל"האימון הוכנס"
                 error = "Inserted Workout";
+
+                // מחכה שנייה לפני המשך (ייתכן להצגת הודעה למשתמש)
                 await Task.Delay(1000);
-
-                 
-
             }
         }
-        else 
+        else
         {
+            // אם כבר קיים אימון באותו מועד, מציג הודעת אישור למשתמש
             bool confirm = await js.InvokeAsync<bool>("confirm", $"You Already have a workout or a team practice on {selectedHour}, are you sure you want to add another workout?");
+
+            // אם המשתמש אישר להוסיף אימון נוסף באותו מועד
             if (confirm)
             {
                 Workout createdWorkout = await workoutDB.InsertGetWorkout(newWorkout);
@@ -457,41 +511,42 @@
                 {
                     int workoutId = createdWorkout.id;
 
-                    // Associate each selected drill with the new workout
                     foreach (var drillName in selectedDrills)
                     {
                         drillslist dl = new drillslist(workoutId, drillName);
                         await drillsListDB.InsertDLAsync(dl);
                     }
 
-                    // Clear the selection and notify the user
                     error = "Inserted Workout";
                     await Task.Delay(1000);
-
-
                 }
             }
             else
             {
+                // אם המשתמש ביטל את ההוספה, מציג הודעת שגיאה מתאימה
                 error = "Unable to Insert Workout,date and hour already taken";
             }
         }
     }
 
+    // פונקציה להמרת אובייקט DateTime למספר שלם המשקף שעה ודקה (לדוגמה 13:30 ל-1330)
     private int ConvertDateTimeToInt(DateTime dateTime)
     {
-        // Combine the hour and minute into an integer
         int combined = dateTime.Hour * 100 + dateTime.Minute;
         return combined;
     }
 
+    // פונקציה המופעלת בזמן האתחול של הרכיב
     protected override void OnInitialized()
     {
-        // Calculate the maximum date (next month)
+        // שמירת התאריך של היום
         var today = DateTime.Today;
+
+        // חישוב התאריך של אותו יום בחודש הבא
         var nextMonth = today.AddMonths(1);
 
-        // Convert to string in "yyyy-MM-dd" format
+        // המרת התאריך לחודש הבא למחרוזת בפורמט שנה-חודש-יום לאיפוס ערך מקסימלי של תאריך
         maxDate = nextMonth.ToString("yyyy-MM-dd");
     }
 }
+

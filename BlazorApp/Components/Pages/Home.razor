@@ -79,6 +79,7 @@
                             <div class="col-lg-10 col-md-11 mx-auto">
                                 <div class="detail-box" style="color:white">
                                     <div >
+                                        <div style="color:wheat">
                                         @if(UserS!=null||coach!=null)
                                         {
                                             if(UserS !=null)
@@ -91,6 +92,7 @@
                                             }
                                             
                                         }
+                                        </div>
                                         <h3>
                                             Fitness
                                         </h3>
@@ -219,52 +221,53 @@
 
 
 @code {
-    Trainer UserS = null;
-    Coach coach = null;
-    Group group = new Group();
-    GroupDB groupDB = new GroupDB();
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    Trainer UserS = null; // יצירת משתנה מסוג Trainer לאחסון פרטי מתאמן מהסשן
+    Coach coach = null; // יצירת משתנה מסוג Coach לאחסון פרטי מאמן מהסשן
+    Group group = new Group(); // יצירת מופע חדש של קבוצה כברירת מחדל
+    GroupDB groupDB = new GroupDB(); // יצירת מופע של מחלקת הגישה למסד הנתונים של קבוצות
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) // פונקציה שמופעלת לאחר הרנדר הראשון של הקומפוננטה
     {
-        if (firstRender)
+        if (firstRender) // בדיקה אם זהו הרנדר הראשון
         {
             try
             {
-                await js.InvokeVoidAsync("initializeGradSchool");
+                await js.InvokeVoidAsync("initializeGradSchool"); // קריאה לפונקציית JavaScript בשם "initializeGradSchool"
             }
             catch (Exception ex)
             {
-                Console.WriteLine("JS Init Error: " + ex.Message);
+                Console.WriteLine("JS Init Error: " + ex.Message); // הדפסת שגיאה אם הקריאה ל-JS נכשלה
             }
-            var user1 = await MySession.GetAsync<Trainer>("Trainer");
-            if (user1.Success)
+
+            var user1 = await MySession.GetAsync<Trainer>("Trainer"); // ניסיון לקבל את המתאמן מהסשן
+            if (user1.Success) // בדיקה אם התקבלה תשובה תקינה
             {
-                UserS = user1.Value;
-                StateHasChanged();
+                UserS = user1.Value; // שמירת ערך המתאמן במשתנה
+                StateHasChanged(); // עדכון מצב הקומפוננטה לרנדר מחודש
             }
-            var user2 = await MySession.GetAsync<Coach>("Coach");
-            if (user2.Success)
+
+            var user2 = await MySession.GetAsync<Coach>("Coach"); // ניסיון לקבל את המאמן מהסשן
+            if (user2.Success) // בדיקה אם התקבלה תשובה תקינה
             {
-                coach = user2.Value;
-                if (coach == null)
+                coach = user2.Value; // שמירת ערך המאמן במשתנה
+                if (coach == null) // בדיקה אם לא קיים מאמן
                 {
-                    group = null;
+                    group = null; // איפוס הקבוצה
                 }
                 else
                 {
-                    group = await groupDB.SelectByPkAsync(coach.groupname);
+                    group = await groupDB.SelectByPkAsync(coach.groupname); // שליפת הקבוצה לפי שם הקבוצה של המאמן
                 }
-                StateHasChanged();
+                StateHasChanged(); // עדכון מצב הקומפוננטה לרנדר מחודש
             }
             else
             {
-                if (UserS == null && coach == null && group == null)
+                if (UserS == null && coach == null && group == null) // בדיקה אם לא קיים מתאמן, מאמן וקבוצה
                 {
-                    navigationManager.NavigateTo("/");
+                    navigationManager.NavigateTo("/"); // ניווט לדף הבית במקרה שאין נתונים
                 }
             }
         }
-
     }
-
 }
 

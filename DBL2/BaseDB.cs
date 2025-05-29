@@ -9,345 +9,306 @@ using System.Threading.Tasks;
 namespace DBL2
 {
 
-    public abstract class BaseDB<T> : DB
+    public abstract class BaseDB<T> : DB // מגדיר מחלקה אבסטרקטית גנרית עם פרמטר טיפוס T היורשת ממחלקה בשם DB
     {
-        protected abstract string GetTableName();
-        protected abstract List<string> GetPrimaryKeyName();
-        protected abstract Task<T> CreateModelAsync(object[] row);
-        protected abstract Task<List<T>> CreateListModelAsync(List<object[]> rows);
+        protected abstract string GetTableName(); // מגדיר מתודה אבסטרקטית להחזרת שם הטבלה במסד הנתונים
+        protected abstract List<string> GetPrimaryKeyName(); // מגדיר מתודה אבסטרקטית להחזרת שמות המפתחות הראשיים
+        protected abstract Task<T> CreateModelAsync(object[] row); // מגדיר מתודה אבסטרקטית ליצירת מודל מטיפוס T משורת נתונים
+        protected abstract Task<List<T>> CreateListModelAsync(List<object[]> rows); // מגדיר מתודה אבסטרקטית ליצירת רשימת מודלים מרשימת שורות
 
         /// <summary>
         /// A generic operation to retrieve ALL data from the database.
         /// </summary>
-        /// <returns>List of Objects</returns>
-        protected async Task<List<T>> SelectAllAsync()
+        protected async Task<List<T>> SelectAllAsync() // מגדיר מתודה אסינכרונית לאחזור כל הנתונים ללא פרמטרים
         {
-            return await SelectAllAsync("", new Dictionary<string, object>());
+            return await SelectAllAsync("", new Dictionary<string, object>()); // קורא לגרסה המלאה של המתודה עם פרמטרי ברירת מחדל
         }
 
         /// <summary>
         /// A generic operation to retrieve data from the database.
         /// </summary>
-        /// <param name="parameters">Dictionary (Key & Value)</param>
-        /// <returns>List of Objects</returns>
-        protected async Task<List<T>> SelectAllAsync(Dictionary<string, object> parameters)
+        protected async Task<List<T>> SelectAllAsync(Dictionary<string, object> parameters) // מגדיר מתודה אסינכרונית לאחזור נתונים עם פרמטרי חיפוש
         {
-            return await SelectAllAsync("", parameters);
+            return await SelectAllAsync("", parameters); // קורא לגרסה המלאה עם שאילתת ברירת מחדל
         }
 
         /// <summary>
         /// A generic operation to retrieve data from the database.
         /// </summary>
-        /// <param name="query">SQL string</param>
-        /// <returns>List of Objects</returns>
-        protected async Task<List<T>> SelectAllAsync(string query)
+        protected async Task<List<T>> SelectAllAsync(string query) // מגדיר מתודה אסינכרונית לאחזור נתונים עם שאילתה מותאמת
         {
-            return await SelectAllAsync(query, new Dictionary<string, object>());
+            return await SelectAllAsync(query, new Dictionary<string, object>()); // קורא לגרסה המלאה עם פרמטרי ברירת מחדל
         }
 
         /// <summary>
         /// A generic operation to retrieve data from the database.
         /// </summary>
-        /// <param name="query">SQL string</param>
-        /// <param name="parameters">Dictionary (Key & Value)</param>
-        /// <returns>List of Objects</returns>
-        protected async Task<List<T>> SelectAllAsync(string query, Dictionary<string, object> parameters)
+        protected async Task<List<T>> SelectAllAsync(string query, Dictionary<string, object> parameters) // מגדיר מתודה אסינכרונית לאחזור נתונים עם שאילתה ופרמטרים
         {
-            List<object[]> list = await StingListSelectAllAsync(query, parameters);
-            return await CreateListModelAsync(list);
+            List<object[]> list = await StingListSelectAllAsync(query, parameters); // מבצע את השאילתה ומקבל רשימת שורות גולמיות
+            return await CreateListModelAsync(list); // ממיר את הרשימה הגולמית לרשימת מודלים
         }
 
         /// <summary>
         /// Insert new records in a table using INSERT Statement.
         /// </summary>
-        /// <param name="keyAndValue">Dictionary (Key & Value)</param>
-        /// <returns>The number of rows affected.</returns>
-        protected async Task<int> InsertAsync(Dictionary<string, object> keyAndValue)
+        protected async Task<int> InsertAsync(Dictionary<string, object> keyAndValue) // מגדיר מתודה אסינכרונית להכנסת רשומה חדשה
         {
-            string sqlCommand = PrepareInsertQueryWithParameters(keyAndValue);
-            return await ExecNonQueryAsync(sqlCommand);
+            string sqlCommand = PrepareInsertQueryWithParameters(keyAndValue); // מכין את פקודת ה-INSERT עם פרמטרים
+            return await ExecNonQueryAsync(sqlCommand); // מבצע את הפקודה ומחזיר מספר שורות שהושפעו
         }
 
         /// <summary>
         /// Insert new records in a table using INSERT Statement.
         /// </summary>
-        /// <param name="keyAndValue">Dictionary (Key & Value)</param>
-        /// <returns>An object that includes the ID attribute from the database.</returns>
-        protected async Task<object> InsertGetObjAsync(Dictionary<string, object> keyAndValue)
+        protected async Task<object> InsertGetObjAsync(Dictionary<string, object> keyAndValue) // מגדיר מתודה להכנסת רשומה וקבלת האובייקט שהוכנס
         {
-            string sqlCommand = PrepareInsertQueryWithParameters(keyAndValue);
-            sqlCommand += $" SELECT LAST_INSERT_ID();";
-            object res = await ExecScalarAsync(sqlCommand);
-            if (res != null)
+            string sqlCommand = PrepareInsertQueryWithParameters(keyAndValue); // מכין את פקודת ה-INSERT הבסיסית
+            sqlCommand += $" SELECT LAST_INSERT_ID();"; // מוסיף פקודה לקבלת המפתח הראשי שהוקצה
+            object res = await ExecScalarAsync(sqlCommand); // מבצע את השאילתה ומקבל את המפתח
+            if (res != null) // בודק אם התקבל מפתח חוקי
             {
-                Dictionary<string, object> p = new Dictionary<string, object>();
-                p.Add("id", res.ToString());
-                string sql;
-                if (GetPrimaryKeyName().Count == 1)
-                    sql = @$"SELECT * FROM {GetTableName()} WHERE ({GetPrimaryKeyName()[0]} = @id)";
+                Dictionary<string, object> p = new Dictionary<string, object>(); // יוצר מילון פרמטרים לחיפוש
+                p.Add("id", res.ToString()); // מוסיף את המפתח שהתקבל כפרמטר
+                string sql; // מכין שאילתת SELECT לאחזור הרשומה שהוכנסה
+                if (GetPrimaryKeyName().Count == 1) // בודק אם יש מפתח ראשי בודד
+                    sql = @$"SELECT * FROM {GetTableName()} WHERE ({GetPrimaryKeyName()[0]} = @id)"; // בונה שאילתה למפתח בודד
                 else
-                    sql = @$"SELECT * FROM {GetTableName()} WHERE ({GetPrimaryKeyName()[0]},{GetPrimaryKeyName()[1]} = @id)";
-                List<T> list = (List<T>)await SelectAllAsync(sql, p);
-                if (list.Count == 1)
-                    return list[0];
+                    sql = @$"SELECT * FROM {GetTableName()} WHERE ({GetPrimaryKeyName()[0]},{GetPrimaryKeyName()[1]} = @id)"; // בונה שאילתה למפתח מרובה
+                List<T> list = (List<T>)await SelectAllAsync(sql, p); // מבצע את השאילתה ומקבל רשימה
+                if (list.Count == 1) // בודק אם התקבלה רשומה אחת
+                    return list[0]; // מחזיר את האובייקט שהוכנס
                 else
-                    return null;
+                    return null; // מחזיר null אם לא נמצאה רשומה
             }
             else
-                return null;
+                return null; // מחזיר null אם לא התקבל מפתח
         }
 
         /// <summary>
         /// Update records in a table using SQL UPDATE Statement.
         /// </summary>
-        /// <param name="FildValue">Dictionary (Key & Value)</param>
-        /// <param name="parameters">Dictionary (Key & Value)</param>
-        /// <returns>The number of rows affected.</returns>
-        protected async Task<int> UpdateAsync(Dictionary<string, object> FildValue, Dictionary<string, object> parameters)
+        protected async Task<int> UpdateAsync(Dictionary<string, object> FildValue, Dictionary<string, object> parameters) // מגדיר מתודה לעדכון רשומות
         {
-            string where = PrepareWhereQueryWithParameters(parameters);
-
-            string InKeyValue = PrepareUpdateQueryWithParameters(FildValue);
-            if (string.IsNullOrEmpty(InKeyValue))
-                return 0;
-
-            string sqlCommand = $"UPDATE sportsync_db.{GetTableName()} SET {InKeyValue}  {where}";
-            return await ExecNonQueryAsync(sqlCommand);
+            string where = PrepareWhereQueryWithParameters(parameters); // מכין את תנאי ה-WHERE
+            string InKeyValue = PrepareUpdateQueryWithParameters(FildValue); // מכין את חלק הערכים ב-SET
+            if (string.IsNullOrEmpty(InKeyValue)) // בודק אם אין ערכים לעדכון
+                return 0; // מחזיר 0 אם אין מה לעדכון
+            string sqlCommand = $"UPDATE sportsync_db.{GetTableName()} SET {InKeyValue}  {where}"; // בונה את פקודת העדכון המלאה
+            return await ExecNonQueryAsync(sqlCommand); // מבצע את העדכון ומחזיר מספר שורות שהושפעו
         }
 
         /// <summary>
         /// Delete records in a table using SQL DELETE Statement.
         /// </summary>
-        /// <param name="parameters">Dictionary (Key & Value)</param>
-        /// <returns>The number of rows affected.</returns>
-        protected async Task<int> DeleteAsync(Dictionary<string, object> parameters)
+        protected async Task<int> DeleteAsync(Dictionary<string, object> parameters) // מגדיר מתודה למחיקת רשומות
         {
-            string where = PrepareWhereQueryWithParameters(parameters);
-
-            string sqlCommand = $"DELETE FROM sportsync_db.{GetTableName()} {where}";
-            return await ExecNonQueryAsync(sqlCommand);
+            string where = PrepareWhereQueryWithParameters(parameters); // מכין את תנאי ה-WHERE
+            string sqlCommand = $"DELETE FROM sportsync_db.{GetTableName()} {where}"; // בונה את פקודת המחיקה
+            return await ExecNonQueryAsync(sqlCommand); // מבצע את המחיקה ומחזיר מספר שורות שהושפעו
         }
 
         /// <summary>
         /// Add one parameters to SQL statement.
         /// </summary>
-        /// <param name="name">Parameter name example:@id</param>
-        /// <param name="value">Parameter value</param>
-        private void AddParameterToCommand(string name, object value)
+        private void AddParameterToCommand(string name, object value) // מתודה להוספת פרמטר לפקודת SQL
         {
-            DbParameter p = cmd.CreateParameter();
-            p.ParameterName = name;
-            p.Value = value;
-            cmd.Parameters.Add(p);
+            DbParameter p = cmd.CreateParameter(); // יוצר אובייקט פרמטר חדש
+            p.ParameterName = name; // קובע את שם הפרמטר
+            p.Value = value; // קובע את ערך הפרמטר
+            cmd.Parameters.Add(p); // מוסיף את הפרמטר לאוסף הפרמטרים
         }
 
         /// <summary>
         /// Prepare command and Connection before executing SQL command
         /// </summary>
-        /// <example>string query = "DELETE FROM Customers WHERE CustomerID = 17"</example>
-        /// <param name="query">SQL query string</param>
-        private async Task PreQueryAsync(string query)
+        private async Task PreQueryAsync(string query) // מתודה להכנת הפקודה והחיבור לפני ביצוע
         {
-            cmd.CommandText = query;
-            if (conn.State != System.Data.ConnectionState.Open)
+            cmd.CommandText = query; // קובע את טקסט הפקודה
+            if (conn.State != System.Data.ConnectionState.Open) // בודק אם החיבור סגור
             {
-                await conn.OpenAsync();
+                await conn.OpenAsync(); // פותח את החיבור אם סגור
             }
-            if (cmd.Connection.State != System.Data.ConnectionState.Open)
+            if (cmd.Connection.State != System.Data.ConnectionState.Open) // בודק אם הפקודה לא מחוברת
             {
-                cmd.Connection = conn;
+                cmd.Connection = conn; // מחבר את הפקודה לחיבור
             }
         }
 
         /// <summary>
         /// Make cleanup after sql command was executed
         /// </summary>
-        private async Task PostQueryAsync()
+        private async Task PostQueryAsync() // מתודה לניקוי משאבים לאחר ביצוע פקודה
         {
-            if (reader != null && !reader.IsClosed)
-                await reader.CloseAsync();
+            if (reader != null && !reader.IsClosed) // בודק אם קורא הנתונים פתוח
+                await reader.CloseAsync(); // סוגר את קורא הנתונים
 
-            cmd.Parameters.Clear();
-            if (conn.State == System.Data.ConnectionState.Open)
-                await conn.CloseAsync();
+            cmd.Parameters.Clear(); // מנקה את אוסף הפרמטרים
+            if (conn.State == System.Data.ConnectionState.Open) // בודק אם החיבור פתוח
+                await conn.CloseAsync(); // סוגר את החיבור
         }
 
         /// <summary>
         /// Prepare a WHERE SQL Query, from given paremeters dictionary
         /// </summary>
-        /// <param name="parameters">Dictionary (Key & Value)</param>
-        /// <example>Where p1=v1 AND p2=v2</example>
-        /// <returns>String of SQL Where closure</returns>
-        private string PrepareWhereQueryWithParameters(Dictionary<string, object> parameters)
+        private string PrepareWhereQueryWithParameters(Dictionary<string, object> parameters) // מתודה להכנת תנאי WHERE ממילון פרמטרים
         {
-            string where = "WHERE ";
-            string AND = "AND";
-            if (parameters != null && parameters.Count > 0)
+            string where = "WHERE "; // התחלת בניית תנאי WHERE
+            string AND = "AND"; // מחרוזת לוגית
+            if (parameters != null && parameters.Count > 0) // בודק אם קיימים פרמטרים
             {
-                foreach (KeyValuePair<string, object> param in parameters)
+                foreach (KeyValuePair<string, object> param in parameters) // עובר על כל הפרמטרים
                 {
-                    string prm = $"@W{param.Key}";
-                    where += $"{param.Key}={prm} {AND} ";
-                    AddParameterToCommand(prm, param.Value);
+                    string prm = $"@W{param.Key}"; // יוצר שם פרמטר ייחודי
+                    where += $"{param.Key}={prm} {AND} "; // מוסיף תנאי השוואה
+                    AddParameterToCommand(prm, param.Value); // מוסיף את הפרמטר לפקודה
                 }
-                where = where.Remove(where.Length - AND.Length - 2);//remove last ' AND '
+                where = where.Remove(where.Length - AND.Length - 2); // מסיר את ה-AND המיותר האחרון
             }
             else
-                where = "";
-            return where;
+                where = ""; // מחזיר מחרוזת ריקה אם אין פרמטרים
+            return where; // מחזיר את מחרוזת התנאי
         }
 
         /// <summary>
         /// Prepare Update Query With Parameters
         /// </summary>
-        /// <param name="fields">Dictionary (Key & Value)</param>
-        /// <returns>String of SQL</returns>
-        private string PrepareUpdateQueryWithParameters(Dictionary<string, object> fields)
+        private string PrepareUpdateQueryWithParameters(Dictionary<string, object> fields) // מתודה להכנת חלק ה-SET בעדכון
         {
-            string InValue = "";
-            if (fields != null && fields.Count > 0)
+            string InValue = ""; // מחרוזת לאחסון ערכים
+            if (fields != null && fields.Count > 0) // בודק אם קיימים שדות לעדכון
             {
-                foreach (KeyValuePair<string, object> param in fields)
+                foreach (KeyValuePair<string, object> param in fields) // עובר על כל השדות
                 {
-                    string prm = $"@{param.Key}";
-                    InValue += $"{param.Key}={prm},";
-                    AddParameterToCommand(prm, param.Value);
+                    string prm = $"@{param.Key}"; // יוצר שם פרמטר
+                    InValue += $"{param.Key}={prm},"; // מוסיף זוג שדה=ערך
+                    AddParameterToCommand(prm, param.Value); // מוסיף פרמטר לפקודה
                 }
-                InValue = InValue.Remove(InValue.Length - 1); //remove last ,
+                InValue = InValue.Remove(InValue.Length - 1); // מסיר פסיק מיותר
             }
-            return InValue;
+            return InValue; // מחזיר את מחרוזת הערכים
         }
 
         /// <summary>
         /// Prepare Insert Query With Parameters
         /// </summary>
-        /// <param name="fields">Dictionary (Key & Value)</param>
-        /// <returns>String of SQL</returns>
-        private string PrepareInsertQueryWithParameters(Dictionary<string, object> fields)
+        private string PrepareInsertQueryWithParameters(Dictionary<string, object> fields) // מתודה להכנת פקודת INSERT
         {
-            if (fields == null || fields.Count == 0)
-                return "";
+            if (fields == null || fields.Count == 0) // בודק אם אין שדות להכנסה
+                return ""; // מחזיר מחרוזת ריקה
 
-            string InKey = "(" + string.Join(",", fields.Keys) + ")";
-            string InValue = "VALUES(";
-            for (int i = 0; i < fields.Values.Count; i++)
+            string InKey = "(" + string.Join(",", fields.Keys) + ")"; // יוצר רשימת שמות עמודות
+            string InValue = "VALUES("; // התחלת בניית רשימת ערכים
+            for (int i = 0; i < fields.Values.Count; i++) // עובר על הערכים
             {
-                string pn = "@" + i;
-                InValue += pn + ',';
-                AddParameterToCommand(pn, fields.Values.ElementAt(i));
+                string pn = "@" + i; // יוצר שם פרמטר אוטומטי
+                InValue += pn + ','; // מוסיף את הפרמטר לרשימה
+                AddParameterToCommand(pn, fields.Values.ElementAt(i)); // מוסיף את הפרמטר לפקודה
             }
-            InValue = InValue.Remove(InValue.Length - 1);//remove last ,
-            InValue += ")";
+            InValue = InValue.Remove(InValue.Length - 1); // מסיר פסיק מיותר
+            InValue += ")"; // סוגר את רשימת הערכים
 
-            string sqlCommand = $"INSERT INTO sportsync_db.{GetTableName()}  {InKey} {InValue};";
-            return sqlCommand;
+            string sqlCommand = $"INSERT INTO sportsync_db.{GetTableName()}  {InKey} {InValue};"; // בונה את הפקודה המלאה
+            return sqlCommand; // מחזיר את פקודת ה-INSERT
         }
 
         /// <summary>
         /// Executes the command against its connection object, returning the number of rows affected. 
         /// </summary>
-        /// <param name="query">SQL string</param>
-        /// <example>DELETE FROM Customers WHERE CustomerID = 17</example>
-        /// <returns>The number of rows affected.</returns>
-        private async Task<int> ExecNonQueryAsync(string query)
+        private async Task<int> ExecNonQueryAsync(string query) // מתודה לביצוע פקודות שאינן שאילתות (INSERT/UPDATE/DELETE)
         {
-            if (String.IsNullOrEmpty(query))
-                return 0;
-            await PreQueryAsync(query);
-            int rowsEffected = 0;
+            if (String.IsNullOrEmpty(query)) // בודק אם הפקודה ריקה
+                return 0; // מחזיר 0 אם ריקה
+            await PreQueryAsync(query); // מכין את הפקודה והחיבור
+            int rowsEffected = 0; // מאתחל מונה שורות
             try
             {
-                rowsEffected = await cmd.ExecuteNonQueryAsync();
+                rowsEffected = await cmd.ExecuteNonQueryAsync(); // מבצע את הפקודה
             }
-            catch (Exception e)
+            catch (Exception e) // תופס שגיאות
             {
-                System.Diagnostics.Debug.WriteLine(e.Message + "\nsql:" + cmd.CommandText);
+                System.Diagnostics.Debug.WriteLine(e.Message + "\nsql:" + cmd.CommandText); // רושם שגיאה
             }
             finally
             {
-                await PostQueryAsync();
+                await PostQueryAsync(); // מבצע ניקוי
             }
-            return rowsEffected;
+            return rowsEffected; // מחזיר את מספר השורות שהושפעו
         }
 
         /// <summary>
         /// Executes the query, and returns the first column of the first row in the result
         /// </summary>
-        /// <param name="query">SQL string</param>
-        /// <returns>The first column of the first row in the result set, or a null.</returns>
-        private async Task<object> ExecScalarAsync(string query)
+        private async Task<object> ExecScalarAsync(string query) // מתודה לביצוע שאילתה והחזרת ערך בודד
         {
-            if (String.IsNullOrEmpty(query))
-                return null;
-            await PreQueryAsync(query);
-            object obj = null;
+            if (String.IsNullOrEmpty(query)) // בודק אם הפקודה ריקה
+                return null; // מחזיר null אם ריקה
+            await PreQueryAsync(query); // מכין את הפקודה והחיבור
+            object obj = null; // מאתחל ערך החזרה
             try
             {
-                obj = await cmd.ExecuteScalarAsync();
+                obj = await cmd.ExecuteScalarAsync(); // מבצע את השאילתה
             }
-            catch (Exception e)
+            catch (Exception e) // תופס שגיאות
             {
-                System.Diagnostics.Debug.WriteLine(e.Message + "\nsql:" + cmd.CommandText);
+                System.Diagnostics.Debug.WriteLine(e.Message + "\nsql:" + cmd.CommandText); // רושם שגיאה
             }
             finally
             {
-                await PostQueryAsync();
+                await PostQueryAsync(); // מבצע ניקוי
             }
-            return obj;
+            return obj; // מחזיר את התוצאה
         }
 
         /// <summary>
         /// Prepare the main WHERE SQL Query, from given paremeters dictionary
         /// </summary>
-        /// <param name="query">SQL string</param>
-        /// <param name="parameters">Dictionary (Key & Value)</param>
-        /// <returns>List of Objects</returns>
-        private async Task<List<object[]>> StingListSelectAllAsync(string query, Dictionary<string, object> parameters)
+        private async Task<List<object[]>> StingListSelectAllAsync(string query, Dictionary<string, object> parameters) // מתודה לביצוע שאילתות SELECT
         {
-            List<object[]> list = new List<object[]>();
-            string sqlCommand = "";
-            if (String.IsNullOrEmpty(query))
+            List<object[]> list = new List<object[]>(); // יוצר רשימה לאחסון תוצאות
+            string sqlCommand = ""; // מאתחל את פקודת ה-SQL
+            if (String.IsNullOrEmpty(query)) // בודק אם לא סופקה שאילתה מותאמת
             {
-                string where = PrepareWhereQueryWithParameters(parameters);
-                sqlCommand = $"SELECT * FROM {GetTableName()} {where}";
+                string where = PrepareWhereQueryWithParameters(parameters); // מכין תנאי WHERE
+                sqlCommand = $"SELECT * FROM {GetTableName()} {where}"; // בונה שאילתת ברירת מחדל
             }
-            else if (query.IndexOf("@") > 0)
+            else if (query.IndexOf("@") > 0) // בודק אם השאילתה מכילה פרמטרים
             {
-                sqlCommand = query;
-                foreach (KeyValuePair<string, object> param in parameters)
+                sqlCommand = query; // משתמש בשאילתה הנתונה
+                foreach (KeyValuePair<string, object> param in parameters) // מוסיף פרמטרים לפקודה
                 {
                     AddParameterToCommand($"@{param.Key}", param.Value);
                 }
             }
-            else
+            else // אם השאילתה לא מכילה פרמטרים
             {
-                string where = PrepareWhereQueryWithParameters(parameters);
-                sqlCommand = $"{query} {where}";
+                string where = PrepareWhereQueryWithParameters(parameters); // מכין תנאי WHERE
+                sqlCommand = $"{query} {where}"; // משרשר את תנאי ה-WHERE לשאילתה
             }
-            await PreQueryAsync(sqlCommand);
+            await PreQueryAsync(sqlCommand); // מכין את הפקודה והחיבור
             try
             {
-                reader = await cmd.ExecuteReaderAsync();
-                var readOnlyData = await reader.GetColumnSchemaAsync();
-                int size = readOnlyData.Count;
-                object[] row;
-                while (reader.Read())
+                reader = await cmd.ExecuteReaderAsync(); // מבצע את השאילתה ומקבל DataReader
+                var readOnlyData = await reader.GetColumnSchemaAsync(); // מקבל מידע על העמודות
+                int size = readOnlyData.Count; // קובע את מספר העמודות
+                object[] row; // מערך לאחסון שורה
+                while (reader.Read()) // קורא שורות תוצאה
                 {
-                    row = new object[size];
-                    reader.GetValues(row);
-                    list.Add(row);
+                    row = new object[size]; // יוצר מערך חדש
+                    reader.GetValues(row); // ממלא את המערך בערכי השורה
+                    list.Add(row); // מוסיף את השורה לרשימה
                 }
             }
-            catch (Exception e)
+            catch (Exception e) // תופס שגיאות
             {
-                System.Diagnostics.Debug.WriteLine(e.Message + "\nsql:" + cmd.CommandText);
-                list.Clear();
+                System.Diagnostics.Debug.WriteLine(e.Message + "\nsql:" + cmd.CommandText); // רושם שגיאה
+                list.Clear(); // מנקה את הרשימה
             }
             finally
             {
-                await PostQueryAsync();
+                await PostQueryAsync(); // מבצע ניקוי
             }
-            return list;
+            return list; // מחזיר את רשימת השורות
         }
     }
 }

@@ -343,133 +343,115 @@
 
 
 @code {
-    private DateTime CurrentWeekStart = GetStartOfWeek(DateTime.Today);
-    private DateTime? SelectedDate;
-    private List<DateTime> WeekDays = new();
-    private List<Workout> DailyWorkouts = new();
-    private List<Workout> AllWeekWorkouts = new();
-    WorkoutDB workoutDB = new WorkoutDB();
-    DrillsListDB DLDB = new DrillsListDB();
-    List<drillslist> Drillsnames = new List<drillslist>();
-    List<Drill> Drills = new List<Drill>();
-    DrillDB drillDB = new DrillDB();
-    Trainer c;
-    List<drillslist> DL = new List<drillslist>();
+    private DateTime CurrentWeekStart = GetStartOfWeek(DateTime.Today); // אתחול משתנה עם תחילת השבוע הנוכחי לפי היום
+    private DateTime? SelectedDate; // משתנה לאחסון תאריך נבחר, יכול להיות ריק
+    private List<DateTime> WeekDays = new(); // רשימת תאריכים של ימי השבוע הנוכחי
+    private List<Workout> DailyWorkouts = new(); // רשימת אימונים ליום הנבחר
+    private List<Workout> AllWeekWorkouts = new(); // רשימת כל האימונים של השבוע
+    WorkoutDB workoutDB = new WorkoutDB(); // מופע של מחלקת גישה לאימונים במסד הנתונים
+    DrillsListDB DLDB = new DrillsListDB(); // מופע של מחלקת גישה לרשימת תרגילים במסד הנתונים
+    List<drillslist> Drillsnames = new List<drillslist>(); // רשימה של שמות תרגילים עבור אימון מסוים
+    List<Drill> Drills = new List<Drill>(); // רשימה של אובייקטי תרגילים
+    DrillDB drillDB = new DrillDB(); // מופע של מחלקת גישה לתרגילים במסד הנתונים
+    Trainer c; // משתנה לאחסון אובייקט מאמן
+    List<drillslist> DL = new List<drillslist>(); // רשימה נוספת של שמות תרגילים (כנראה מיותרת או לשימוש אחר)
 
-    private bool isOpen = false;
-    private int openWorkoutId = -1;
-    private List<Drill> workoutDrills = new List<Drill>();
+    private bool isOpen = false; // מצב פתיחת פרטי אימון (אם פתוח או סגור)
+    private int openWorkoutId = -1; // מזהה האימון שפרטיו פתוחים כרגע, -1 אם אין אימון פתוח
+    private List<Drill> workoutDrills = new List<Drill>(); // רשימת תרגילים של האימון הפתוח כרגע
 
-    private async Task ToggleWorkout(int workoutId)
+    private async Task ToggleWorkout(int workoutId) // פונקציה לפתיחה/סגירת פרטי אימון לפי מזהה
     {
-        workoutDrills.Clear();
+        workoutDrills.Clear(); // איפוס רשימת התרגילים של האימון הפתוח
 
-        if (openWorkoutId == workoutId)
+        if (openWorkoutId == workoutId) // אם האימון שנבחר הוא כבר האימון הפתוח
         {
             // If this workout is already open, close it
-            openWorkoutId = -1;
-            workoutDrills.Clear();
+            openWorkoutId = -1; // סגירת האימון (אין אימון פתוח)
+            workoutDrills.Clear(); // איפוס רשימת התרגילים שוב
         }
         else
         {
             // Open this workout and load its drills
-            openWorkoutId = workoutId;
-            Drillsnames = await DLDB.SelectAllInWorkoutAsync(workoutId);
-            foreach (var dl in Drillsnames)
+            openWorkoutId = workoutId; // סימון האימון הזה כאימון פתוח
+            Drillsnames = await DLDB.SelectAllInWorkoutAsync(workoutId); // שליפת כל שמות התרגילים של האימון מהDB
+            foreach (var dl in Drillsnames) // מעבר על כל שמות התרגילים
             {
-                Drill drill = await drillDB.SelectByPkAsync(dl.Drillname);
-                workoutDrills.Add(drill);
+                Drill drill = await drillDB.SelectByPkAsync(dl.Drillname); // שליפת אובייקט תרגיל לפי שם
+                workoutDrills.Add(drill); // הוספת התרגיל לרשימת התרגילים של האימון הפתוח
             }
         }
 
-        StateHasChanged();
+        StateHasChanged(); // עדכון ה-UI בעקבות השינוי במצב
     }
 
-
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender) // פעולה המופעלת לאחר רינדור הרכיב
     {
-
-        if (firstRender)
+        if (firstRender) // אם זה הרינדור הראשון
         {
-
-
-            var user1 = await MySession.GetAsync<Trainer>("Trainer");
-            if (user1.Success)
+            var user1 = await MySession.GetAsync<Trainer>("Trainer"); // שליפת מאמן מהסשן
+            if (user1.Success) // אם השליפה הצליחה
             {
-                c = user1.Value;
-                await UpdateWeekDays();
-                if (!SelectedDate.HasValue)
+                c = user1.Value; // שמירת המאמן במשתנה המקומי
+                await UpdateWeekDays(); // עדכון רשימת ימי השבוע
+                if (!SelectedDate.HasValue) // אם לא נבחר תאריך עדיין
                 {
-                    await SelectDate(DateTime.Today);
+                    await SelectDate(DateTime.Today); // בחירת התאריך של היום
                 }
-
-
-                StateHasChanged();
+                StateHasChanged(); // עדכון ה-UI
             }
-            if (c == null)
+            if (c == null) // אם המאמן לא נטען
             {
-                navigationManager.NavigateTo("/login");
-
+                navigationManager.NavigateTo("/login"); // ניווט לדף התחברות
             }
             else
             {
-
+                // אין פעולה נוספת כאן
             }
-
-
         }
     }
 
-
-
-    private static DateTime GetStartOfWeek(DateTime date)
+    private static DateTime GetStartOfWeek(DateTime date) // פונקציה סטטית שמחזירה את תחילת השבוע (ראשון) לתאריך נתון
     {
         // Calculate days to subtract to get to previous Sunday
-        int daysToSubtract = (int)date.DayOfWeek;
-        return date.AddDays(-daysToSubtract).Date;
+        int daysToSubtract = (int)date.DayOfWeek; // חישוב מספר הימים להחסיר כדי להגיע לראשון
+        return date.AddDays(-daysToSubtract).Date; // החזרת תאריך ראשון השבוע
     }
 
-    private async Task UpdateWeekDays()
+    private async Task UpdateWeekDays() // פונקציה לעדכון רשימת ימי השבוע לפי CurrentWeekStart
     {
-        WeekDays = Enumerable.Range(0, 7)
-            .Select(offset => CurrentWeekStart.AddDays(offset))
-            .ToList();
-        await LoadWeekWorkouts();
+        WeekDays = Enumerable.Range(0, 7) // יצירת רצף של 7 ימים
+            .Select(offset => CurrentWeekStart.AddDays(offset)) // יצירת כל יום בשבוע בהתבסס על תחילת השבוע
+            .ToList(); // המרה לרשימה
+        await LoadWeekWorkouts(); // טעינת כל האימונים של השבוע
     }
 
-    private async Task LoadWeekWorkouts()
+    private async Task LoadWeekWorkouts() // פונקציה לטעינת אימונים של השבוע ממסד הנתונים
     {
         // שליפת כל האימונים לשבוע הנוכחי ממסד הנתונים
-        List<Workout> rawWorkouts = await workoutDB.GetWorkoutsByWeekAsync(c.id, CurrentWeekStart);
-        List<Workout> DeletedWorkouts = new List<Workout>();
+        List<Workout> rawWorkouts = await workoutDB.GetWorkoutsByWeekAsync(c.id, CurrentWeekStart); // שליפת אימונים מהDB לפי מאמן ותאריך תחילת שבוע
+        List<Workout> DeletedWorkouts = new List<Workout>(); // רשימה של אימונים שנמחקו או מבוטלים
 
-        foreach (Workout workout in rawWorkouts)
+        foreach (Workout workout in rawWorkouts) // מעבר על כל האימונים שנטענו
         {
-            if (workout.duration < 0)
+            if (workout.duration < 0) // אם משך האימון שלילי (מסמן מחיקה/ביטול)
             {
-                DeletedWorkouts.Add(workout);
+                DeletedWorkouts.Add(workout); // הוספת האימון לרשימת אימונים שבוטלו
             }
-
-
         }
 
         // יצירת רשימה של האימונים לשבוע
-        AllWeekWorkouts = new List<Workout>();
+        AllWeekWorkouts = new List<Workout>(); // אתחול רשימה חדשה לאימונים השבועיים
 
         // מעבר על כל האימונים שנטענו
         foreach (Workout workout in rawWorkouts)
         {
-
-            // הוספת האימון לרשימה הראשית
-
-
             // אם האימון מחזורי, נוסיף אותו גם לימים המתאימים
             if (workout.IsReccuring == "true")
             {
-                if (DateTime.TryParse(workout.date, out DateTime workoutDate))
+                if (DateTime.TryParse(workout.date, out DateTime workoutDate)) // המרה מתאריך מחרוזת לתאריך
                 {
-                    DayOfWeek recurringDay = workoutDate.DayOfWeek;
+                    DayOfWeek recurringDay = workoutDate.DayOfWeek; // קבלת יום בשבוע של האימון המחזורי
 
                     // מעבר על ימי השבוע הנוכחיים והבאים
                     foreach (var day in WeekDays)
@@ -478,93 +460,86 @@
                         if (day.DayOfWeek == recurringDay && workout.duration > 0)
                         {
                             // הוספת האימון למחזור לכל יום מתאים בשבוע הנוכחי
-                            if (!AllWeekWorkouts.Any(w => w.id == workout.id))
+                            if (!AllWeekWorkouts.Any(w => w.id == workout.id)) // בדיקה אם האימון כבר נוסף
                             {
                                 int count = 0;
-                                foreach (Workout wd in DeletedWorkouts)
+                                foreach (Workout wd in DeletedWorkouts) // מעבר על האימונים שבוטלו
                                 {
-                                    if (wd.duration == workout.id * -1 && DateTime.Parse(wd.date) == DateTime.Parse(workout.date))
+                                    if (wd.duration == workout.id * -1 && DateTime.Parse(wd.date) == DateTime.Parse(workout.date)) // בדיקה אם האימון בוטל באותו תאריך
                                     {
                                         count++;
-
                                     }
                                 }
-                                if (count == 0)
-                                    AllWeekWorkouts.Add(workout);
+                                if (count == 0) // אם האימון לא בוטל באותו תאריך
+                                    AllWeekWorkouts.Add(workout); // הוספת האימון לרשימה השבועית
                             }
                         }
                     }
                 }
             }
-            else
+            else // אם האימון לא מחזורי
             {
                 int count = 0;
-                foreach (Workout wd in DeletedWorkouts)
+                foreach (Workout wd in DeletedWorkouts) // מעבר על האימונים שבוטלו
                 {
-                    if (wd.duration == workout.id * -1 && DateTime.Parse(wd.date) == DateTime.Parse(workout.date))
+                    if (wd.duration == workout.id * -1 && DateTime.Parse(wd.date) == DateTime.Parse(workout.date)) // בדיקה אם האימון בוטל באותו תאריך
                     {
                         count++;
-
                     }
                 }
-                if (count == 0 && workout.duration > 0)
-                    AllWeekWorkouts.Add(workout);
+                if (count == 0 && workout.duration > 0) // אם האימון לא בוטל ויש לו משך חיובי
+                    AllWeekWorkouts.Add(workout); // הוספת האימון לרשימה השבועית
             }
         }
-
-
-
     }
 
-
-    private async Task SelectDate(DateTime date)
+    private async Task SelectDate(DateTime date) // פונקציה לבחירת תאריך ספציפי והצגת אימונים מתאימים
     {
-        SelectedDate = date;
-        DailyWorkouts.Clear(); // איפוס רשימת האימונים
-        if (AllWeekWorkouts.Any())
+        SelectedDate = date; // שמירת התאריך הנבחר
+        DailyWorkouts.Clear(); // איפוס רשימת האימונים ליום הנבחר
+        if (AllWeekWorkouts.Any()) // אם קיימים אימונים בשבוע
         {
-            foreach (var w in AllWeekWorkouts)
-                if (DateTime.Parse(w.date).DayOfWeek == date.DayOfWeek && w.IsReccuring == "true" || DateTime.Parse(w.date) == date)
+            foreach (var w in AllWeekWorkouts) // מעבר על כל האימונים השבועיים
+                if (DateTime.Parse(w.date).DayOfWeek == date.DayOfWeek && w.IsReccuring == "true" || DateTime.Parse(w.date) == date) // אם האימון מחזורי ותואם ליום בשבוע או תאריך מדויק
                 {
-                    Workout workout = new Workout(w);
-                    workout.date = date.ToString();
-                    DailyWorkouts.Add(workout);
+                    Workout workout = new Workout(w); // יצירת עותק של האימון
+                    workout.date = date.ToString(); // עדכון תאריך האימון לתאריך הנבחר
+                    DailyWorkouts.Add(workout); // הוספת האימון לרשימת האימונים היומית
                 }
         }
         else
         {
-            await LoadWeekWorkouts();
+            await LoadWeekWorkouts(); // טעינת אימונים מחדש אם אין רשימה זמינה
         }
     }
 
-
-
-    private async Task PreviousWeek()
+    private async Task PreviousWeek() // פונקציה למעבר לשבוע הקודם
     {
-        CurrentWeekStart = CurrentWeekStart.AddDays(-7);
-        await UpdateWeekDays();
+        CurrentWeekStart = CurrentWeekStart.AddDays(-7); // הורדת 7 ימים מתחילת השבוע
+        await UpdateWeekDays(); // עדכון רשימת ימי השבוע החדשה וטעינת אימונים
         if (SelectedDate.HasValue)
         {
-            await LoadWeekWorkouts();
+            await SelectDate(SelectedDate.Value.AddDays(-7)); // בחירת תאריך מקביל בשבוע החדש
         }
     }
 
-    private async Task NextWeek()
+    private async Task NextWeek() // פונקציה למעבר לשבוע הבא
     {
-        CurrentWeekStart = CurrentWeekStart.AddDays(7);
-        await UpdateWeekDays();
+        CurrentWeekStart = CurrentWeekStart.AddDays(7); // הוספת 7 ימים לתחילת השבוע
+        await UpdateWeekDays(); // עדכון רשימת ימי השבוע החדשה וטעינת אימונים
         if (SelectedDate.HasValue)
         {
-            await LoadWeekWorkouts();
+            await SelectDate(SelectedDate.Value.AddDays(7)); // בחירת תאריך מקביל בשבוע החדש
         }
     }
+
 
     private string GetFormattedHour(int hour)
     {
-        int h = hour / 100;
-        int m = hour % 100;
-        string a = h.ToString("D2") + ":" + m.ToString("D2");
-        return a;
+        int h = hour / 100;          // חילוץ השעות מתוך המספר (למשל 930 -> 9)
+        int m = hour % 100;          // חילוץ הדקות מתוך המספר (למשל 930 -> 30)
+        string a = h.ToString("D2") + ":" + m.ToString("D2");  // המרת שעות ודקות למחרוזת בפורמט HH:mm עם אפס מוביל
+        return a;                    // החזרת המחרוזת המפוסקת של השעה והדקה
     }
 
 

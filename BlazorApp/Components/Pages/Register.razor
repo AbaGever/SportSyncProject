@@ -372,123 +372,114 @@
     }
 </script>
 @code {
-    List<string> Sports = new List<string>
+    List<string> Sports = new List<string> // יצירת רשימת ספורט מחרוזות עם שמות של סוגי ספורט
 {
-    "Soccer",
-    "Basketball",
-    "Tennis",
-    "Swimming",
-    "Running",
-    "Cycling",
-    "Boxing",
-    "Martial Arts",
-    "Volleyball",
-    "Baseball",
-    "Gymnastics",
-    "Rowing",
-    "Wrestling",
-    "CrossFit",
-    "Climbing",
-    "Surfing",
-    "American Football",
-    "Table Tennis",
-    "Badminton",
-    "Handball",
-    "Rugby",
-    "Skiing",
-    "Snowboarding",
-    "Skateboarding",
-    "Golf",
-    "Cricket",
-    "Fencing",
-    "Karate",
-    "Judo",
-    "Triathlon"
+    "Soccer", "Basketball", "Tennis", "Swimming", "Running", "Cycling",
+    "Boxing", "Martial Arts", "Volleyball", "Baseball", "Gymnastics",
+    "Rowing", "Wrestling", "CrossFit", "Climbing", "Surfing",
+    "American Football", "Table Tennis", "Badminton", "Handball",
+    "Rugby", "Skiing", "Snowboarding", "Skateboarding", "Golf",
+    "Cricket", "Fencing", "Karate", "Judo", "Triathlon"
 };
-    private string UserEmail = "";
-    private string CoachEmail = "";
-    private string CoachPassword = "";
-    private string UserPassword = "";
-    private bool isFirstRender = true;
-    private bool isLogin = false;
-    private string panelClass
+
+    private string UserEmail = ""; // מחרוזת לאחסון אימייל של משתמש
+    private string CoachEmail = ""; // מחרוזת לאחסון אימייל של מאמן
+    private string CoachPassword = ""; // מחרוזת לאחסון סיסמה של מאמן
+    private string UserPassword = ""; // מחרוזת לאחסון סיסמה של משתמש
+    private bool isFirstRender = true; // בוליאני לבדיקת רנדר ראשון
+    private bool isLogin = false; // בוליאני לזיהוי מצב של התחברות
+
+    private string panelClass // מאפיין שמחזיר את שם הקלאס של הפאנל לפי מצב התחברות
     {
         get
         {
-            if (isLogin)
+            if (isLogin) // אם במצב התחברות
             {
-                return "login-panel";
+                return "login-panel"; // מחזיר את שם הקלאס
             }
-            return "";
+            return ""; // אחרת מחזיר מחרוזת ריקה
         }
     }
 
-    private void TogglePanel()
+    private void TogglePanel() // פעולה להפעלת או כיבוי מצב ההתחברות
     {
-        isLogin = !isLogin;
-        if (JS != null)
+        isLogin = !isLogin; // הפיכת הערך של isLogin
+        if (JS != null) // בדיקה אם אובייקט JS קיים
         {
-            JS.InvokeVoidAsync("animatePanel", isLogin);
+            JS.InvokeVoidAsync("animatePanel", isLogin); // קריאה לפונקציה ב-JS לצורך אנימציה לפי מצב התחברות
         }
-        StateHasChanged();
+        StateHasChanged(); // רענון מצב הקומפוננטה
     }
 
-    Trainer cus = new Trainer();
-    TrainerDB db = new TrainerDB();
-    Coach coach = new Coach();
-    CoachDB dbc = new CoachDB();
-    string sport;
-    bool b;
+    Trainer cus = new Trainer(); // יצירת מופע חדש של מתאמן
+    TrainerDB db = new TrainerDB(); // יצירת מופע של גישה למסד הנתונים של מתאמנים
+    Coach coach = new Coach(); // יצירת מופע חדש של מאמן
+    CoachDB dbc = new CoachDB(); // יצירת מופע של גישה למסד הנתונים של מאמנים
+    string sport; // משתנה לאחסון סוג ספורט נבחר
+    bool b; // משתנה בוליאני לתוצאה מהכנסה למסד
 
-    async Task RegTrainer()
+    async Task RegTrainer() // פונקציה אסינכרונית לרישום מתאמן
     {
-        if (cus.emailaddress.Contains("@gmail"))
+        if (cus.emailaddress.Contains("@gmail")) // בדיקה אם כתובת האימייל מכילה את הסיומת הרצויה
         {
-            string a = cus.phonenumber;
-            int p;
-            int l = int.Parse(a);
-            bool bp = int.TryParse(a,out p);
-            if(bp&&l>0)
+            string a = cus.phonenumber; // שמירת מספר הטלפון למשתנה עזר
+            int p; // משתנה לעיבוד המספר
+
+            bool bp = int.TryParse(a, out p); // ניסיון להמיר את המספר למספר שלם
+
+            if (bp) // אם ההמרה הצליחה
             {
-                b = await db.insertuser(cus);
-                navigationManager.NavigateTo("/");
+                int l = int.Parse(a); // המרה למספר שלם
+                if (l > 0) // בדיקה אם המספר חיובי
+                {
+                    b = await db.insertuser(cus); // הכנסת המשתמש למסד
+                    navigationManager.NavigateTo("/"); // ניווט לדף הבית
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("alert", $"PhoneNumber Is Wrong"); // הצגת התראה אם המספר שגוי
+                }
             }
             else
             {
-                await JS.InvokeVoidAsync("alert", $"PhoneNumber Is Wrong");
-            }
-        }
-
-        else
-        {
-            await JS.InvokeVoidAsync("alert", $"Email Is Wrong");
-        }
-    }
-    async Task RegCoach()
-    {
-        if (coach.emailaddress.Contains("@gmail"))
-        {
-            coach.sport = sport;
-            string a = coach.phonenumber;
-            int p;
-            bool bp = int.TryParse(a, out p);
-            if (bp &&coach.exp>=0&&coach.exp<100)
-            {
-                b = await dbc.insertcoach(coach);
-                navigationManager.NavigateTo("/");
-            }
-            else
-            {
-                await JS.InvokeVoidAsync("alert", $"PhoneNumber Is Wrong");
+                await JS.InvokeVoidAsync("alert", $"PhoneNumber Is Wrong"); // הצגת התראה אם ההמרה נכשלה
             }
         }
         else
         {
-            await JS.InvokeVoidAsync("alert", $"Email Is Wrong");
+            await JS.InvokeVoidAsync("alert", $"Email Is Wrong"); // הצגת התראה אם האימייל לא תקין
         }
     }
-    private void OnChange(ChangeEventArgs args)
+
+    async Task RegCoach() // פונקציה אסינכרונית לרישום מאמן
     {
-        sport = args.Value.ToString();
+        if (coach.emailaddress.Contains("@gmail")) // בדיקה אם כתובת האימייל תקינה
+        {
+            coach.sport = sport; // שמירת סוג הספורט הנבחר במאמן
+            string a = coach.phonenumber; // שמירת מספר הטלפון למשתנה עזר
+            int p; // משתנה לעיבוד המספר
+
+            bool bp = int.TryParse(a, out p); // ניסיון להמיר למספר שלם
+
+            if (bp && coach.exp >= 0 && coach.exp < 100) // בדיקה אם המספר חוקי והניסיון של המאמן בטווח תקין
+            {
+                b = await dbc.insertcoach(coach); // הכנסת המאמן למסד
+                navigationManager.NavigateTo("/"); // ניווט לדף הבית
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", $"PhoneNumber Is Wrong"); // הצגת התראה אם יש בעיה במספר
+            }
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", $"Email Is Wrong"); // הצגת התראה אם האימייל שגוי
+        }
+    }
+
+    private void OnChange(ChangeEventArgs args) // פעולה שמופעלת כאשר הספורט משתנה בתיבת הבחירה
+    {
+        sport = args.Value.ToString(); // שמירת ערך הספורט מהאירוע למשתנה
     }
 }
+

@@ -210,116 +210,227 @@
 @code {
 
     private string email;
+    // משתנה לשמירת כתובת האימייל שהמשתמש מזין
+
     private string codeInput;
+    // משתנה לשמירת קוד האימות שהמשתמש מזין
+
     private string newPassword;
+    // משתנה לסיסמה החדשה שהמשתמש מזין
+
     private string confirmPassword;
+    // משתנה לאישור סיסמה חדשה שהמשתמש מזין
+
     private string resetCode;
+    // משתנה לשמירת קוד האיפוס שנשלח למייל
+
     private string message;
+    // משתנה להצגת הודעות למשתמש
+
     private bool codeSent = false;
+    // דגל המציין האם קוד האיפוס נשלח
+
     private bool codeConfirmed = false;
+    // דגל המציין האם הקוד שהוזן אומת בהצלחה
 
     private async Task SendResetCode()
     {
         CoachDB coachDB = new CoachDB();
+        // יצירת מופע לניהול מאגר המאמנים
+
         Coach coach = await coachDB.EmailCheck(email);
+        // בדיקת קיום אימייל במאגר המאמנים
+
         TrainerDB tdb = new TrainerDB();
+        // יצירת מופע לניהול מאגר המאמנים
+
         Trainer trainer = await tdb.EmailCheck(email);
-        if (trainer == null&&coach == null)
+        // בדיקת קיום אימייל במאגר המאמנים
+
+        if (trainer == null && coach == null)
+        // בדיקה אם האימייל לא קיים בשני המאגרות
+
         {
             message = "Email Doesnot Exist ";
+            // הצגת הודעה שהאימייל לא קיים
+
             return;
+            // יציאה מהפונקציה
         }
 
         if (string.IsNullOrEmpty(email) && email.Contains("@gmail"))
+        // בדיקה אם האימייל ריק וכולל "@gmail"
+
         {
             message = "Enter You Email";
+            // הצגת הודעה להזנת האימייל
+
             return;
+            // יציאה מהפונקציה
         }
 
         resetCode = new Random().Next(100000, 999999).ToString();
+        // יצירת קוד איפוס אקראי בן 6 ספרות
 
         try
         {
             var emailService = new EmailService();
+            // יצירת מופע שירות שליחת אימיילים
+
             await emailService.SendEmailAsync(
                 email,
+                // כתובת המייל של המשתמש
+
                 "Password Reset Request",
+                // נושא האימייל
+
                 $"Your code : {resetCode}",
+                // תוכן האימייל עם קוד האיפוס
+
                 "razperli100@gmail.com"
+            // כתובת השולח
             );
 
             codeSent = true;
+            // סימון שהקוד נשלח
+
             message = "Code Sent";
+            // הצגת הודעה שהקוד נשלח
         }
         catch (Exception ex)
         {
             message = $"Error in Sending: {ex.Message}";
+            // הצגת הודעת שגיאה במקרה של כשל בשליחת האימייל
         }
     }
 
     private void ConfirmCode()
     {
         if (codeInput == resetCode)
+        // בדיקה אם הקוד שהוזן תואם לקוד שנשלח
+
         {
             codeConfirmed = true;
+            // סימון שהקוד אומת בהצלחה
+
             message = "Code Validated";
+            // הצגת הודעה שהקוד נכון
         }
         else
         {
             message = "The Code is Wrong";
+            // הצגת הודעה שהקוד שהוזן שגוי
         }
     }
 
     private async void ResetPassword()
     {
         CoachDB coachDB = new CoachDB();
+        // יצירת מופע לניהול מאגר המאמנים
+
         Coach coach = await coachDB.EmailCheck(email);
+        // בדיקת קיום אימייל במאגר המאמנים
+
         TrainerDB tdb = new TrainerDB();
+        // יצירת מופע לניהול מאגר המאמנים
+
         Trainer trainer = await tdb.EmailCheck(email);
+        // בדיקת קיום אימייל במאגר המאמנים
+
         if (trainer == null && coach == null)
+        // בדיקה אם האימייל לא קיים בשני המאגרות
+
         {
             message = "Email is wrong";
+            // הצגת הודעה שהאימייל שגוי
+
             return;
+            // יציאה מהפונקציה
         }
+
         if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
+        // בדיקה אם אחת מהסיסמאות החדשות ריקה
+
         {
             message = "Please Fill Every Input";
+            // הצגת הודעה שיש למלא את כל השדות
+
             return;
+            // יציאה מהפונקציה
         }
 
         if (newPassword != confirmPassword)
+        // בדיקה אם הסיסמאות החדשות אינן תואמות
+
         {
             message = "Passwords are not matching ";
+            // הצגת הודעה שהסיסמאות לא תואמות
+
             return;
+            // יציאה מהפונקציה
         }
-        if(coach ==null)
+
+        if (coach == null)
+        // בדיקה אם המשתמש הוא מאמן ולא מאמן קבוצת מאמנים
+
         {
             trainer.password = newPassword;
+            // עדכון הסיסמה החדשה במאמן
+
             int n = await tdb.UpdateAsyncWithoutGroup(trainer);
+            // עדכון רשומת המאמן במסד הנתונים ללא שינוי קבוצה
+
             if (n > 0)
+            // בדיקה אם העדכון בוצע בהצלחה
+
             {
                 message = "Password changed succesfuly";
-                await Task.Delay(3000);
-                StateHasChanged();
-                navigationManager.NavigateTo("/");
-                return;
+                // הצגת הודעה שהסיסמה שונתה בהצלחה
 
+                await Task.Delay(3000);
+                // השהייה של 3 שניות לפני פעולה נוספת
+
+                StateHasChanged();
+                // רענון הממשק
+
+                navigationManager.NavigateTo("/");
+                // ניווט לעמוד הראשי
+
+                return;
+                // יציאה מהפונקציה
             }
         }
-        if(trainer ==null)
+
+        if (trainer == null)
+        // בדיקה אם המשתמש הוא מאמן קבוצת מאמנים ולא מאמן רגיל
+
         {
             coach.password = newPassword;
+            // עדכון הסיסמה החדשה במאמן הקבוצה
+
             int n = await coachDB.UpdateAsyncWithoutGroup(coach);
+            // עדכון רשומת המאמן במסד הנתונים ללא שינוי קבוצה
+
             if (n > 0)
+            // בדיקה אם העדכון בוצע בהצלחה
+
             {
                 message = "Password changed succesfuly";
-                await Task.Delay(3000);
-                StateHasChanged();
-                navigationManager.NavigateTo("/");
-                return;
+                // הצגת הודעה שהסיסמה שונתה בהצלחה
 
+                await Task.Delay(3000);
+                // השהייה של 3 שניות לפני פעולה נוספת
+
+                StateHasChanged();
+                // רענון הממשק
+
+                navigationManager.NavigateTo("/");
+                // ניווט לעמוד הראשי
+
+                return;
+                // יציאה מהפונקציה
             }
         }
-        
+
     }
 }
