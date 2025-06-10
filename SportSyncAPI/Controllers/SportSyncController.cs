@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-using DBL2;
+﻿using DBL2;
+using Microsoft.AspNetCore.Mvc;
 using Models2;
 using System;
 using System.Globalization;
+using System.Xml.Linq;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -62,20 +62,72 @@ namespace SportSyncAPI.Controllers
 
             bool b;
             // מגדיר משתנה בוליאני
-
-            b = await db.insertuser(item);
-            // מנסה להכניס את המשתמש למסד נתונים באופן אסינכרוני ושומר את תוצאת ההצלחה
-
-            if (b)
+            
+            if (item.emailaddress.Contains("@gmail"))
             {
-                return item.id;
-                // אם ההכנסה הצליחה, מחזיר את המזהה של המאמן החדש
+                Trainer tr = await db.EmailCheck(item.emailaddress);
+                if ( tr == null)
+                {
+
+
+                    if (!string.IsNullOrEmpty(item.firstName) && !string.IsNullOrEmpty(item.lastName))
+                    {
+                        if (!(item.firstName.Any(char.IsDigit)) && !(item.lastName.Any(char.IsDigit)))
+                        {
+                            string a = item.phonenumber; // שמירת מספר הטלפון למשתנה עזר
+                            int p; // משתנה לעיבוד המספר
+
+                            bool bp = int.TryParse(a, out p);
+                            if (bp)
+                            {
+                                int l = int.Parse(a); // המרה למספר שלם
+                                if (l > 0)
+                                {
+                                    b = await db.insertuser(item);
+                                    // מנסה להכניס את המשתמש למסד נתונים באופן אסינכרוני ושומר את תוצאת ההצלחה
+
+                                    if (b)
+                                    {
+                                        return item.id;
+
+                                        // אם ההכנסה הצליחה, מחזיר את המזהה של המאמן החדש
+                                    }
+                                    else
+                                    {
+                                        return BadRequest();
+                                    }
+                                }
+                                else
+                                {
+                                    return BadRequest();
+                                }
+                            }
+                            else
+                            {
+                                return BadRequest();
+                            }
+                        }
+                        else
+                        {
+                            return BadRequest();
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest();
+                    }
+                }
+            
+                else
+                {
+                    return BadRequest();
+                }
             }
             else
             {
-                return StatusCode(StatusCodes.Status200OK);
-                // אם ההכנסה נכשלה, מחזיר קוד 200 למרות זאת (לא סטנדרטי)
+                return BadRequest();
             }
+
         }
 
         [HttpPost]

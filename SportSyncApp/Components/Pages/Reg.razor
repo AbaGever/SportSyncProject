@@ -112,75 +112,78 @@
 
         var xx = await httpClient.PostAsJsonAsync<Trainer>(dataConstLink.Api.regurl, cus);
         // שולח בקשת POST עם אובייקט המאמן לכתובת API לרישום
-
-        try
+        
+        if (xx.IsSuccessStatusCode)
         {
-            if (cus.emailaddress.Contains("@gmail"))
-            // בדיקה אם כתובת האימייל מכילה "@gmail" (סוג של תנאי סינון)
-
+            try
             {
-                TrainerNew tt = new TrainerNew();
-                // יצירת מופע חדש של אובייקט כניסה
-
-                tt.email = cus.emailaddress;
-                // מקצה את האימייל שנרשם לשדה האימייל של התחברות
-
-                tt.pass = cus.password;
-                // מקצה את הסיסמה לשדה סיסמה של התחברות
-
-                Trainer trainer = new Trainer();
-                // יצירת מופע ריק של מאמן לצורך קבלת תוצאה מהשרת
-                
-                var yy = await httpClient.PostAsJsonAsync<TrainerNew>(dataConstLink.Api.loginurl, tt);
-                // שולח בקשת POST לכתובת API של התחברות עם פרטי המשתמש
-
-                if (tt != null)
-                // בדיקה אם האובייקט tt (לא תוצאת הבקשה) אינו null – לא הגיוני לוגית
+                if (cus.emailaddress.Contains("@gmail"))
+                // בדיקה אם כתובת האימייל מכילה "@gmail" (סוג של תנאי סינון)
 
                 {
-                    trainer = await yy.Content.ReadFromJsonAsync<Trainer>();
-                    // קריאת תוכן התגובה והמרתו לאובייקט Trainer
+                    TrainerNew tt = new TrainerNew();
+                    // יצירת מופע חדש של אובייקט כניסה
 
-                    string jsonOSL = JsonSerializer.Serialize(trainer);
-                    // ממיר את אובייקט המאמן למחרוזת JSON
+                    tt.email = cus.emailaddress;
+                    // מקצה את האימייל שנרשם לשדה האימייל של התחברות
 
-                    try
+                    tt.pass = cus.password;
+                    // מקצה את הסיסמה לשדה סיסמה של התחברות
+
+                    Trainer trainer = new Trainer();
+                    // יצירת מופע ריק של מאמן לצורך קבלת תוצאה מהשרת
+
+                    var yy = await httpClient.PostAsJsonAsync<TrainerNew>(dataConstLink.Api.loginurl, tt);
+                    // שולח בקשת POST לכתובת API של התחברות עם פרטי המשתמש
+
+                    if (tt != null)
+
                     {
-                        await SecureStorage.Default.SetAsync("trn", jsonOSL);
-                        // שומר את פרטי המשתמש המאוחסנים ב-SecureStorage תחת מפתח "trn"
-                    }
-                    catch (Exception storageEx)
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
-                        // מציג הודעת שגיאה אם שמירת הנתונים נכשלה
+                        trainer = await yy.Content.ReadFromJsonAsync<Trainer>();
+                        // קריאת תוכן התגובה והמרתו לאובייקט Trainer
+
+                        string jsonOSL = JsonSerializer.Serialize(trainer);
+                        // ממיר את אובייקט המתאמן למחרוזת JSON
+
+                        try
+                        {
+                            await SecureStorage.Default.SetAsync("trn", jsonOSL);
+                            // שומר את פרטי המשתמש המאוחסנים ב-SecureStorage תחת מפתח "trn"
+                        }
+                        catch (Exception storageEx)
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
+                            // מציג הודעת שגיאה אם שמירת הנתונים נכשלה
+
+                            return;
+                        }
+
+                        navigateMg.NavigateTo("/", replace: true);
+                        // מעביר את המשתמש לעמוד הבית לאחר התחברות מוצלחת
 
                         return;
                     }
+                }
+                else
+                {
+                    Exception storageEx = new Exception();
+                    // יצירת חריגה כללית (ללא תוכן) – לא תקין
 
-                    navigateMg.NavigateTo("/", replace: true);
-                    // מעביר את המשתמש לעמוד הבית לאחר התחברות מוצלחת
+                    await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
+                    // מציג הודעת שגיאה עם טקסט חריגה ריק
 
                     return;
                 }
             }
-            else
+            catch (Exception storageEx)
             {
-                Exception storageEx = new Exception();
-                // יצירת חריגה כללית (ללא תוכן) – לא תקין
-
                 await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
-                // מציג הודעת שגיאה עם טקסט חריגה ריק
+                // טיפול בשגיאה כללית – מציג הודעת שגיאה אם משהו משתבש במהלך התהליך כולו
 
                 return;
             }
         }
-        catch (Exception storageEx)
-        {
-            await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
-            // טיפול בשגיאה כללית – מציג הודעת שגיאה אם משהו משתבש במהלך התהליך כולו
-
-            return;
-        }
+        
     }
 }
 

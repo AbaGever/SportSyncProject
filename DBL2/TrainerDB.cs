@@ -169,7 +169,7 @@ namespace DBL2
             p.Add("emailaddress", email); // פרמטר אימייל
             List<Trainer> list = (List<Trainer>)await SelectAllAsync(sql, p); // מבצע את השאילתה
             if (list.Count == 1) // בודק אם נמצא משתמש אחד
-                return list[0]; // מחזיר את המאמן
+                return list[0]; // מחזיר את המתאמן
             else
                 return null; // מחזיר null אם לא נמצא
         }
