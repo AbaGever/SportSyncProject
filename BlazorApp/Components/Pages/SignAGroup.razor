@@ -463,12 +463,20 @@
 
         group.coachid = coach.id; // קישור הקבוצה למזהה המאמן המחובר
         group.sport = coach.sport; // קישור הקבוצה לסוג הספורט של המאמן
-
-        b = await Gdb.insertgroup(group); // ניסיון להוסיף את הקבוצה למסד הנתונים ושמירת התוצאה ב-b
-
-        if (b)
+        if (group.maxcapacity >= 0)
         {
-            navigationManager.NavigateTo("/"); // ניתוב לעמוד הראשי במקרה של הצלחה
+
+
+            b = await Gdb.insertgroup(group); // ניסיון להוסיף את הקבוצה למסד הנתונים ושמירת התוצאה ב-b
+
+            if (b)
+            {
+                navigationManager.NavigateTo("/"); // ניתוב לעמוד הראשי במקרה של הצלחה
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("Didnt Succeed"); // הצגת הודעת שגיאה במקרה של כישלון
+            }
         }
         else
         {

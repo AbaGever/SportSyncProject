@@ -128,6 +128,16 @@
                 return;
             }
         }
+        else
+        {
+            Exception storageEx = new Exception();
+            // יצירת חריגה ריקה באופן מלאכותי (לא תקין)
+
+            await Application.Current.MainPage.DisplayAlert("Storage Error", storageEx.Message, "OK");
+            // הצגת הודעת שגיאה עם הודעה ריקה אם האימייל לא עומד בתנאי
+
+            return;
+        }
     }
 }
 
