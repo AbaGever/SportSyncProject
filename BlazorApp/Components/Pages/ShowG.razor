@@ -694,62 +694,80 @@
 
     async Task CheckReccuring()
     {
-        if (SelectedOptions.Count > 0 || SelectedOptions != null)
+        int mins;
+        bool bp = int.TryParse(duration, out mins);
+        if(bp)
         {
-            // אם נבחרו אפשרויות לימות שבוע
-
-            IsReccuring1 = "true";
-            // קובע שהאימון חוזר
-
-            foreach (var d in SelectedOptions)
+            mins = int.Parse(duration);
+            if(mins >0)
             {
-                // עבור כל יום שנבחר ברשימה
+                if (SelectedOptions.Count > 0 || SelectedOptions != null)
+                {
+                    // אם נבחרו אפשרויות לימות שבוע
 
-                DayOfWeek dayOfWeek = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), d, true);
-                // ממיר מחרוזת של יום לשם ENUM DayOfWeek
+                    IsReccuring1 = "true";
+                    // קובע שהאימון חוזר
 
-                DateTime rd = GetNextDay(DateTime.Today, dayOfWeek);
-                // מחשב את התאריך הבא ליום השבוע שנבחר, החל מהיום
+                    foreach (var d in SelectedOptions)
+                    {
+                        // עבור כל יום שנבחר ברשימה
 
-                await CreateWorkout(rd, IsReccuring1);
-                // יוצר אימון לתאריך המחושב עם סטטוס חוזר
+                        DayOfWeek dayOfWeek = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), d, true);
+                        // ממיר מחרוזת של יום לשם ENUM DayOfWeek
+
+                        DateTime rd = GetNextDay(DateTime.Today, dayOfWeek);
+                        // מחשב את התאריך הבא ליום השבוע שנבחר, החל מהיום
+
+                        await CreateWorkout(rd, IsReccuring1);
+                        // יוצר אימון לתאריך המחושב עם סטטוס חוזר
+                    }
+                }
+
+                int a = 0;
+                // משתנה לספירת התאמות של יום נבחר ברשימה
+
+                foreach (var d in SelectedOptions)
+                {
+                    if (d == selectedDate.DayOfWeek.ToString())
+                    {
+                        a++;
+                    }
+                }
+                // סופר אם יום התאריך שנבחר נמצא ברשימת הימים שנבחרו
+
+                if (a == 0)
+                {
+                    // אם יום התאריך הנבחר לא נמצא ברשימה
+
+                    await CreateWorkout(selectedDate, "false");
+                    // יוצר אימון בתאריך הנבחר ללא סטטוס חוזר
+                }
+
+                SelectedOptions.Clear();
+                // מנקה את רשימת האפשרויות שנבחרו
+
+                selectedDate = DateTime.Today;
+                // מאפס את התאריך הנבחר להיום
+
+                selectedHour = new DateTime();
+                // מאפס את השעה הנבחרת לערך ברירת מחדל
+
+                duration = "";
+                // מאפס את משך האימון למחרוזת ריקה
+
+                StateHasChanged();
+                // מרענן את הממשק (UI)
+            }
+            else
+            {
+                await js.InvokeVoidAsync("alert", $"Duration time is wrong");
             }
         }
-
-        int a = 0;
-        // משתנה לספירת התאמות של יום נבחר ברשימה
-
-        foreach (var d in SelectedOptions)
+        else
         {
-            if (d == selectedDate.DayOfWeek.ToString())
-            {
-                a++;
-            }
+            await js.InvokeVoidAsync("alert", $"Duration time is wrong");
         }
-        // סופר אם יום התאריך שנבחר נמצא ברשימת הימים שנבחרו
-
-        if (a == 0)
-        {
-            // אם יום התאריך הנבחר לא נמצא ברשימה
-
-            await CreateWorkout(selectedDate, "false");
-            // יוצר אימון בתאריך הנבחר ללא סטטוס חוזר
-        }
-
-        SelectedOptions.Clear();
-        // מנקה את רשימת האפשרויות שנבחרו
-
-        selectedDate = DateTime.Today;
-        // מאפס את התאריך הנבחר להיום
-
-        selectedHour = new DateTime();
-        // מאפס את השעה הנבחרת לערך ברירת מחדל
-
-        duration = "";
-        // מאפס את משך האימון למחרוזת ריקה
-
-        StateHasChanged();
-        // מרענן את הממשק (UI)
+        
     }
 
     static DateTime GetNextDay(DateTime startDate, DayOfWeek targetDay)
@@ -830,35 +848,44 @@
 
     async Task doEditgroup()
     {
+       
         GroupDB GDB = new GroupDB();
         // יוצר מופע חדש של מחלקת גישה לקבוצות
-
-        if (usersInGroup.Count <= max)
+        if(max !=group.maxcapacity)
         {
-            // בודק אם מספר המתאמנים לא חורג מהמקסימום
-
-            group.maxcapacity = max;
-            // מעדכן את הקיבולת המקסימלית של הקבוצה
-
-            int n = await GDB.UpdateAsync(group);
-            // מנסה לעדכן את פרטי הקבוצה במסד הנתונים
-
-            if (n > 0)
+            if (usersInGroup.Count < max)
             {
-                await js.InvokeVoidAsync("alert", $"Updated Successfully!");
-                // מציג הודעת הצלחה למשתמש
+                // בודק אם מספר המתאמנים לא חורג מהמקסימום
+
+                group.maxcapacity = max;
+                // מעדכן את הקיבולת המקסימלית של הקבוצה
+
+                int n = await GDB.UpdateAsync(group);
+                // מנסה לעדכן את פרטי הקבוצה במסד הנתונים
+
+                if (n > 0)
+                {
+                    await js.InvokeVoidAsync("alert", $"Updated Successfully!");
+                    // מציג הודעת הצלחה למשתמש
+                }
+                else
+                {
+                    await js.InvokeVoidAsync("alert", $"Update failed!");
+                    // מציג הודעת כשלון לעדכון
+                }
             }
-            else
+            else if (usersInGroup.Count > max)
             {
-                await js.InvokeVoidAsync("alert", $"Update failed!");
-                // מציג הודעת כשלון לעדכון
+                await js.InvokeVoidAsync("alert", $"You have too many trainers in group to reduce maximum capacity");
+                // מציג הודעה שמשתמשים בקבוצה חורגים מהקיבולת החדשה
             }
         }
         else
         {
-            await js.InvokeVoidAsync("alert", $"You have too many trainers in group to reduce maximum capacity");
-            // מציג הודעה שמשתמשים בקבוצה חורגים מהקיבולת החדשה
+            await js.InvokeVoidAsync("alert", $"You didnt change nothing");
         }
+        
+        
     }
 
     public async Task LoadUsersInGroup()

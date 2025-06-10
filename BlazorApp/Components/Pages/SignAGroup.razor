@@ -455,49 +455,61 @@
 
     async Task RegGroup()
     {
-        if (currentname != "" && currentmax != 0)
+        if (!string.IsNullOrEmpty(currentname) && currentmax > 0)
         {
-            group.name = currentname; // הגדרת שם הקבוצה מהקלט
-            group.maxcapacity = currentmax; // הגדרת הקיבולת המקסימלית מהקלט
-        }
-
-        group.coachid = coach.id; // קישור הקבוצה למזהה המאמן המחובר
-        group.sport = coach.sport; // קישור הקבוצה לסוג הספורט של המאמן
-        if (group.maxcapacity >= 0)
-        {
-
-
-            b = await Gdb.insertgroup(group); // ניסיון להוסיף את הקבוצה למסד הנתונים ושמירת התוצאה ב-b
-
-            if (b)
+            if (!(currentname.Any(char.IsDigit)))
             {
-                navigationManager.NavigateTo("/"); // ניתוב לעמוד הראשי במקרה של הצלחה
+                group.name = currentname; // הגדרת שם הקבוצה מהקלט
+                group.maxcapacity = currentmax; // הגדרת הקיבולת המקסימלית מהקלט
+                group.coachid = coach.id; // קישור הקבוצה למזהה המאמן המחובר
+                group.sport = coach.sport; // קישור הקבוצה לסוג הספורט של המאמן
+                if (group.maxcapacity >= 0)
+                {
+
+
+                    b = await Gdb.insertgroup(group); // ניסיון להוסיף את הקבוצה למסד הנתונים ושמירת התוצאה ב-b
+
+                    if (b)
+                    {
+                        navigationManager.NavigateTo("/"); // ניתוב לעמוד הראשי במקרה של הצלחה
+                    }
+                    else
+                    {
+                        await JS.InvokeVoidAsync("Didnt Succeed"); // הצגת הודעת שגיאה במקרה של כישלון
+                    }
+                }
+                else
+                {
+                    await JS.InvokeVoidAsync("Didnt Succeed"); // הצגת הודעת שגיאה במקרה של כישלון
+                }
+
+                coach.groupname = group.name; // עדכון שדה שם הקבוצה במאמן
+
+                int n = await coachDB.UpdateAsync(coach); // עדכון פרטי המאמן במסד הנתונים ושמירת מספר הרשומות שהושפעו
+
+                if (n > 0)
+                {
+                    await MySession.SetAsync("Coach", coach); // עדכון המאמן ב-session עם הנתונים החדשים
+                    var name = await MySession.GetAsync<Coach>("Coach"); // שליפת המאמן המעודכן מה-session
+
+                    if (name.Success)
+                    {
+                        coach = name.Value; // שמירת המאמן המעודכן במשתנה coach
+                        StateHasChanged(); // עדכון הממשק בעקבות שינוי מצב
+                    }
+                }
             }
             else
             {
-                await JS.InvokeVoidAsync("Didnt Succeed"); // הצגת הודעת שגיאה במקרה של כישלון
+                await JS.InvokeVoidAsync("alert", $"Group Name is Wrong");
             }
         }
         else
         {
-            await JS.InvokeVoidAsync("Didnt Succeed"); // הצגת הודעת שגיאה במקרה של כישלון
+            await JS.InvokeVoidAsync("alert", $"Something is wrong");
         }
 
-        coach.groupname = group.name; // עדכון שדה שם הקבוצה במאמן
-
-        int n = await coachDB.UpdateAsync(coach); // עדכון פרטי המאמן במסד הנתונים ושמירת מספר הרשומות שהושפעו
-
-        if (n > 0)
-        {
-            await MySession.SetAsync("Coach", coach); // עדכון המאמן ב-session עם הנתונים החדשים
-            var name = await MySession.GetAsync<Coach>("Coach"); // שליפת המאמן המעודכן מה-session
-
-            if (name.Success)
-            {
-                coach = name.Value; // שמירת המאמן המעודכן במשתנה coach
-                StateHasChanged(); // עדכון הממשק בעקבות שינוי מצב
-            }
-        }
+        
     }
 
     void Reset()
